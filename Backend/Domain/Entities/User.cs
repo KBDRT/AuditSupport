@@ -15,5 +15,8 @@ namespace Domain.Entities
         public string Email { get; set; } = string.Empty;
 
         public Roles Role { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
     }
 }
