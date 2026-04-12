@@ -11,6 +11,14 @@ namespace Infrastructure.Database
 
         public DbSet<Direction> Directions { get; set; } = null!;
 
+        public DbSet<EduYear> EduYears { get; set; } = null!;
+
+        public DbSet<Check> Checks { get; set; } = null!;
+
+        public DbSet<EduProgram> EduPrograms { get; set; } = null!;
+
+        public DbSet<ProgramVersion> ProgramVersions { get; set; } = null!;
+
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
             Database.EnsureCreated();

@@ -9,12 +9,12 @@ namespace Application.Logic.Services.Implementations
 
     public class DirectionService : IDirectionService
     {
-        private readonly IBaseRepository<Direction> _directionRepository;
+        private readonly IBaseRepository<Direction> _repository;
         private readonly ServiceResult _result;
 
         public DirectionService(IBaseRepository<Direction> directionRepository, ServiceResult result)
         {
-            _directionRepository = directionRepository;
+            _repository = directionRepository;
             _result = result;
         }
 
@@ -34,7 +34,7 @@ namespace Application.Logic.Services.Implementations
                 Id = Guid.NewGuid(),
             };
 
-            var newGuid = await _directionRepository.AddNewAsync(newDirection, cancellationToken);
+            var newGuid = await _repository.AddNewAsync(newDirection, cancellationToken);
             return Result.Success(newGuid);
         }
 
@@ -47,20 +47,20 @@ namespace Application.Logic.Services.Implementations
                 return Result.Failure<Guid>("Error");
             }
 
-            await _directionRepository.DeleteByIdAsync(directionId, cancellationToken);
+            await _repository.DeleteByIdAsync(directionId, cancellationToken);
             return Result.Success();
         }
 
         public async Task<Result<List<Direction>>> Get(CancellationToken cancellationToken)
         {
-            var directions = await _directionRepository.GetAllAsync(cancellationToken) ?? [];
+            var directions = await _repository.GetAllAsync(cancellationToken) ?? [];
 
             return Result.Success(directions);
         }
 
         public async Task<Result> Update(Direction direction, CancellationToken cancellationToken)
         {
-            await _directionRepository.UpdateAsync(direction, cancellationToken);
+            await _repository.UpdateAsync(direction, cancellationToken);
 
             return Result.Success();
         }
