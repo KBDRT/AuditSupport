@@ -1,4 +1,13 @@
-﻿using Microsoft.OpenApi;
+﻿using Application.Abstractions.Repositories;
+using Application.Helpers;
+using Application.Logic.Services.Definitions;
+using Application.Logic.Services.Implementations;
+using Domain.Entities;
+using Infrastructure.Database;
+using Infrastructure.Database.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Presentation.Extensions
 {
@@ -22,6 +31,18 @@ namespace Presentation.Extensions
                     Version = "v1",
                 });
             });
+
+            _services.AddControllers();
+            _services.AddEndpointsApiExplorer();
+
+            string? connectionDB = _configuration?.GetConnectionString("DefaultConnectionDataBase");
+
+            _services.AddDbContext<AppDBContext>(options => options.UseNpgsql(connectionDB));
+
+            _services.AddScoped<IBaseRepository<Direction>, BaseRepository<Direction>>();
+            _services.AddScoped<ServiceResult>();
+
+            _services.AddScoped<IDirectionService, DirectionService>();
 
         }
     }

@@ -11,6 +11,13 @@
                 options.RoutePrefix = string.Empty;
             });
 
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.MapControllers();
+
+
 
         }
     }

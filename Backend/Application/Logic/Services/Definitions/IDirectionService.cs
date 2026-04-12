@@ -1,15 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
+using Domain.Entities;
 
 namespace Application.Logic.Services.Definitions
 {
-    internal interface IDirectionService
+    public interface IDirectionService
     {
-        public Task<Result<Guid>> Create(string name, string shortName, string description);
+        public Task<Result<Guid>> Create(string name, string shortName, string description, CancellationToken cancellationToken);
 
-        public Task Delete();
+        public Task<Result> Delete(Guid directionId, CancellationToken cancellationToken);
 
-        public Task Get();
+        public Task<Result<List<Direction>>> Get(CancellationToken cancellationToken);
 
-        public Task Update();
+        public Task<Result> Update(Direction direction, CancellationToken cancellationToken);
     }
 }

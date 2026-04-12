@@ -9,6 +9,8 @@ namespace Infrastructure.Database
     {
         public DbSet<User> Users { get; set; } = null!;
 
+        public DbSet<Direction> Directions { get; set; } = null!;
+
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
             Database.EnsureCreated();
