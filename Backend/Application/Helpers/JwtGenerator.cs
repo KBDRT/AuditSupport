@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Application.Abstractions.Settings;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Presentation.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Presentation.Auth
+namespace Application.Helpers
 {
     public class JwtGenerator
     {
-        private readonly IOptions<AuthTokenSettings> _settings;
+        private readonly IAuthTokenSettings _settings;
 
-        public JwtGenerator(IOptions<AuthTokenSettings> settings)
+        public JwtGenerator(IAuthTokenSettings settings)
         {
             _settings = settings;
         }
@@ -19,9 +19,9 @@ namespace Presentation.Auth
         public string GetNewJwtTokenString(List<Claim> claims)
         {
 
-            var key = _settings.Value.SecretKey;
+            var key = _settings.SecretKey;
             var jwtToken = new JwtSecurityToken(
-                expires: DateTime.UtcNow.Add(_settings.Value.TokenLifeTime),
+                expires: DateTime.UtcNow.Add(_settings.TokenLifeTime),
                 claims: claims,
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                 SecurityAlgorithms.HmacSha256

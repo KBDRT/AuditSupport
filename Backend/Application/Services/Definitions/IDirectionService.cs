@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Entities;
 
-namespace Application.Logic.Services.Definitions
+namespace Application.Services.Definitions
 {
     public interface IDirectionService
     {

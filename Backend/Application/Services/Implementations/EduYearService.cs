@@ -1,10 +1,10 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Helpers;
-using Application.Logic.Services.Definitions;
+using Application.Services.Definitions;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 
-namespace Application.Logic.Services.Implementations
+namespace Application.Services.Implementations
 {
     public class EduYearService : IEduYearService
     {

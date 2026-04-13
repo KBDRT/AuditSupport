@@ -1,5 +1,5 @@
 ﻿using Application.Helpers;
-using Application.Logic.Services.Definitions;
+using Application.Services.Definitions;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

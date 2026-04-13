@@ -1,6 +1,8 @@
-﻿namespace Presentation.Settings
+﻿using Application.Abstractions.Settings;
+
+namespace Presentation.Settings
 {
-    public class AuthTokenSettings
+    public class AuthTokenSettings : IAuthTokenSettings
     {
         public string SecretKey { get; set; } = string.Empty;
 
