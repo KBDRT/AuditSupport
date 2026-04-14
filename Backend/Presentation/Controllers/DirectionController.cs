@@ -1,14 +1,13 @@
 ﻿using Application.Helpers;
 using Application.Services.Definitions;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(Policy = "RoleAdmin")]
+    //[Authorize(Policy = "RoleAdmin")]
     public class DirectionController(ServiceResult result, IDirectionService service) : ControllerBase
     {
         private readonly ServiceResult _serviceResult = result;

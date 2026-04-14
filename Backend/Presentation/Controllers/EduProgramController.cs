@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Files;
+using Application.Features.EduProgram.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.EduPrograms;
@@ -9,11 +10,13 @@ namespace Presentation.Controllers
     [ApiController]
     public class EduProgramController : ControllerBase
     {
-
         private readonly IMinioService _minioService;
-        public EduProgramController(IMinioService minioService)
+        private readonly IMediator _mediator;
+
+        public EduProgramController(IMinioService minioService, IMediator mediator)
         {
             _minioService = minioService;
+            _mediator = mediator;
         }
 
 
@@ -47,6 +50,17 @@ namespace Presentation.Controllers
             return File(file, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "example.docx");
         }
 
+
+
+
+        [HttpPost("test")]
+        public async Task<IActionResult> New(CreateProgramCommand request, CancellationToken cancellationToken)
+        {
+            var result = _mediator.Send(request, cancellationToken);
+
+
+            return Ok();
+        }
 
     }
 }

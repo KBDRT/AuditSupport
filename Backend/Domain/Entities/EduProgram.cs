@@ -1,5 +1,5 @@
 ﻿using Domain.Entities.Base;
-using Domain.Values;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -11,16 +11,18 @@ namespace Domain.Entities
         
         public double Duration { get; set; }
 
-        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
+        public Guid YearId { get; set; }
+        public EduYear Year { get; set; } = null!;
 
-        public EduYear Years { get; set; } = null!;
+        public Guid DirectionId { get; set; }
+        public Direction Direction { get; set; } = null!;
 
-        public Direction Directopn { get; set; } = null!;
-
+        public Guid TeacherId { get; set; }
         public User Teacher { get; set; } = null!;
 
-        public ProgramStatuses ProgramStatuses { get; set; }
+        public ProgramStatuses ProgramStatus { get; set; }
 
         public List<ProgramVersion> Versions { get; set; } = [];
     }

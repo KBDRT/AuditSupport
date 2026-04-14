@@ -15,6 +15,7 @@ namespace Presentation.Extensions
                 options.RoutePrefix = string.Empty;
             });
 
+            app.UseCors("AllowReactApp");
 
             //app.UseCookiePolicy(new CookiePolicyOptions
             //{

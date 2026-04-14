@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Repositories;
+﻿using Application.Abstractions.Notifications;
+using Application.Abstractions.Repositories;
 using Application.DTO;
 using Application.Helpers;
 using Application.Services.Definitions;
@@ -13,25 +14,20 @@ namespace Application.Services.Implementations
     {
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
+        private readonly INotification _notificationService;
 
         public AdminService(IUserRepository repository,
-                            IMapper mapper)
+                            IMapper mapper,
+                            INotification notificationService)
         {
             _repository = repository;
             _mapper = mapper;
+            _notificationService = notificationService;
         }
 
 
         public async Task<Result> CreateUser(CreateUserDTO userInfo, CancellationToken cancellationToken)
         {
-            //var validation = _validatorFactory.GetValidator<RegisterUserCommand>().Validate(request);
-            //var result = new CQResult<Guid>(validation);
-
-            //if (!validation.IsValid)
-            //{
-            //    return result;
-            //}
-
             var userInBase = await _repository.GetByLogin(userInfo.Login, cancellationToken);
             if (userInBase != null)
             {
@@ -43,34 +39,88 @@ namespace Application.Services.Implementations
             var newUser = _mapper.Map<User>(userInfo);
             newUser.Id = Guid.NewGuid();
 
-
             string password = PasswordGenerator.GeneratePassword(12, true);
 
             var hashedPassword = new PasswordHasher<User>().HashPassword(newUser, password);
             newUser.PasswordHashed = hashedPassword;
 
-            var id = await _repository.AddNewAsync(newUser);
-            //result.SetResultData(id);
+            var id = await _repository.AddNewAsync(newUser, cancellationToken);
 
-            //if (request.TeacherId != Guid.Empty)
-            //{
-            //    await _teacherRepository.SetUserForTeacherAsync((Guid)request.TeacherId, id);
-            //}
-
-            //return result;
+            //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
 
             return Result.Success(); 
         }
 
-        public Task DeactivateUser()
+        public async Task<Result> ChangeUserActivation(Guid userId, bool isActive, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByIdAsync(userId, cancellationToken);
+            if (user == null)
+            {
+                return Result.Failure("Пользователь не найден!");
+            }
+
+            user.IsActive = isActive;
+            await _repository.UpdateAsync(user, cancellationToken);
+
+            return Result.Success();
         }
 
-        public Task DeleteUser()
+        public async Task<Result> DeleteUser(Guid userId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByIdAsync(userId, cancellationToken);
+            if (user == null)
+            {
+                return Result.Failure("Пользователь не найден!");
+            }
+
+            await _repository.DeleteByIdAsync(user.Id, cancellationToken);
+
+            return Result.Success();
         }
 
+        public async Task<Result<string>> ResetPassword(Guid userId, CancellationToken cancellationToken)
+        {
+            var user = await _repository.GetByIdAsync(userId, cancellationToken);
+            if (user == null)
+            {
+                return Result.Failure<string>("Пользователь не найден!");
+                //result.AddMessage("Пользователь с таким логином уже зарегистрирован!", "Login");
+                //return result;
+            }
+
+            string password = PasswordGenerator.GeneratePassword(12, true);
+
+            var hashedPassword = new PasswordHasher<User>().HashPassword(user, password);
+            user.PasswordHashed = hashedPassword;
+
+            var id = await _repository.UpdateAsync(user, cancellationToken);
+
+            //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
+
+            return Result.Success(password);
+        }
+
+        public async Task<Result<List<GetUserDTO>>> GetUsers(int page, int size, CancellationToken cancellationToken)
+        {
+            var users = await _repository.GetWithPaginationAsync(page, size, cancellationToken) ?? [];
+
+            var response = _mapper.Map<List<GetUserDTO>>(users);
+
+            return Result.Success(response);
+        }
+
+        public async Task<Result> ChangeEmail(Guid userId, string newEmail, CancellationToken cancellationToken)
+        {
+            var user = await _repository.GetByIdAsync(userId, cancellationToken);
+            if (user == null)
+            {
+                return Result.Failure<string>("Пользователь не найден!");
+            }
+
+            user.Email = newEmail;
+            await _repository.UpdateAsync(user, cancellationToken);
+
+            return Result.Success();
+        }
     }
 }

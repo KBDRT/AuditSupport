@@ -94,7 +94,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("DirectopnId")
+                    b.Property<Guid>("DirectionId")
                         .HasColumnType("uuid");
 
                     b.Property<double>("Duration")
@@ -110,16 +110,16 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("YearsId")
+                    b.Property<Guid>("YearId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DirectopnId");
+                    b.HasIndex("DirectionId");
 
                     b.HasIndex("TeacherId");
 
-                    b.HasIndex("YearsId");
+                    b.HasIndex("YearId");
 
                     b.ToTable("EduPrograms");
                 });
@@ -234,9 +234,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.EduProgram", b =>
                 {
-                    b.HasOne("Domain.Entities.Direction", "Directopn")
+                    b.HasOne("Domain.Entities.Direction", "Direction")
                         .WithMany()
-                        .HasForeignKey("DirectopnId")
+                        .HasForeignKey("DirectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -246,17 +246,17 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.EduYear", "Years")
+                    b.HasOne("Domain.Entities.EduYear", "Year")
                         .WithMany()
-                        .HasForeignKey("YearsId")
+                        .HasForeignKey("YearId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Directopn");
+                    b.Navigation("Direction");
 
                     b.Navigation("Teacher");
 
-                    b.Navigation("Years");
+                    b.Navigation("Year");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProgramVersion", b =>

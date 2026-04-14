@@ -1,5 +1,6 @@
 ﻿using Application.DTO;
 using CSharpFunctionalExtensions;
+using Domain.Entities;
 
 namespace Application.Services.Definitions
 {
@@ -7,9 +8,17 @@ namespace Application.Services.Definitions
     {
         public Task<Result> CreateUser(CreateUserDTO userInfo, CancellationToken cancellationToken);
 
-        public Task DeleteUser();
+        public Task<Result> DeleteUser(Guid userId, CancellationToken cancellationToken);
 
-        public Task DeactivateUser();
-        
+        public Task<Result> ChangeUserActivation(Guid userId, bool isActive, CancellationToken cancellationToken);
+
+        public Task<Result<string>> ResetPassword(Guid userId, CancellationToken cancellationToken);
+
+        public Task<Result<List<GetUserDTO>>> GetUsers(int page, int size, CancellationToken cancellationToken);
+
+
+        public Task<Result> ChangeEmail(Guid userId, string newEmail, CancellationToken cancellationToken);
+
+
     }
 }

@@ -19,7 +19,7 @@ namespace Presentation.Controllers
             _authSettings = authSettings;
         }
 
-        [HttpGet("/checkauth")]
+        [HttpGet("checkauth")]
         public async Task<IActionResult> CheckAuth()
         {
             if (User.Identity?.IsAuthenticated == true)
@@ -30,7 +30,7 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpGet("/logout")]
+        [HttpGet("logout")]
         public async Task<IActionResult> Logout()
         {
             Response.Cookies.Delete(_authSettings.Value.CookieNameForToken);
@@ -38,7 +38,7 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public async Task<IActionResult> LoginUser(string login, string password, CancellationToken cancellationToken)
         {
             var result = await _service.LoginUser(login, password, cancellationToken);

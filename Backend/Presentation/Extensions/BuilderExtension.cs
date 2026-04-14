@@ -1,6 +1,9 @@
 ﻿using Application.Abstractions.Files;
+using Application.Abstractions.Notifications;
 using Application.Abstractions.Repositories;
+using Application.Abstractions.Repositories.Builders;
 using Application.Abstractions.Settings;
+using Application.Features.EduProgram.Commands.Create;
 using Application.Helpers;
 using Application.Services.Definitions;
 using Application.Services.Implementations;
@@ -8,6 +11,7 @@ using Domain.Entities;
 using Infrastructure.Database;
 using Infrastructure.Database.Repositories;
 using Infrastructure.Files;
+using Infrastructure.Notifications;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -36,6 +40,20 @@ namespace Presentation.Extensions
             _services.Configure<AuthTokenSettings>(_configuration.GetSection("AuthenticationSettings"));
             _services.Configure<MinioSettings>(_configuration.GetSection("MinioS3"));
 
+            _services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
+            
+
+
             _services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
@@ -53,13 +71,15 @@ namespace Presentation.Extensions
             _services.AddControllers();
             _services.AddEndpointsApiExplorer();
 
-            string? connectionDB = _configuration?.GetConnectionString("DefaultConnectionDataBaseDocker");
+            string? connectionDB = _configuration?.GetConnectionString("DefaultConnectionDataBase");
 
             _services.AddDbContext<AppDBContext>(options => options.UseNpgsql(connectionDB));
 
             _services.AddScoped<IBaseRepository<Direction>, BaseRepository<Direction>>();
             _services.AddScoped<IBaseRepository<EduYear>, BaseRepository<EduYear>>();
             _services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
+            _services.AddScoped<IBaseRepository<EduProgram>, BaseRepository<EduProgram>>();
+
             _services.AddScoped<IUserRepository, UserRepository>();
 
             _services.AddScoped<ServiceResult>();
@@ -90,7 +110,11 @@ namespace Presentation.Extensions
             _services.AddAutoMapper(cfg => { }, typeof(Application.MappingProfiles.UserProfile));
 
 
-            
+            _services.AddScoped<INotification, EmailService>();
+            _services.AddScoped<IProgramQueryBuilder, IProgramQueryBuilder>();
+            _services.AddScoped<IProgramRepository, ProgramRepository>();
+
+            _services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProgramCommand).Assembly));
 
         }
 

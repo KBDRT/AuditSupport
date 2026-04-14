@@ -11,6 +11,8 @@ namespace Application.MappingProfiles
         {
             CreateMap<CreateUserDTO, User>()
                 .ForMember(dest => dest.Initials, opt => opt.MapFrom(src => new PersonInitials() { Name = src.Name, Surname = src.Surname, Patronymic = src.Patronymic }));
+
+            CreateMap<User, GetUserDTO>();
         }
     }
 }
