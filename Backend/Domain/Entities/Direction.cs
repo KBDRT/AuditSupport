@@ -8,7 +8,7 @@ namespace Domain.Entities
         public string ShortName { get; set; }  = string.Empty;
         public string Description { get; set; } = string.Empty;
 
-        public List<EduProgram> Programs = [];
+        public List<ProgramVersion> Programs = [];
 
     }
 }

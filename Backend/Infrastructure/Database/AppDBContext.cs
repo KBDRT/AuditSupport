@@ -1,6 +1,5 @@
 ﻿//using Infrastructure.Database.Configurations;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 using Domain.Entities;
 
 namespace Infrastructure.Database
@@ -13,11 +12,14 @@ namespace Infrastructure.Database
 
         public DbSet<EduYear> EduYears { get; set; } = null!;
 
-        public DbSet<Check> Checks { get; set; } = null!;
+        public DbSet<ProgramReview> Reviews { get; set; } = null!;
 
         public DbSet<EduProgram> EduPrograms { get; set; } = null!;
 
         public DbSet<ProgramVersion> ProgramVersions { get; set; } = null!;
+
+        public DbSet<ProgramHistory> ProgramHistories { get; set; } = null!;
+
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {

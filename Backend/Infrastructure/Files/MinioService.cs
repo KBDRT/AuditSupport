@@ -21,6 +21,7 @@ namespace Infrastructure.Files
             _bucketName = _settings.DefaultBucketName;
         }
 
+        public void SetBucket(string bucketName) => _bucketName = bucketName;   
 
         public async Task<Stream> GetFile(string fileNameInMinio)
         {
@@ -60,7 +61,7 @@ namespace Infrastructure.Files
                 fileStream.Position = 0;
                 await _minioClient.PutObjectAsync(args).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex) 
             {
                 throw new Exception("[MinioProblem]");
             }

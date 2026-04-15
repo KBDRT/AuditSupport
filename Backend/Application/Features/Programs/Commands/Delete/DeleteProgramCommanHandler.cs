@@ -2,20 +2,20 @@
 using CSharpFunctionalExtensions;
 using MediatR;
 
-namespace Application.Features.EduProgram.Commands.Delete
+namespace Application.Features.Programs.Commands.Delete
 {
     public class DeleteProgramCommandHandler : IRequestHandler<DeleteProgramCommand, Result>
     {
-        private readonly IBaseRepository<Domain.Entities.EduProgram> _repository;
+        private readonly IBaseRepository<Domain.Entities.ProgramVersion> _repository;
 
-        public DeleteProgramCommandHandler(IBaseRepository<Domain.Entities.EduProgram> repository)
+        public DeleteProgramCommandHandler(IBaseRepository<Domain.Entities.ProgramVersion> repository)
         {
             _repository = repository;
         }
 
         public async Task<Result> Handle(DeleteProgramCommand request, CancellationToken cancellationToken)
         {
-            await _repository.DeleteByIdAsync(request.ProgramId, cancellationToken);
+            await _repository.DeleteById(request.ProgramId, cancellationToken);
 
             return Result.Success();
         }

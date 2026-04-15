@@ -24,7 +24,7 @@ namespace Domain.Entities
 
         public bool IsOpened { get; set; } = false;
 
-        public List<EduProgram> Programs = [];
+        public List<ProgramVersion> Programs = [];
 
     }
 }

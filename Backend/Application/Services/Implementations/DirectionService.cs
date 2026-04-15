@@ -10,19 +10,17 @@ namespace Application.Services.Implementations
     public class DirectionService : IDirectionService
     {
         private readonly IBaseRepository<Direction> _repository;
-        private readonly ServiceResult _result;
 
-        public DirectionService(IBaseRepository<Direction> directionRepository, ServiceResult result)
+        public DirectionService(IBaseRepository<Direction> directionRepository)
         {
             _repository = directionRepository;
-            _result = result;
         }
 
         public async Task<Result<Guid>> Create(string name, string shortName, string description, CancellationToken cancellationToken)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                _result.AddMessage("Empty name");
+                //_result.AddMessage("Empty name");
                 return Result.Failure<Guid>("Error");
             }
 
@@ -34,7 +32,7 @@ namespace Application.Services.Implementations
                 Id = Guid.NewGuid(),
             };
 
-            var newGuid = await _repository.AddNewAsync(newDirection, cancellationToken);
+            var newGuid = await _repository.AddNew(newDirection, cancellationToken);
             return Result.Success(newGuid);
         }
 
@@ -42,25 +40,25 @@ namespace Application.Services.Implementations
         {
             if (directionId == Guid.Empty)
             {
-                _result.AddMessage("Empty id");
-                _result.SetStatusCode(400);
+                //_result.AddMessage("Empty id");
+                //_result.SetStatusCode(400);
                 return Result.Failure<Guid>("Error");
             }
 
-            await _repository.DeleteByIdAsync(directionId, cancellationToken);
+            await _repository.DeleteById(directionId, cancellationToken);
             return Result.Success();
         }
 
         public async Task<Result<List<Direction>>> Get(CancellationToken cancellationToken)
         {
-            var directions = await _repository.GetAllAsync(cancellationToken) ?? [];
+            var directions = await _repository.GetAll(cancellationToken) ?? [];
 
             return Result.Success(directions);
         }
 
         public async Task<Result> Update(Direction direction, CancellationToken cancellationToken)
         {
-            await _repository.UpdateAsync(direction, cancellationToken);
+            await _repository.Update(direction, cancellationToken);
 
             return Result.Success();
         }

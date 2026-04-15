@@ -8,9 +8,8 @@ namespace Presentation.Controllers
     [Route("[controller]")]
     [ApiController]
     //[Authorize(Policy = "RoleAdmin")]
-    public class DirectionController(ServiceResult result, IDirectionService service) : ControllerBase
+    public class DirectionController(IDirectionService service) : ControllerBase
     {
-        private readonly ServiceResult _serviceResult = result;
         private readonly IDirectionService _service = service;
 
         [HttpPost]

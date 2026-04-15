@@ -1,18 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
-using Domain.Entities;
-using Domain.Values;
 using MediatR;
 
-namespace Application.Features.EduProgram.Commands.Create
+namespace Application.Features.Programs.Commands.Update
 {
-    public record CreateProgramCommand
+    public record UpdateProgramCommand
     (
-        Guid TeacherId,
+        Guid ProgramId,
         string Name,
         string AgesOfChildrens,
         double Duration,
-        Guid YearId,
         Guid DirectionId
     ) : IRequest<Result>;
 }
-

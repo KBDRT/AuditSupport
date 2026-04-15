@@ -9,18 +9,16 @@ namespace Application.Services.Implementations
     public class EduYearService : IEduYearService
     {
         private readonly IBaseRepository<EduYear> _repository;
-        private readonly ServiceResult _result;
 
-        public EduYearService(IBaseRepository<EduYear> repository, ServiceResult result)
+        public EduYearService(IBaseRepository<EduYear> repository)
         {
             _repository = repository;
-            _result = result;
         }
 
 
         public async Task<Result> ChangeStatus(Guid yearId, bool isOpenYear, CancellationToken cancellationToken)
         {
-            var oldEduYear = await _repository.GetByIdAsync(yearId, cancellationToken);
+            var oldEduYear = await _repository.GetById(yearId, cancellationToken);
             
             if (oldEduYear == null)
             {
@@ -28,7 +26,7 @@ namespace Application.Services.Implementations
             }
             
             oldEduYear?.IsOpened = isOpenYear;
-            await _repository.UpdateAsync(oldEduYear, cancellationToken);
+            await _repository.Update(oldEduYear, cancellationToken);
 
             return Result.Success();
         }
@@ -37,7 +35,7 @@ namespace Application.Services.Implementations
         {
             if (startYear <= 2000)
             {
-                _result.AddMessage("Incorrect id");
+                //_result.AddMessage("Incorrect id");
                 return Result.Failure<Guid>("Error");
             }
 
@@ -49,7 +47,7 @@ namespace Application.Services.Implementations
                 Description = description,
             };
 
-            var newGuid = await _repository.AddNewAsync(newEduYear, cancellationToken);
+            var newGuid = await _repository.AddNew(newEduYear, cancellationToken);
             return Result.Success(newGuid);
         }
 
@@ -57,25 +55,25 @@ namespace Application.Services.Implementations
         {
             if (yearId == Guid.Empty)
             {
-                _result.AddMessage("Empty id");
-                _result.SetStatusCode(400);
+                //_result.AddMessage("Empty id");
+                //_result.SetStatusCode(400);
                 return Result.Failure<Guid>("Error");
             }
 
-            await _repository.DeleteByIdAsync(yearId, cancellationToken);
+            await _repository.DeleteById(yearId, cancellationToken);
             return Result.Success();
         }
 
         public async Task<Result<List<EduYear>>> Get(CancellationToken cancellationToken)
         {
-            var directions = await _repository.GetAllAsync(cancellationToken) ?? [];
+            var directions = await _repository.GetAll(cancellationToken) ?? [];
 
             return Result.Success(directions);
         }
 
         public async Task<Result> Update(EduYear year, CancellationToken cancellationToken)
         {
-            await _repository.UpdateAsync(year, cancellationToken);
+            await _repository.Update(year, cancellationToken);
 
             return Result.Success();
         }

@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Repositories.Builders;
+using Application.DTO;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using System.Net.NetworkInformation;
 
 namespace Infrastructure.Database.Repositories.Builders
 {
@@ -17,6 +17,12 @@ namespace Infrastructure.Database.Repositories.Builders
         {
             _context = context;
             _query = _context.EduPrograms;
+        }
+
+        public IProgramQueryBuilder ForId(Guid programId)
+        {
+            _query = _query.Where(x => x.Id == programId);
+            return this;
         }
 
         public IProgramQueryBuilder ForYear(Guid yearId)
@@ -67,15 +73,21 @@ namespace Infrastructure.Database.Repositories.Builders
             return this;
         }
 
-
-        public async Task<List<EduProgram>> ExecuteAsync()
+        public IProgramQueryBuilder UsePagination(PaginationDTO pagination)
         {
-            return await _query.ToListAsync();
+            _query = _query.Skip((pagination.Page - 1) * pagination.Size)
+                           .Take(pagination.Size);
+            return this;
         }
 
-        public async Task<EduProgram?> SingleOrDefaultAsync()
+        public async Task<List<EduProgram>> ToListAsync(CancellationToken cancellationToken)
         {
-            return await _query.SingleOrDefaultAsync();
+            return await _query.ToListAsync(cancellationToken);
+        }
+
+        public async Task<EduProgram?> SingleOrDefaultAsync(CancellationToken cancellationToken)
+        {
+            return await _query.SingleOrDefaultAsync(cancellationToken);
         }
 
 

@@ -1,4 +1,5 @@
-﻿using Application.DTO;
+﻿using Application.Common;
+using Application.DTO;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 
@@ -6,7 +7,7 @@ namespace Application.Services.Definitions
 {
     public interface IAdminService
     {
-        public Task<Result> CreateUser(CreateUserDTO userInfo, CancellationToken cancellationToken);
+        public Task<UnitResult<ServiceError>> CreateUser(CreateUserDTO userInfo, CancellationToken cancellationToken);
 
         public Task<Result> DeleteUser(Guid userId, CancellationToken cancellationToken);
 

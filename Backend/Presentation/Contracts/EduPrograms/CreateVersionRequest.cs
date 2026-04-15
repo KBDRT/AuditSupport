@@ -2,7 +2,9 @@
 {
     public record CreateVersionRequest
     (
-        IFormFile? file   
+        Guid ProgramId,
+        string Changes,
+        IFormFile File
     );
 
 }

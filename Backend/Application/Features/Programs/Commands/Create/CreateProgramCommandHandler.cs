@@ -1,21 +1,22 @@
 ﻿using Application.Abstractions.Repositories;
 using CSharpFunctionalExtensions;
+using Domain.Entities;
 using MediatR;
 
-namespace Application.Features.EduProgram.Commands.Create
+namespace Application.Features.Programs.Commands.Create
 {
     public class CreateProgramCommandHandler : IRequestHandler<CreateProgramCommand, Result>
     {
-        private readonly IBaseRepository<Domain.Entities.EduProgram> _repository;
+        private readonly IBaseRepository<EduProgram> _repository;
 
-        public CreateProgramCommandHandler(IBaseRepository<Domain.Entities.EduProgram> repository)
+        public CreateProgramCommandHandler(IBaseRepository<EduProgram> repository)
         {
             _repository = repository;
         }
 
         public async Task<Result> Handle(CreateProgramCommand request, CancellationToken cancellationToken)
         {
-            Domain.Entities.EduProgram program = new()
+            EduProgram program = new()
             {
                 AgesOfChildrens = request.AgesOfChildrens,
                 DirectionId = request.DirectionId,
@@ -26,7 +27,7 @@ namespace Application.Features.EduProgram.Commands.Create
                 YearId = request.YearId,
             };
 
-            await _repository.AddNewAsync(program, cancellationToken);
+            await _repository.AddNew(program, cancellationToken);
 
             return Result.Success();
         }

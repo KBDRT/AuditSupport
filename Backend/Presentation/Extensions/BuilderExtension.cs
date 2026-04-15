@@ -3,13 +3,14 @@ using Application.Abstractions.Notifications;
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Repositories.Builders;
 using Application.Abstractions.Settings;
-using Application.Features.EduProgram.Commands.Create;
+using Application.Features.Programs.Commands.Create;
 using Application.Helpers;
 using Application.Services.Definitions;
 using Application.Services.Implementations;
 using Domain.Entities;
 using Infrastructure.Database;
 using Infrastructure.Database.Repositories;
+using Infrastructure.Database.Repositories.Builders;
 using Infrastructure.Files;
 using Infrastructure.Notifications;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,11 +79,13 @@ namespace Presentation.Extensions
             _services.AddScoped<IBaseRepository<Direction>, BaseRepository<Direction>>();
             _services.AddScoped<IBaseRepository<EduYear>, BaseRepository<EduYear>>();
             _services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
+            _services.AddScoped<IBaseRepository<ProgramVersion>, BaseRepository<ProgramVersion>>();
             _services.AddScoped<IBaseRepository<EduProgram>, BaseRepository<EduProgram>>();
+            _services.AddScoped<IBaseRepository<ProgramReview>, BaseRepository<ProgramReview>>();
+            _services.AddScoped<IBaseRepository<ProgramHistory>, BaseRepository<ProgramHistory>>();
 
             _services.AddScoped<IUserRepository, UserRepository>();
 
-            _services.AddScoped<ServiceResult>();
 
             _services.AddScoped<IDirectionService, DirectionService>();
             _services.AddScoped<IEduYearService, EduYearService>();
@@ -111,8 +114,10 @@ namespace Presentation.Extensions
 
 
             _services.AddScoped<INotification, EmailService>();
-            _services.AddScoped<IProgramQueryBuilder, IProgramQueryBuilder>();
+            _services.AddScoped<IProgramQueryBuilder, ProgramQueryBuilder>();
             _services.AddScoped<IProgramRepository, ProgramRepository>();
+            _services.AddScoped<IProgramVersionRepository, ProgramVersionRepository>();
+            _services.AddScoped<IProgramHistoryRepository, ProgramHistoryRepository>();
 
             _services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProgramCommand).Assembly));
 

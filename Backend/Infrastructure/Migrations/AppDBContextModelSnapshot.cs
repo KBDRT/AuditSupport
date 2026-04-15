@@ -22,42 +22,6 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Check", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AuditorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CheckId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Commentary")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsSuccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("ProgramId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuditorId");
-
-                    b.HasIndex("CheckId");
-
-                    b.HasIndex("ProgramId");
-
-                    b.ToTable("Checks");
-                });
-
             modelBuilder.Entity("Domain.Entities.Direction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -104,7 +68,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ProgramStatuses")
+                    b.Property<int>("ProgramStatus")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("TeacherId")
@@ -150,6 +114,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("EduYears");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ProgramReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuditorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Commentary")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("ProgramVersionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("VersionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuditorId");
+
+                    b.HasIndex("ProgramVersionId");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("Domain.Entities.ProgramVersion", b =>
                 {
                     b.Property<Guid>("Id")
@@ -166,6 +164,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<double>("FileSize")
+                        .HasColumnType("double precision");
 
                     b.Property<Guid>("ProgramId")
                         .HasColumnType("uuid");
@@ -209,29 +210,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Check", b =>
-                {
-                    b.HasOne("Domain.Entities.User", "Auditor")
-                        .WithMany()
-                        .HasForeignKey("AuditorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Check", null)
-                        .WithMany("Checks")
-                        .HasForeignKey("CheckId");
-
-                    b.HasOne("Domain.Entities.ProgramVersion", "Program")
-                        .WithMany()
-                        .HasForeignKey("ProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Auditor");
-
-                    b.Navigation("Program");
-                });
-
             modelBuilder.Entity("Domain.Entities.EduProgram", b =>
                 {
                     b.HasOne("Domain.Entities.Direction", "Direction")
@@ -257,6 +235,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Teacher");
 
                     b.Navigation("Year");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProgramReview", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "Auditor")
+                        .WithMany()
+                        .HasForeignKey("AuditorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ProgramVersion", "ProgramVersion")
+                        .WithMany()
+                        .HasForeignKey("ProgramVersionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Auditor");
+
+                    b.Navigation("ProgramVersion");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProgramVersion", b =>
@@ -299,11 +296,6 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Initials")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Check", b =>
-                {
-                    b.Navigation("Checks");
                 });
 
             modelBuilder.Entity("Domain.Entities.EduProgram", b =>

@@ -7,9 +7,8 @@ namespace Presentation.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class EduYearController(ServiceResult result, IEduYearService service) : ControllerBase
+    public class EduYearController(IEduYearService service) : ControllerBase
     {
-        private readonly ServiceResult _serviceResult = result;
         private readonly IEduYearService _service = service;
 
         [HttpPost]

@@ -1,21 +1,22 @@
 ﻿using Application.Abstractions.Repositories;
 using CSharpFunctionalExtensions;
+using Domain.Entities;
 using MediatR;
 
-namespace Application.Features.EduProgram.Commands.Update
+namespace Application.Features.Programs.Commands.Update
 {
     public class UpdateProgramCommandHandler : IRequestHandler<UpdateProgramCommand, Result>
     {
-        private readonly IBaseRepository<Domain.Entities.EduProgram> _repository;
+        private readonly IBaseRepository<EduProgram> _repository;
 
-        public UpdateProgramCommandHandler(IBaseRepository<Domain.Entities.EduProgram> repository)
+        public UpdateProgramCommandHandler(IBaseRepository<EduProgram> repository)
         {
             _repository = repository;
         }
 
         public async Task<Result> Handle(UpdateProgramCommand request, CancellationToken cancellationToken)
         {
-            var program = await _repository.GetByIdAsync(request.ProgramId, cancellationToken);
+            var program = await _repository.GetById(request.ProgramId, cancellationToken);
 
             if (program == null)
             {
@@ -27,7 +28,7 @@ namespace Application.Features.EduProgram.Commands.Update
             program.Duration = request.Duration;
             program.DirectionId = request.DirectionId;
 
-            await _repository.UpdateAsync(program, cancellationToken);
+            await _repository.Update(program, cancellationToken);
 
             return Result.Success();
         }

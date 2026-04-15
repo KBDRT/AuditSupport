@@ -19,5 +19,9 @@ namespace Domain.Entities
 
         public ProgramStatuses NewStatus { get; set; }
 
+        public Guid SourceId { get; set; }
+
+        public HistorySourceType SourceType { get; set; }
+
     }
 }

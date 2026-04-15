@@ -1,9 +1,11 @@
-﻿using Application.DTO;
+﻿using Application.Common;
+using Application.DTO;
 using CSharpFunctionalExtensions;
+using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 
-namespace Application.Features.EduProgram.Quaries.GetProgramWithFilter
+namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
 {
     public record GetProgramsWithFilterQuery
     (
@@ -12,5 +14,5 @@ namespace Application.Features.EduProgram.Quaries.GetProgramWithFilter
         PaginationDTO? Pagination,
         List<ProgramStatuses>? Statuses,
         List<Guid>? Directions
-    ) : IRequest<Result>;
+    ) : IRequest<Result<List<EduProgram>,ServiceError>>;
 }

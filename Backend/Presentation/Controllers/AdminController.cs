@@ -9,8 +9,7 @@ namespace Presentation.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [ProducesResponseType(409)]
-    public class AdminController : ControllerBase
+    public class AdminController : BaseController
     {
         private readonly IAdminService _service;
         private readonly IMapper _mapper;
@@ -28,13 +27,9 @@ namespace Presentation.Controllers
         {
             var serviceRequest = _mapper.Map<CreateUserDTO>(request);   
 
-
             var result = await _service.CreateUser(serviceRequest, cancellationToken);
 
-            if (result.IsSuccess)
-                return Ok();
-
-            return Conflict(result.Error);
+            return FromResult(result);
         }
 
 

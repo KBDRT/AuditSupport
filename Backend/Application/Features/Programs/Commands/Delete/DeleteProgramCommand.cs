@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 
-namespace Application.Features.EduProgram.Commands.Delete
+namespace Application.Features.Programs.Commands.Delete
 {
     public record DeleteProgramCommand
     (

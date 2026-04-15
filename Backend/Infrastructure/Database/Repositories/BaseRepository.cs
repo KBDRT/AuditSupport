@@ -15,30 +15,46 @@ namespace Infrastructure.Database.Repositories
             _dbSet = _context.Set<TEntity>();
         }
 
-        public async Task<Guid> AddNewAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public async Task<Guid> AddNew(TEntity entity, CancellationToken cancellationToken = default, SaveToDb saveToDb = SaveToDb.SaveNow)
         {
             await _dbSet.AddAsync(entity, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+
+            if (saveToDb == SaveToDb.SaveNow)
+            {
+                await SaveChanges(cancellationToken);
+            }
+
             return entity.Id;
         }
 
-        public async Task AddNewRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+        public async Task AddNewRange(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, SaveToDb saveToDb = SaveToDb.SaveNow)
         {
             await _dbSet.AddRangeAsync(entities, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+
+            if (saveToDb == SaveToDb.SaveNow)
+            {
+                await SaveChanges(cancellationToken);
+            }
         }
 
-        public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteById(Guid id, CancellationToken cancellationToken = default, SaveToDb saveToDb = SaveToDb.SaveNow)
         {
-            await _dbSet.Where(x => x.Id == id).ExecuteDeleteAsync(cancellationToken);
+            var entity = await _dbSet.FindAsync([id], cancellationToken);
+            if (entity == null)
+                return;
+
+            _dbSet.Remove(entity);
+
+            if (saveToDb == SaveToDb.SaveNow)
+                await SaveChanges(cancellationToken);
         }
 
-        public async Task<List<TEntity>?> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<List<TEntity>?> GetAll(CancellationToken cancellationToken = default)
         {
             return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<TEntity?> GetById(Guid id, CancellationToken cancellationToken = default)
         {
             return await _dbSet.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
@@ -48,7 +64,7 @@ namespace Infrastructure.Database.Repositories
             return _dbSet.AsNoTracking().Count();
         }
 
-        public async Task<List<TEntity>?> GetWithPaginationAsync(int page, int size, CancellationToken cancellationToken = default)
+        public async Task<List<TEntity>?> GetWithPagination(int page, int size, CancellationToken cancellationToken = default)
         {
             return await _dbSet
                           .Skip((page - 1) * size)
@@ -56,10 +72,18 @@ namespace Infrastructure.Database.Repositories
                           .ToListAsync(cancellationToken);
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public async Task SaveChanges(CancellationToken cancellationToken = default)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<TEntity> Update(TEntity entity, CancellationToken cancellationToken = default, SaveToDb saveToDb = SaveToDb.SaveNow)
         {
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            if (saveToDb == SaveToDb.SaveNow)
+            {
+                await SaveChanges(cancellationToken);
+            }
             return entity;
         }
     }
