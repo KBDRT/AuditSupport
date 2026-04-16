@@ -12,9 +12,10 @@ import type {
 } from 'axios';
 
 import type {
+  CreateDirectionRequest,
   DeleteDirectionParams,
   Direction,
-  PostDirectionParams
+  UpdateDirectionRequest
 } from '../models';
 
 
@@ -22,24 +23,24 @@ import type {
 
   export const getDirection = (axiosInstance: AxiosInstance = axios.default) => {
 const postDirection = (
-    params?: PostDirectionParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+    createDirectionRequest: CreateDirectionRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<string>> => {
     return axiosInstance.post(
-      `/Direction`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
+      `/Direction`,
+      createDirectionRequest,{
+    ...options,}
     );
   }
 const getDirection = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<Direction[]>> => {
     return axiosInstance.get(
       `/Direction`,options
     );
   }
 const deleteDirection = (
     params?: DeleteDirectionParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.delete(
       `/Direction`,{
     ...options,
@@ -47,15 +48,15 @@ const deleteDirection = (
     );
   }
 const putDirection = (
-    direction: Direction, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+    updateDirectionRequest: UpdateDirectionRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.put(
       `/Direction`,
-      direction,options
+      updateDirectionRequest,options
     );
   }
 return {postDirection,getDirection,deleteDirection,putDirection}};
-export type PostDirectionResult = AxiosResponse<void>
-export type GetDirectionResult = AxiosResponse<void>
-export type DeleteDirectionResult = AxiosResponse<void>
-export type PutDirectionResult = AxiosResponse<void>
+export type PostDirectionResult = AxiosResponse<string>
+export type GetDirectionResult = AxiosResponse<Direction[]>
+export type DeleteDirectionResult = AxiosResponse<unknown>
+export type PutDirectionResult = AxiosResponse<unknown>

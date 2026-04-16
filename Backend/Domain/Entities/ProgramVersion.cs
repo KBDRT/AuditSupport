@@ -12,8 +12,6 @@ namespace Domain.Entities
 
         public string Changes { get; set; } = string.Empty;
 
-        public string FileName { get; set; } = string.Empty;
-
         public double FileSize { get; set; }
 
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;

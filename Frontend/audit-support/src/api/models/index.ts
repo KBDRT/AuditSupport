@@ -5,15 +5,31 @@
  * OpenAPI spec version: v1
  */
 
+export * from './changeProgramStatusCommand';
+export * from './changeUserActivationRequest';
+export * from './changeUserEmailRequest';
+export * from './changeYearStatusRequest';
+export * from './createDirectionRequest';
+export * from './createProgramCommand';
+export * from './createReviewCommand';
 export * from './createUserRequest';
+export * from './createYearRequest';
+export * from './deleteAdminUsersParams';
 export * from './deleteDirectionParams';
 export * from './deleteEduYearParams';
+export * from './deleteProgramCommand';
+export * from './deleteReviewCommand';
 export * from './direction';
-export * from './eduYear';
-export * from './patchEduYearParams';
-export * from './postDirectionParams';
-export * from './postEduProgramBody';
-export * from './postEduYearParams';
-export * from './postLoginParams';
+export * from './getAdminUsersParams';
+export * from './getEduProgramParams';
+export * from './getUserDTO';
+export * from './loginUserRequest';
+export * from './personInitials';
+export * from './postEduProgramVersionBody';
 export * from './problemDetails';
+export * from './programStatuses';
 export * from './roles';
+export * from './updateDirectionRequest';
+export * from './updateProgramCommand';
+export * from './updateReviewCommand';
+export * from './updateYearRequest';

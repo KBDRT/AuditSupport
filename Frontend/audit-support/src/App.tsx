@@ -1,11 +1,12 @@
-import Login from '@/pages/auth/LoginPage'
-import DirectionPage from './pages/direction/DirectionPage'
+import AdminPage from './pages/admin/AdminPage'
+import Header from './components/common/Header'
 
 function App() {
 
   return (
     <>
-      <DirectionPage />
+      <Header></Header>
+      <AdminPage></AdminPage>
     </>
   )
 }
@@ -13,9 +14,3 @@ function App() {
 export default App
 
 
-    // <DirectionPage>
-
-    // </DirectionPage>
-    // <Login>
-
-    // </Login>

@@ -12,37 +12,36 @@ import type {
 } from 'axios';
 
 import type {
-  PostLoginParams
+  LoginUserRequest
 } from '../models';
 
 
 
 
   export const getAuth = (axiosInstance: AxiosInstance = axios.default) => {
-const getCheckauth = (
+const getAuthCheckAuth = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.get(
-      `/checkauth`,options
+      `/Auth/CheckAuth`,options
     );
   }
-const getLogout = (
+const postAuthLogout = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    return axiosInstance.get(
-      `/logout`,options
-    );
-  }
-const postLogin = (
-    params?: PostLoginParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.post(
-      `/login`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
+      `/Auth/Logout`,undefined,options
     );
   }
-return {getCheckauth,getLogout,postLogin}};
-export type GetCheckauthResult = AxiosResponse<void>
-export type GetLogoutResult = AxiosResponse<void>
-export type PostLoginResult = AxiosResponse<void>
+const postAuthLogin = (
+    loginUserRequest: LoginUserRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.post(
+      `/Auth/Login`,
+      loginUserRequest,options
+    );
+  }
+return {getAuthCheckAuth,postAuthLogout,postAuthLogin}};
+export type GetAuthCheckAuthResult = AxiosResponse<unknown>
+export type PostAuthLogoutResult = AxiosResponse<unknown>
+export type PostAuthLoginResult = AxiosResponse<unknown>

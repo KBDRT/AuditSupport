@@ -1,14 +1,16 @@
-﻿using Application.DTO;
+﻿using Application.DTO.Common;
+using Application.DTO.Users;
 using Application.Services.Definitions;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Contracts.Common;
 using Presentation.Contracts.User;
-using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/Users")]
     [ApiController]
+   
     public class AdminController : BaseController
     {
         private readonly IAdminService _service;
@@ -22,7 +24,8 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpPost("Register")]
+        [HttpPost]
+        [ProducesResponseType(typeof(Guid), 200)]
         public async Task<IActionResult> RegisterUser(CreateUserRequest request, CancellationToken cancellationToken)
         {
             var serviceRequest = _mapper.Map<CreateUserDTO>(request);   
@@ -33,61 +36,50 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpDelete("Delete")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser(Guid userId, CancellationToken cancellationToken)
         {
             var result = await _service.DeleteUser(userId, cancellationToken);
 
-            if (result.IsSuccess)
-                return Ok();
-
-            return Conflict(result.Error);
+            return FromResult(result);
         }
 
 
         [HttpPatch("Activation")]
-        public async Task<IActionResult> ChangeActivationUser(Guid userId, bool isActive, CancellationToken cancellationToken)
+        public async Task<IActionResult> ChangeActivationUser(ChangeUserActivationRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.ChangeUserActivation(userId, isActive, cancellationToken);
+            var dto = _mapper.Map<ChangeUserActivationDTO>(request);
 
-            if (result.IsSuccess)
-                return Ok();
-
-            return Conflict(result.Error);
+            var result = await _service.ChangeUserActivation(dto, cancellationToken);
+            return FromResult(result);
         }
 
-        [HttpGet("ResetPassword")]
+        [HttpGet("{userId}")]
+        [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> ResetPassword(Guid userId, CancellationToken cancellationToken)
         {
             var result = await _service.ResetPassword(userId, cancellationToken);
-
-            if (result.IsSuccess)
-                return Ok(result.Value);
-
-            return Conflict(result.Error);
+            return FromResult(result);
         }
 
 
-        [HttpGet("Users")]
-        public async Task<IActionResult> GetUsers(int page, int size, CancellationToken cancellationToken)
+        [HttpGet]
+        [ProducesResponseType(typeof(List<GetUserDTO>), 200)]
+        public async Task<IActionResult> GetUsers([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.GetUsers(page, size, cancellationToken);
+            var dto = _mapper.Map<PaginationDTO>(request);
 
-            if (result.IsSuccess)
-                return Ok(result.Value);
-
-            return Conflict(result.Error);
+            var result = await _service.GetUsers(dto, cancellationToken);
+            return FromResult(result);
         }
 
-        [HttpPatch("ChangeEmail")]
-        public async Task<IActionResult> ChangeUserEmail(Guid userId, [EmailAddress] string newEmail, CancellationToken cancellationToken)
+        [HttpPatch("Email")]
+        public async Task<IActionResult> ChangeUserEmail(ChangeUserEmailRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.ChangeEmail(userId, newEmail, cancellationToken);
+            var dto = _mapper.Map<ChangeUserEmailDTO>(request);
 
-            if (result.IsSuccess)
-                return Ok();
-
-            return Conflict(result.Error);
+            var result = await _service.ChangeEmail(dto, cancellationToken);
+            return FromResult(result);
         }
 
     }

@@ -12,62 +12,34 @@ import type {
 } from 'axios';
 
 import type {
+  ChangeYearStatusRequest,
+  CreateYearRequest,
   DeleteEduYearParams,
-  EduYear,
-  PatchEduYearParams,
-  PostEduYearParams
+  UpdateYearRequest
 } from '../models';
-
-
-// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
-type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
-T,
->() => T extends Y ? 1 : 2
-? A
-: B;
-
-type WritableKeys<T> = {
-[P in keyof T]-?: IfEquals<
-  { [Q in P]: T[P] },
-  { -readonly [Q in P]: T[P] },
-  P
->;
-}[keyof T];
-
-type UnionToIntersection<U> =
-  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
-type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
-
-type Writable<T> = Pick<T, WritableKeys<T>>;
-type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
-  [P in keyof Writable<T>]: T[P] extends object
-    ? NonReadonly<NonNullable<T[P]>>
-    : T[P];
-} : DistributeReadOnlyOverUnions<T>;
 
 
 
 
   export const getEduYear = (axiosInstance: AxiosInstance = axios.default) => {
 const postEduYear = (
-    params?: PostEduYearParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+    createYearRequest: CreateYearRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.post(
-      `/EduYear`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
+      `/EduYear`,
+      createYearRequest,options
     );
   }
 const getEduYear = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.get(
       `/EduYear`,options
     );
   }
 const deleteEduYear = (
     params?: DeleteEduYearParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.delete(
       `/EduYear`,{
     ...options,
@@ -75,25 +47,24 @@ const deleteEduYear = (
     );
   }
 const putEduYear = (
-    eduYear: NonReadonly<EduYear>, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+    updateYearRequest: UpdateYearRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.put(
       `/EduYear`,
-      eduYear,options
+      updateYearRequest,options
     );
   }
 const patchEduYear = (
-    params?: PatchEduYearParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+    changeYearStatusRequest: ChangeYearStatusRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.patch(
-      `/EduYear`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
+      `/EduYear`,
+      changeYearStatusRequest,options
     );
   }
 return {postEduYear,getEduYear,deleteEduYear,putEduYear,patchEduYear}};
-export type PostEduYearResult = AxiosResponse<void>
-export type GetEduYearResult = AxiosResponse<void>
-export type DeleteEduYearResult = AxiosResponse<void>
-export type PutEduYearResult = AxiosResponse<void>
-export type PatchEduYearResult = AxiosResponse<void>
+export type PostEduYearResult = AxiosResponse<unknown>
+export type GetEduYearResult = AxiosResponse<unknown>
+export type DeleteEduYearResult = AxiosResponse<unknown>
+export type PutEduYearResult = AxiosResponse<unknown>
+export type PatchEduYearResult = AxiosResponse<unknown>

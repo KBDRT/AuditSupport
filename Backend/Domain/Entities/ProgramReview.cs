@@ -16,5 +16,7 @@ namespace Domain.Entities
 
         public bool IsSuccess { get; set; } = false;
 
+        public double FileSize { get; set; }
+
     }
 }

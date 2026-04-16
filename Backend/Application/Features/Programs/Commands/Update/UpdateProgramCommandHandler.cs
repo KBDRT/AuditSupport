@@ -1,11 +1,12 @@
 ﻿using Application.Abstractions.Repositories;
+using Application.Common;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Programs.Commands.Update
 {
-    public class UpdateProgramCommandHandler : IRequestHandler<UpdateProgramCommand, Result>
+    public class UpdateProgramCommandHandler : IRequestHandler<UpdateProgramCommand, UnitResult<ServiceError>>
     {
         private readonly IBaseRepository<EduProgram> _repository;
 
@@ -14,13 +15,13 @@ namespace Application.Features.Programs.Commands.Update
             _repository = repository;
         }
 
-        public async Task<Result> Handle(UpdateProgramCommand request, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> Handle(UpdateProgramCommand request, CancellationToken cancellationToken)
         {
             var program = await _repository.GetById(request.ProgramId, cancellationToken);
 
             if (program == null)
             {
-                return Result.Failure("Not found!");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
             }
 
             program.Name = request.Name;
@@ -30,7 +31,7 @@ namespace Application.Features.Programs.Commands.Update
 
             await _repository.Update(program, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
     }
 }

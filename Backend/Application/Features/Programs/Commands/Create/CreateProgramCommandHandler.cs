@@ -1,11 +1,12 @@
 ﻿using Application.Abstractions.Repositories;
+using Application.Common;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Programs.Commands.Create
 {
-    public class CreateProgramCommandHandler : IRequestHandler<CreateProgramCommand, Result>
+    public class CreateProgramCommandHandler : IRequestHandler<CreateProgramCommand, UnitResult<ServiceError>>
     {
         private readonly IBaseRepository<EduProgram> _repository;
 
@@ -14,7 +15,7 @@ namespace Application.Features.Programs.Commands.Create
             _repository = repository;
         }
 
-        public async Task<Result> Handle(CreateProgramCommand request, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> Handle(CreateProgramCommand request, CancellationToken cancellationToken)
         {
             EduProgram program = new()
             {
@@ -29,7 +30,7 @@ namespace Application.Features.Programs.Commands.Create
 
             await _repository.AddNew(program, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
     }
 }

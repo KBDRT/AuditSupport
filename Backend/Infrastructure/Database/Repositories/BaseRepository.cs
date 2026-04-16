@@ -67,6 +67,7 @@ namespace Infrastructure.Database.Repositories
         public async Task<List<TEntity>?> GetWithPagination(int page, int size, CancellationToken cancellationToken = default)
         {
             return await _dbSet
+                          .OrderBy(x => x.Id)
                           .Skip((page - 1) * size)
                           .Take(size)
                           .ToListAsync(cancellationToken);

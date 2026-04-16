@@ -1,4 +1,4 @@
-﻿using Application.DTO;
+﻿using Application.DTO.Common;
 using Domain.Entities;
 using Domain.Enums;
 

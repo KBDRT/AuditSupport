@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Repositories.Builders;
-using Application.DTO;
+using Application.DTO.Common;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -75,7 +75,8 @@ namespace Infrastructure.Database.Repositories.Builders
 
         public IProgramQueryBuilder UsePagination(PaginationDTO pagination)
         {
-            _query = _query.Skip((pagination.Page - 1) * pagination.Size)
+            _query = _query.OrderBy(x => x.Id)
+                           .Skip((pagination.Page - 1) * pagination.Size)
                            .Take(pagination.Size);
             return this;
         }

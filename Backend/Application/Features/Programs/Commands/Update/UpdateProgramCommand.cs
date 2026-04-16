@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Application.Common;
+using CSharpFunctionalExtensions;
 using MediatR;
 
 namespace Application.Features.Programs.Commands.Update
@@ -10,5 +11,5 @@ namespace Application.Features.Programs.Commands.Update
         string AgesOfChildrens,
         double Duration,
         Guid DirectionId
-    ) : IRequest<Result>;
+    ) : IRequest<UnitResult<ServiceError>>;
 }

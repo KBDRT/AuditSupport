@@ -1,6 +1,5 @@
-﻿using CSharpFunctionalExtensions;
-using Domain.Entities;
-using Domain.Values;
+﻿using Application.Common;
+using CSharpFunctionalExtensions;
 using MediatR;
 
 namespace Application.Features.Programs.Commands.Create
@@ -13,6 +12,6 @@ namespace Application.Features.Programs.Commands.Create
         double Duration,
         Guid YearId,
         Guid DirectionId
-    ) : IRequest<Result>;
+    ) : IRequest<UnitResult<ServiceError>>;
 }
 

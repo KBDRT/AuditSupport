@@ -11,7 +11,7 @@ namespace Infrastructure.Database.Repositories
     {
         public async Task<List<ProgramHistory>> GetByProgramId(Guid programId, CancellationToken cancellationToken = default)
         {
-            await _context.ProgramHistories.Where(x => x.ProgramId == programId).ToListAsync(cancellationToken); 
+            return await _context.ProgramHistories.Where(x => x.ProgramId == programId).ToListAsync(cancellationToken); 
         }
     }
 }

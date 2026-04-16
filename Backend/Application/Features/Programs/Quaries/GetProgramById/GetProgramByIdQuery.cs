@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.DTO.Programs;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using MediatR;
@@ -9,5 +10,5 @@ namespace Application.Features.Programs.Quaries.GetProgramById
     (
         Guid ProgramId
 
-    ) : IRequest<Result<EduProgram, ServiceError>>;
+    ) : IRequest<Result<EduProgramDTO, ServiceError>>;
 }

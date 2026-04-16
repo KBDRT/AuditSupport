@@ -12,7 +12,12 @@ import type {
 } from 'axios';
 
 import type {
-  PostEduProgramBody
+  ChangeProgramStatusCommand,
+  CreateProgramCommand,
+  DeleteProgramCommand,
+  GetEduProgramParams,
+  PostEduProgramVersionBody,
+  UpdateProgramCommand
 } from '../models';
 
 
@@ -20,24 +25,93 @@ import type {
 
   export const getEduProgram = (axiosInstance: AxiosInstance = axios.default) => {
 const postEduProgram = (
-    postEduProgramBody: PostEduProgramBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {const formData = new FormData();
-if(postEduProgramBody.file !== undefined) {
- formData.append(`file`, postEduProgramBody.file);
- }
-
+    createProgramCommand: CreateProgramCommand, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<string>> => {
     return axiosInstance.post(
       `/EduProgram`,
-      formData,options
+      createProgramCommand,{
+    ...options,}
     );
   }
 const getEduProgram = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+    params?: GetEduProgramParams, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
     return axiosInstance.get(
-      `/EduProgram`,options
+      `/EduProgram`,{
+    ...options,
+        params: {...params, ...options?.params},}
     );
   }
-return {postEduProgram,getEduProgram}};
-export type PostEduProgramResult = AxiosResponse<void>
-export type GetEduProgramResult = AxiosResponse<void>
+const patchEduProgram = (
+    updateProgramCommand: UpdateProgramCommand, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.patch(
+      `/EduProgram`,
+      updateProgramCommand,options
+    );
+  }
+const postEduProgramVersion = (
+    postEduProgramVersionBody: PostEduProgramVersionBody, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {const formData = new FormData();
+if(postEduProgramVersionBody.ProgramId !== undefined) {
+ formData.append(`ProgramId`, postEduProgramVersionBody.ProgramId);
+ }
+if(postEduProgramVersionBody.Changes !== undefined) {
+ formData.append(`Changes`, postEduProgramVersionBody.Changes);
+ }
+if(postEduProgramVersionBody.File !== undefined) {
+ formData.append(`File`, postEduProgramVersionBody.File);
+ }
+
+    return axiosInstance.post(
+      `/EduProgram/Version`,
+      formData,options
+    );
+  }
+const getEduProgramVersionFileVersionId = (
+    versionId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.get(
+      `/EduProgram/Version/File/${versionId}`,options
+    );
+  }
+const getEduProgramProgramId = (
+    programId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.get(
+      `/EduProgram/${programId}`,options
+    );
+  }
+const getEduProgramVersionVersionId = (
+    versionId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.get(
+      `/EduProgram/Version/${versionId}`,options
+    );
+  }
+const patchEduProgramStatus = (
+    changeProgramStatusCommand: ChangeProgramStatusCommand, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.patch(
+      `/EduProgram/Status`,
+      changeProgramStatusCommand,options
+    );
+  }
+const deleteEduProgramDelete = (
+    deleteProgramCommand: DeleteProgramCommand, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.delete(
+      `/EduProgram/Delete`,{data:
+      deleteProgramCommand, ...options}
+    );
+  }
+return {postEduProgram,getEduProgram,patchEduProgram,postEduProgramVersion,getEduProgramVersionFileVersionId,getEduProgramProgramId,getEduProgramVersionVersionId,patchEduProgramStatus,deleteEduProgramDelete}};
+export type PostEduProgramResult = AxiosResponse<string>
+export type GetEduProgramResult = AxiosResponse<unknown>
+export type PatchEduProgramResult = AxiosResponse<unknown>
+export type PostEduProgramVersionResult = AxiosResponse<unknown>
+export type GetEduProgramVersionFileVersionIdResult = AxiosResponse<unknown>
+export type GetEduProgramProgramIdResult = AxiosResponse<unknown>
+export type GetEduProgramVersionVersionIdResult = AxiosResponse<unknown>
+export type PatchEduProgramStatusResult = AxiosResponse<unknown>
+export type DeleteEduProgramDeleteResult = AxiosResponse<unknown>

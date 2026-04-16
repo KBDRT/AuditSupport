@@ -1,11 +1,11 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Application.Common;
+using Application.DTO.Users;
+using CSharpFunctionalExtensions;
 
 namespace Application.Services.Definitions
 {
     public interface IAuthService
     {
-        public Task<Result<string>> LoginUser(string login, string password, CancellationToken cancellationToken);
-
-
+        public Task<Result<string, ServiceError>> LoginUser(LoginUserDTO dto, CancellationToken cancellationToken);
     }
 }

@@ -1,77 +1,67 @@
-﻿using Application.Helpers;
+﻿using Application.DTO.Years;
 using Application.Services.Definitions;
-using Domain.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Contracts.Year;
 
 namespace Presentation.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class EduYearController(IEduYearService service) : ControllerBase
+    public class EduYearController : BaseController
     {
-        private readonly IEduYearService _service = service;
+        private readonly IEduYearService _service;
+
+        private readonly IMapper _mapper;
+
+        public EduYearController(IEduYearService service,
+                                 IMapper mapper)
+        {
+            _service = service;
+            _mapper = mapper;
+        }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewTask(int startYear, string description, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddNewYear(CreateYearRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.Create(startYear, description, cancellationToken);
+            var dto = _mapper.Map<CreateYearDTO>(request);
 
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return NotFound();
+            var result = await _service.Create(dto, cancellationToken);
+            return FromResult(result);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetTasks(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetYears(CancellationToken cancellationToken)
         {
             var result = await _service.Get(cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return NotFound();
+            return FromResult(result);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteTask(Guid guid, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteYear(Guid guid, CancellationToken cancellationToken)
         {
             var result = await _service.Delete(guid, cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok();
-            }
-
-            return BadRequest();
+            return FromResult(result);
         }
 
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTask(EduYear eduYear, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateYear(UpdateYearRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.Update(eduYear, cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok();
-            }
+            var dto = _mapper.Map<UpdateYearDTO>(request);
 
-            return BadRequest();
+            var result = await _service.Update(dto, cancellationToken);
+            return FromResult(result);
         }
 
         [HttpPatch]
-        public async Task<IActionResult> ChangeYearStatus(Guid yearId, bool isOpenYear, CancellationToken cancellationToken)
+        public async Task<IActionResult> ChangeYearStatus(ChangeYearStatusRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.ChangeStatus(yearId, isOpenYear, cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok();
-            }
+            var dto = _mapper.Map<ChangeYearStatusDTO>(request);
 
-            return BadRequest();
+            var result = await _service.ChangeStatus(dto, cancellationToken);
+            return FromResult(result);
         }
 
     }

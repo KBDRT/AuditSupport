@@ -1,21 +1,26 @@
 ﻿using Application.Abstractions.Repositories.Builders;
 using Application.Common;
+using Application.DTO.Programs;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
 {
-    public class GetProgramsWithFilterQueryHandler : IRequestHandler<GetProgramsWithFilterQuery, Result<List<EduProgram>, ServiceError>>
+    public class GetProgramsWithFilterQueryHandler : IRequestHandler<GetProgramsWithFilterQuery, Result<List<EduProgramShortDTO>, ServiceError>>
     {
         private readonly IProgramQueryBuilder _queryBuilder;
+        private readonly IMapper _mapper;
 
-        public GetProgramsWithFilterQueryHandler(IProgramQueryBuilder queryBuilder)
+        public GetProgramsWithFilterQueryHandler(IProgramQueryBuilder queryBuilder,
+                                                 IMapper mapper)
         {
             _queryBuilder = queryBuilder;
+            _mapper = mapper;
         }
 
-        public async Task<Result<List<EduProgram>, ServiceError>> Handle(GetProgramsWithFilterQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<EduProgramShortDTO>, ServiceError>> Handle(GetProgramsWithFilterQuery request, CancellationToken cancellationToken)
         {
             var query = _queryBuilder.ForYear(request.YearId);
 
@@ -33,7 +38,9 @@ namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
 
             var programs = await query.ToListAsync(cancellationToken);
 
-            return Result.Success<List<EduProgram>, ServiceError>(programs);
+            var result = _mapper.Map<List<EduProgramShortDTO>>(programs);
+
+            return Result.Success<List<EduProgramShortDTO>, ServiceError>(result);
         }
     }
 }

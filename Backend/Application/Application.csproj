@@ -25,12 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Reviews\Commands\Create\" />
-    <Folder Include="Features\Reviews\Commands\Delete\" />
-    <Folder Include="Features\Reviews\Commands\Update\" />
     <Folder Include="Features\Reviews\Quaries\GetReviewsWithFilter\" />
-    <Folder Include="Features\Reviews\Quaries\GetReviewFile\" />
-    <Folder Include="Features\Reviews\Quaries\GetReviewById\" />
   </ItemGroup>
 
 </Project>

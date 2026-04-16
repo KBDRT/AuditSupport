@@ -12,8 +12,5 @@ module.exports = {
         useTypeOverInterfaces: false,
       }
     },
-    hooks: {
-      afterAllFilesWrite: 'npm run format'
-    }
   }
 };

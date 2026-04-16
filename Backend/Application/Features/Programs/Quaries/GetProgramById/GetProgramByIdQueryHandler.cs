@@ -1,31 +1,37 @@
 ﻿using Application.Abstractions.Repositories.Builders;
 using Application.Common;
+using Application.DTO.Programs;
+using AutoMapper;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Programs.Quaries.GetProgramById
 {
-    public class GetProgramByIdQueryHandler : IRequestHandler<GetProgramByIdQuery, Result<EduProgram, ServiceError>>
+    public class GetProgramByIdQueryHandler : IRequestHandler<GetProgramByIdQuery, Result<EduProgramDTO, ServiceError>>
     {
         private readonly IProgramQueryBuilder _queryBuilder;
+        private readonly IMapper _mapper;
 
-        public GetProgramByIdQueryHandler(IProgramQueryBuilder queryBuilder)
+        public GetProgramByIdQueryHandler(IProgramQueryBuilder queryBuilder,
+                                          IMapper mapper)
         {
             _queryBuilder = queryBuilder;
+            _mapper = mapper;
         }
 
-        public async Task<Result<EduProgram, ServiceError>> Handle(GetProgramByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<EduProgramDTO, ServiceError>> Handle(GetProgramByIdQuery request, CancellationToken cancellationToken)
         {
             var program = await _queryBuilder.ForId(request.ProgramId)
                                              .SingleOrDefaultAsync(cancellationToken);
 
             if (program == null)
             {
-                return Result.Failure<EduProgram, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
+                return Result.Failure<EduProgramDTO, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
             }
 
-            return Result.Success<EduProgram, ServiceError>(program);
+            var result = _mapper.Map<EduProgramDTO>(program);
+
+            return Result.Success<EduProgramDTO, ServiceError>(result);
         }
     }
 }

@@ -12,20 +12,73 @@ import type {
 } from 'axios';
 
 import type {
-  CreateUserRequest
+  ChangeUserActivationRequest,
+  ChangeUserEmailRequest,
+  CreateUserRequest,
+  DeleteAdminUsersParams,
+  GetAdminUsersParams,
+  GetUserDTO
 } from '../models';
 
 
 
 
   export const getAdmin = (axiosInstance: AxiosInstance = axios.default) => {
-const postAdminRegister = (
+const postAdminUsers = (
     createUserRequest: CreateUserRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<string>> => {
     return axiosInstance.post(
-      `/Admin/register`,
-      createUserRequest,options
+      `/Admin/Users`,
+      createUserRequest,{
+    ...options,}
     );
   }
-return {postAdminRegister}};
-export type PostAdminRegisterResult = AxiosResponse<unknown>
+const deleteAdminUsers = (
+    params?: DeleteAdminUsersParams, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.delete(
+      `/Admin/Users`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+const getAdminUsers = (
+    params?: GetAdminUsersParams, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetUserDTO[]>> => {
+    return axiosInstance.get(
+      `/Admin/Users`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+const patchAdminUsersActivation = (
+    changeUserActivationRequest: ChangeUserActivationRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.patch(
+      `/Admin/Users/Activation`,
+      changeUserActivationRequest,options
+    );
+  }
+const getAdminUsersUserId = (
+    userId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<string>> => {
+    return axiosInstance.get(
+      `/Admin/Users/${userId}`,{
+    ...options,}
+    );
+  }
+const patchAdminUsersEmail = (
+    changeUserEmailRequest: ChangeUserEmailRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.patch(
+      `/Admin/Users/Email`,
+      changeUserEmailRequest,options
+    );
+  }
+return {postAdminUsers,deleteAdminUsers,getAdminUsers,patchAdminUsersActivation,getAdminUsersUserId,patchAdminUsersEmail}};
+export type PostAdminUsersResult = AxiosResponse<string>
+export type DeleteAdminUsersResult = AxiosResponse<unknown>
+export type GetAdminUsersResult = AxiosResponse<GetUserDTO[]>
+export type PatchAdminUsersActivationResult = AxiosResponse<unknown>
+export type GetAdminUsersUserIdResult = AxiosResponse<string>
+export type PatchAdminUsersEmailResult = AxiosResponse<unknown>

@@ -1,4 +1,6 @@
 ﻿using Application.Abstractions.Repositories;
+using Application.Common;
+using Application.DTO.Years;
 using Application.Helpers;
 using Application.Services.Definitions;
 using CSharpFunctionalExtensions;
@@ -15,67 +17,76 @@ namespace Application.Services.Implementations
             _repository = repository;
         }
 
-
-        public async Task<Result> ChangeStatus(Guid yearId, bool isOpenYear, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> ChangeStatus(ChangeYearStatusDTO dto, CancellationToken cancellationToken)
         {
-            var oldEduYear = await _repository.GetById(yearId, cancellationToken);
+            var oldEduYear = await _repository.GetById(dto.YearId, cancellationToken);
             
             if (oldEduYear == null)
             {
-                return Result.Failure("Not found");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
             }
             
-            oldEduYear?.IsOpened = isOpenYear;
+            oldEduYear?.IsOpened = dto.IsOpenYear;
             await _repository.Update(oldEduYear, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result<Guid>> Create(int startYear, string description, CancellationToken cancellationToken)
+        public async Task<Result<Guid, ServiceError>> Create(CreateYearDTO dto, CancellationToken cancellationToken)
         {
-            if (startYear <= 2000)
+            if (dto.StartYear <= 2000)
             {
                 //_result.AddMessage("Incorrect id");
-                return Result.Failure<Guid>("Error");
+                return Result.Failure<Guid, ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
             }
 
             EduYear newEduYear = new()
             {
                 Id = Guid.NewGuid(),
-                StartYear = startYear,
-                EndYear = startYear + 1,
-                Description = description,
+                StartYear = dto.StartYear,
+                EndYear = dto.StartYear + 1,
+                Description = dto.Description,
             };
 
             var newGuid = await _repository.AddNew(newEduYear, cancellationToken);
-            return Result.Success(newGuid);
+            return Result.Success<Guid, ServiceError>(newGuid);
         }
 
-        public async Task<Result> Delete(Guid yearId, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> Delete(Guid yearId, CancellationToken cancellationToken)
         {
             if (yearId == Guid.Empty)
             {
                 //_result.AddMessage("Empty id");
                 //_result.SetStatusCode(400);
-                return Result.Failure<Guid>("Error");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
             }
 
             await _repository.DeleteById(yearId, cancellationToken);
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result<List<EduYear>>> Get(CancellationToken cancellationToken)
+        public async Task<Result<List<EduYear>, ServiceError>> Get(CancellationToken cancellationToken)
         {
             var directions = await _repository.GetAll(cancellationToken) ?? [];
 
-            return Result.Success(directions);
+            return Result.Success<List<EduYear>, ServiceError>(directions);
         }
 
-        public async Task<Result> Update(EduYear year, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> Update(UpdateYearDTO dto, CancellationToken cancellationToken)
         {
-            await _repository.Update(year, cancellationToken);
+            var eduYear = await _repository.GetById(dto.YearId, cancellationToken);
+            if (eduYear == null)
+            {
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
+            }
 
-            return Result.Success();
+            eduYear.Description = dto.Description;
+            eduYear.StartYear = dto.StartYear;
+            eduYear.EndYear = dto.StartYear + 1;
+
+            await _repository.Update(eduYear, cancellationToken);
+
+            return UnitResult.Success<ServiceError>();
         }
     }
 }

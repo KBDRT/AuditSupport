@@ -4,7 +4,8 @@
     {
         NOT_FOUND,
         EXISTING_RECORD,
-        INCORRECT_PARAMETERS
+        INCORRECT_PARAMETERS,
+        UNKNOWN_ERROR
     };
 
 

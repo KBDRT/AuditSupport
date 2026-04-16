@@ -1,7 +1,8 @@
 ﻿using Application.Abstractions.Notifications;
 using Application.Abstractions.Repositories;
 using Application.Common;
-using Application.DTO;
+using Application.DTO.Common;
+using Application.DTO.Users;
 using Application.Helpers;
 using Application.Services.Definitions;
 using AutoMapper;
@@ -27,17 +28,15 @@ namespace Application.Services.Implementations
         }
 
 
-        public async Task<UnitResult<ServiceError>> CreateUser(CreateUserDTO userInfo, CancellationToken cancellationToken)
+        public async Task<Result<Guid, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken)
         {
-            var userInBase = await _repository.GetByLogin(userInfo.Login, cancellationToken);
+            var userInBase = await _repository.GetByLogin(dto.Login, cancellationToken);
             if (userInBase != null)
             {
-                return UnitResult.Failure<ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь с таким логином уже зарегистрирован!"));
-                //result.AddMessage("Пользователь с таким логином уже зарегистрирован!", "Login");
-                //return result;
+                return Result.Failure<Guid, ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь с таким логином уже зарегистрирован!"));
             }
 
-            var newUser = _mapper.Map<User>(userInfo);
+            var newUser = _mapper.Map<User>(dto);
             newUser.Id = Guid.NewGuid();
 
             string password = PasswordGenerator.GeneratePassword(12, true);
@@ -49,42 +48,42 @@ namespace Application.Services.Implementations
 
             //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
 
-            return UnitResult.Success<ServiceError>(); 
+            return Result.Success<Guid, ServiceError>(id); 
         }
 
-        public async Task<Result> ChangeUserActivation(Guid userId, bool isActive, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> ChangeUserActivation(ChangeUserActivationDTO dto, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetById(userId, cancellationToken);
+            var user = await _repository.GetById(dto.UserId, cancellationToken);
             if (user == null)
             {
-                return Result.Failure("Пользователь не найден!");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
             }
 
-            user.IsActive = isActive;
+            user.IsActive = dto.IsActive;
             await _repository.Update(user, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result> DeleteUser(Guid userId, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> DeleteUser(Guid userId, CancellationToken cancellationToken)
         {
             var user = await _repository.GetById(userId, cancellationToken);
             if (user == null)
             {
-                return Result.Failure("Пользователь не найден!");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
             }
 
             await _repository.DeleteById(user.Id, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result<string>> ResetPassword(Guid userId, CancellationToken cancellationToken)
+        public async Task<Result<string, ServiceError>> ResetPassword(Guid userId, CancellationToken cancellationToken)
         {
             var user = await _repository.GetById(userId, cancellationToken);
             if (user == null)
             {
-                return Result.Failure<string>("Пользователь не найден!");
+                return Result.Failure<string, ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
                 //result.AddMessage("Пользователь с таким логином уже зарегистрирован!", "Login");
                 //return result;
             }
@@ -98,30 +97,30 @@ namespace Application.Services.Implementations
 
             //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
 
-            return Result.Success(password);
+            return Result.Success<string, ServiceError>(password);
         }
 
-        public async Task<Result<List<GetUserDTO>>> GetUsers(int page, int size, CancellationToken cancellationToken)
+        public async Task<Result<List<GetUserDTO>, ServiceError>> GetUsers(PaginationDTO dto, CancellationToken cancellationToken)
         {
-            var users = await _repository.GetWithPagination(page, size, cancellationToken) ?? [];
+            var users = await _repository.GetWithPagination(dto.Page, dto.Size, cancellationToken) ?? [];
 
             var response = _mapper.Map<List<GetUserDTO>>(users);
 
-            return Result.Success(response);
+            return Result.Success<List<GetUserDTO>, ServiceError>(response);
         }
 
-        public async Task<Result> ChangeEmail(Guid userId, string newEmail, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> ChangeEmail(ChangeUserEmailDTO dto, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetById(userId, cancellationToken);
+            var user = await _repository.GetById(dto.UserId, cancellationToken);
             if (user == null)
             {
-                return Result.Failure<string>("Пользователь не найден!");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
             }
 
-            user.Email = newEmail;
+            user.Email = dto.NewEmail;
             await _repository.Update(user, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
     }
 }

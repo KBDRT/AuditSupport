@@ -1,4 +1,6 @@
 ﻿using Application.Abstractions.Repositories;
+using Application.Common;
+using Application.DTO.Users;
 using Application.Helpers;
 using Application.Services.Definitions;
 using CSharpFunctionalExtensions;
@@ -21,17 +23,17 @@ namespace Application.Services.Implementations
         }
 
 
-        public async Task<Result<string>> LoginUser(string login, string password, CancellationToken cancellationToken)
+        public async Task<Result<string, ServiceError>> LoginUser(LoginUserDTO dto, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetByLogin(login, cancellationToken);
+            var user = await _repository.GetByLogin(dto.Login, cancellationToken);
             if (user != null)
             {
-                var verifiedResult = new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHashed, password);
+                var verifiedResult = new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHashed, dto.Password);
                 if (verifiedResult == PasswordVerificationResult.Success)
                 {
                     var claims = CreateClaimForUser(user);
                     var token = _tokenGenerator.GetNewJwtTokenString(claims);
-                    return Result.Success<string>(token);
+                    return Result.Success<string, ServiceError>(token);
                 }
                 else
                 {
@@ -43,7 +45,7 @@ namespace Application.Services.Implementations
                 //result.AddMessage("Пользователь не найден!", "Login");
             }
 
-            return Result.Failure<string>("Error");
+            return Result.Failure<string, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
         }
 
         private List<Claim> CreateClaimForUser(User user)

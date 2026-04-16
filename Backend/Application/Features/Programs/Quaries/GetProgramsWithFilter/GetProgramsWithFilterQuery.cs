@@ -1,5 +1,6 @@
 ﻿using Application.Common;
-using Application.DTO;
+using Application.DTO.Common;
+using Application.DTO.Programs;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using Domain.Enums;
@@ -14,5 +15,5 @@ namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
         PaginationDTO? Pagination,
         List<ProgramStatuses>? Statuses,
         List<Guid>? Directions
-    ) : IRequest<Result<List<EduProgram>,ServiceError>>;
+    ) : IRequest<Result<List<EduProgramShortDTO>,ServiceError>>;
 }

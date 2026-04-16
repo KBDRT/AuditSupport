@@ -1,66 +1,64 @@
-﻿using Application.Helpers;
+﻿using Application.DTO.Directions;
+using Application.DTO.Users;
+using Application.Helpers;
 using Application.Services.Definitions;
+using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Contracts.Direction;
 
 namespace Presentation.Controllers
 {
     [Route("[controller]")]
     [ApiController]
     //[Authorize(Policy = "RoleAdmin")]
-    public class DirectionController(IDirectionService service) : ControllerBase
+    public class DirectionController : BaseController
     {
-        private readonly IDirectionService _service = service;
+        private readonly IDirectionService _service;
+
+        private readonly IMapper _mapper;
+
+        public DirectionController(IDirectionService service,
+                                   IMapper mapper)
+        {
+            _service = service;
+            _mapper = mapper;
+        }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewTask(string name, string shortName, string description, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(Guid), 200)]
+        public async Task<IActionResult> AddNewDirection(CreateDirectionRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.Create(name, shortName, description, cancellationToken);
+            var dto = _mapper.Map<CreateDirectionDTO>(request);
 
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return NotFound();
+            var result = await _service.Create(dto, cancellationToken);
+            return FromResult(result);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetTasks(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(List<Direction>), 200)]
+        public async Task<IActionResult> GetDirections(CancellationToken cancellationToken)
         {
             var result = await _service.Get(cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return NotFound();
+            return FromResult(result);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteTask(Guid guid, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteDirection(Guid guid, CancellationToken cancellationToken)
         {
             var result = await _service.Delete(guid, cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok();
-            }
-
-            return BadRequest();
+            return FromResult(result);
         }
 
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTask(Direction direction, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateDirection(UpdateDirectionRequest request, CancellationToken cancellationToken)
         {
-            var result = await _service.Update(direction, cancellationToken);
-            if (result.IsSuccess)
-            {
-                return Ok();
-            }
+            var dto = _mapper.Map<UpdateDirectionDTO>(request);
 
-            return BadRequest();
+            var result = await _service.Update(dto, cancellationToken);
+            return FromResult(result);
         }
 
     }

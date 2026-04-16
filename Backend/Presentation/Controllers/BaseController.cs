@@ -21,12 +21,24 @@ namespace Presentation.Controllers
                 return Ok();
 
             var statusCode = GetStatusCode(serviceResult.Error.Code);
-            return new JsonResult(serviceResult.Error.Message)
+            return new JsonResult(serviceResult.Error)
             {
                 StatusCode = statusCode
             };
         }
 
+        [NonAction]
+        public IActionResult FromResult<T>(Result<T, ServiceError> serviceResult)
+        {
+            if (serviceResult.IsSuccess)
+                return Ok(serviceResult.Value);
+
+            var statusCode = GetStatusCode(serviceResult.Error.Code);
+            return new JsonResult(serviceResult.Error)
+            {
+                StatusCode = statusCode
+            };
+        }
 
 
         private int GetStatusCode(ErrorsCode code)

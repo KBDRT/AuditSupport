@@ -109,7 +109,7 @@ namespace Presentation.Extensions
             });
 
 
-            _services.AddAutoMapper(cfg => { }, typeof(UserProfile));
+            _services.AddAutoMapper(cfg => { }, typeof(RequestsProfile));
             _services.AddAutoMapper(cfg => { }, typeof(Application.MappingProfiles.UserProfile));
 
 

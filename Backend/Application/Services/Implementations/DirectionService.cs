@@ -1,4 +1,6 @@
 ﻿using Application.Abstractions.Repositories;
+using Application.Common;
+using Application.DTO.Directions;
 using Application.Helpers;
 using Application.Services.Definitions;
 using CSharpFunctionalExtensions;
@@ -16,51 +18,61 @@ namespace Application.Services.Implementations
             _repository = directionRepository;
         }
 
-        public async Task<Result<Guid>> Create(string name, string shortName, string description, CancellationToken cancellationToken)
+        public async Task<Result<Guid, ServiceError>> Create(CreateDirectionDTO dto, CancellationToken cancellationToken)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (String.IsNullOrWhiteSpace(dto.Name))
             {
                 //_result.AddMessage("Empty name");
-                return Result.Failure<Guid>("Error");
+                return Result.Failure<Guid, ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
             }
 
             Direction newDirection = new()
             {
-                Name = name,
-                Description = shortName,
-                ShortName = shortName,
+                Name = dto.Name,
+                Description = dto.ShortName,
+                ShortName = dto.ShortName,
                 Id = Guid.NewGuid(),
             };
 
             var newGuid = await _repository.AddNew(newDirection, cancellationToken);
-            return Result.Success(newGuid);
+            return Result.Success<Guid, ServiceError>(newGuid);
         }
 
-        public async Task<Result> Delete(Guid directionId, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> Delete(Guid directionId, CancellationToken cancellationToken)
         {
             if (directionId == Guid.Empty)
             {
                 //_result.AddMessage("Empty id");
                 //_result.SetStatusCode(400);
-                return Result.Failure<Guid>("Error");
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
             }
 
             await _repository.DeleteById(directionId, cancellationToken);
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result<List<Direction>>> Get(CancellationToken cancellationToken)
+        public async Task<Result<List<Direction>, ServiceError>> Get(CancellationToken cancellationToken)
         {
             var directions = await _repository.GetAll(cancellationToken) ?? [];
 
-            return Result.Success(directions);
+            return Result.Success<List<Direction>, ServiceError>(directions);
         }
 
-        public async Task<Result> Update(Direction direction, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> Update(UpdateDirectionDTO dto, CancellationToken cancellationToken)
         {
+            var direction = await _repository.GetById(dto.DirectionId, cancellationToken);
+            if (direction == null)
+            {
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
+            }
+
+            direction.Description = dto.Description; 
+            direction.ShortName = dto.ShortName;
+            direction.Name = dto.Name;
+
             await _repository.Update(direction, cancellationToken);
 
-            return Result.Success();
+            return UnitResult.Success<ServiceError>();
         }
     }
 }
