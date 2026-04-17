@@ -42,6 +42,14 @@ const getEduProgram = (
         params: {...params, ...options?.params},}
     );
   }
+const deleteEduProgram = (
+    deleteProgramCommand: DeleteProgramCommand, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.delete(
+      `/EduProgram`,{data:
+      deleteProgramCommand, ...options}
+    );
+  }
 const patchEduProgram = (
     updateProgramCommand: UpdateProgramCommand, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<unknown>> => {
@@ -97,21 +105,13 @@ const patchEduProgramStatus = (
       changeProgramStatusCommand,options
     );
   }
-const deleteEduProgramDelete = (
-    deleteProgramCommand: DeleteProgramCommand, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
-    return axiosInstance.delete(
-      `/EduProgram/Delete`,{data:
-      deleteProgramCommand, ...options}
-    );
-  }
-return {postEduProgram,getEduProgram,patchEduProgram,postEduProgramVersion,getEduProgramVersionFileVersionId,getEduProgramProgramId,getEduProgramVersionVersionId,patchEduProgramStatus,deleteEduProgramDelete}};
+return {postEduProgram,getEduProgram,deleteEduProgram,patchEduProgram,postEduProgramVersion,getEduProgramVersionFileVersionId,getEduProgramProgramId,getEduProgramVersionVersionId,patchEduProgramStatus}};
 export type PostEduProgramResult = AxiosResponse<string>
 export type GetEduProgramResult = AxiosResponse<unknown>
+export type DeleteEduProgramResult = AxiosResponse<unknown>
 export type PatchEduProgramResult = AxiosResponse<unknown>
 export type PostEduProgramVersionResult = AxiosResponse<unknown>
 export type GetEduProgramVersionFileVersionIdResult = AxiosResponse<unknown>
 export type GetEduProgramProgramIdResult = AxiosResponse<unknown>
 export type GetEduProgramVersionVersionIdResult = AxiosResponse<unknown>
 export type PatchEduProgramStatusResult = AxiosResponse<unknown>
-export type DeleteEduProgramDeleteResult = AxiosResponse<unknown>

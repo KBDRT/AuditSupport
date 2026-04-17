@@ -19,6 +19,7 @@ namespace Presentation.MappingProfiles
             CreateMap<ChangeUserActivationRequest, ChangeUserActivationDTO>();
             CreateMap<ChangeUserEmailRequest, ChangeUserEmailDTO>();
             CreateMap<LoginUserRequest, LoginUserDTO>();
+            CreateMap<UpdateUserRequest, UpdateUserDTO>();
 
             CreateMap<CreateYearRequest, CreateYearDTO>();
             CreateMap<UpdateYearRequest, UpdateYearDTO>();

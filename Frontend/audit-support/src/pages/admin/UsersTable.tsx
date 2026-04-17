@@ -1,90 +1,39 @@
-import { Table, Box, HStack, Center, Badge, ActionBar, Portal, Button, Separator } from "@chakra-ui/react"
+import { Table, Box,  Center, Badge} from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
-import type { Direction } from '@/types/Direction';
 import { useUsersStore } from "@/stores/UsersStore";
-import type { GetUserDTO, Roles } from "@/api/models";
-import { Input, InputGroup, Kbd } from "@chakra-ui/react"
-import { LuSearch } from "react-icons/lu"
-import { Checkbox, createListCollection, Select } from "@chakra-ui/react"
+import type {  UpdateUserRequest } from "@/api/models";
+import FilterTable from "./FilterPanel";
+import GetRoleName from "@/utils/TextUtils";
+import UserUpdate from "./UserUpdate";
+import { FixDialog } from "@/utils/DialogFix";
+
 
 const UsersTable = () => {
   const { items, deleteItem, updateItem, fetchUsers } = useUsersStore()
-  const [selectedItem, setSelectedItem] = useState<GetUserDTO | null>(null)
+  const [selectedLogin, setSelectedLogin] = useState("") 
+  const [selectedItem, setSelectedItem] = useState<UpdateUserRequest | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const tableRef = useRef<HTMLDivElement>(null)
-
-  const hasSelection = selectedItem !== null
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
-        setSelectedItem(null) 
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
-  const handleDelete = (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить?')) {
-      deleteItem(id)
-      setSelectedItem(null)
-    }
-  }
-
-  const handleOpen = (item: GetUserDTO) => {
-    setSelectedItem(item)
-    setIsOpen(true)
+  const handleDelete = async (id: string) => {
+    await deleteItem(id)
+    setSelectedItem(null)
   }
 
   const handleClose = () => {
     setIsOpen(false)
     setSelectedItem(null)
-
-    setTimeout(() => {
-      document.body.style.pointerEvents = ''
-      document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.width = ''
-      document.body.style.paddingRight = ''  
-      
-      document.body.style.removeProperty('padding-right')
-    }, 0)
+    FixDialog()
   }
 
-
-  const handleSave = (updatedItem: Direction) => {
-    updateItem(updatedItem.id, updatedItem)  
+  const handleSave = (updatedItem: UpdateUserRequest) => {
+    updateItem(updatedItem.userId ?? "", updatedItem)  
     handleClose()  
   }
-
-  const getRoleName = (role: Roles) => {
-    switch (role) {
-      case 0: return 'Педагог';
-      case 1: return 'Методист';
-      case 2: return 'Зам. директора';
-      case 3: return 'Администратор';
-      default: return 'Не указано';
-    }
-  }
-
-
-  const frameworks = createListCollection({
-    items: [
-      { label: "Педагоги", value: "0" },
-      { label: "Методисты", value: "1" },
-      { label: "Зам. директора", value: "2" },
-      { label: "Админ", value: "3" },
-    ],
-  })
 
   return (
     <>
@@ -94,49 +43,7 @@ const UsersTable = () => {
         maxW="100%"
       >
 
-        <Box>
-
-        <HStack>
-          <InputGroup flex="1"  startElement={<LuSearch />} endElement={<></>}>
-            <Input placeholder="ФИО или Логин" size="sm"/>
-          </InputGroup>
-          <Separator orientation="vertical" height="8"/>
-          <Select.Root multiple collection={frameworks} size="sm" width="320px">
-            <Select.HiddenSelect />
-            <Select.Control>
-              <Select.Trigger>
-                <Select.ValueText placeholder="Выберите роли" />
-              </Select.Trigger>
-              <Select.IndicatorGroup>
-                <Select.ClearTrigger />
-                <Select.Indicator />
-              </Select.IndicatorGroup>
-            </Select.Control>
-            <Portal>
-              <Select.Positioner>
-                <Select.Content>
-                  {frameworks.items.map((framework) => (
-                    <Select.Item item={framework} key={framework.value}>
-                      {framework.label}
-                      <Select.ItemIndicator />
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Positioner>
-            </Portal>
-          </Select.Root>
-          <Separator orientation="vertical" height="8"/>
-          <Checkbox.Root>
-            <Checkbox.HiddenInput />
-            <Checkbox.Control>
-              <Checkbox.Indicator />
-            </Checkbox.Control>
-            <Checkbox.Label>Только активные пользователи</Checkbox.Label>
-          </Checkbox.Root>
-        </HStack>
-
-        </Box>
-
+        <FilterTable />
 
         <Table.Root 
           size="sm" 
@@ -161,13 +68,25 @@ const UsersTable = () => {
             {items.map((item) => (
               <Table.Row 
                 key={item.id}
-                onClick={() => setSelectedItem(item)}
+                onDoubleClick={() => {setSelectedItem(
+                  {
+                    email: item.email, 
+                    userId: item.id, 
+                    isActive: item.isActive, 
+                    name: item.initials?.name, 
+                    surname: item.initials?.surname,
+                    patronymic: item.initials?.patronymic,
+                    role: item.role
+                  } as UpdateUserRequest);   
+                    setSelectedLogin(item.login ?? "")
+                    setIsOpen(true)
+                }}
                 style={{ cursor: "pointer" }}
-                bg={selectedItem?.id === item.id ? "blue.50" : undefined}
+                bg={selectedItem?.userId === item.id ? "blue.50" : undefined}
                 _hover={{ bg: "gray.50" }}
               >
                 <Table.Cell w="200px" verticalAlign="middle">
-                  {item.initials?.short || item.initials?.surname || '—'}
+                  {item.initials?.surname} {item.initials?.name} {item.initials?.patronymic}
                 </Table.Cell>
 
                 <Table.Cell w="250px" verticalAlign="middle">
@@ -179,7 +98,7 @@ const UsersTable = () => {
                 </Table.Cell>
 
                 <Table.Cell w="150px" verticalAlign="middle">
-                  {getRoleName(item.role ?? 0)}
+                  {GetRoleName(item.role ?? 0)}
                 </Table.Cell>
 
                 <Table.Cell w="150px" verticalAlign="middle" textAlign="center">
@@ -201,47 +120,16 @@ const UsersTable = () => {
         </Table.Root>
       </Box>
 
-      <ActionBar.Root open={hasSelection}>
-        <Portal>
-          <ActionBar.Positioner>
-            <ActionBar.Content>
-              <Button 
-                variant="outline" 
-                size="sm"
-                colorScheme="blue"
-                onClick={() => {
-                  if (selectedItem) {
-                    handleOpen(selectedItem)
-                  }
-                }}
-              >
-                Редактировать
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                colorScheme="red"
-                onClick={() => {
-                  if (selectedItem?.id) {
-                    handleDelete(selectedItem.id)
-                  }
-                }}
-              >
-                Удалить
-              </Button>
-            </ActionBar.Content>
-          </ActionBar.Positioner>
-        </Portal>
-      </ActionBar.Root>
-
-      {/* {isOpen && selectedItem && (
-        <DirectionUpdate 
+      {isOpen && selectedItem && (
+        <UserUpdate 
           open={isOpen}
           item={selectedItem}
+          userLogin={selectedLogin}
           onClose={handleClose}
           onSave={handleSave}
+          onDelete={handleDelete}
         />
-      )} */}
+      )}
     </>
   )
 }

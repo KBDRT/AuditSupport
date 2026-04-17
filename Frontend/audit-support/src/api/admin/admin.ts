@@ -17,7 +17,8 @@ import type {
   CreateUserRequest,
   DeleteAdminUsersParams,
   GetAdminUsersParams,
-  GetUserDTO
+  GetUserDTO,
+  UpdateUserRequest
 } from '../models';
 
 
@@ -51,6 +52,14 @@ const getAdminUsers = (
         params: {...params, ...options?.params},}
     );
   }
+const patchAdminUsers = (
+    updateUserRequest: UpdateUserRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.patch(
+      `/Admin/Users`,
+      updateUserRequest,options
+    );
+  }
 const patchAdminUsersActivation = (
     changeUserActivationRequest: ChangeUserActivationRequest, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<unknown>> => {
@@ -59,11 +68,11 @@ const patchAdminUsersActivation = (
       changeUserActivationRequest,options
     );
   }
-const getAdminUsersUserId = (
+const postAdminUsersPasswordUserId = (
     userId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<string>> => {
-    return axiosInstance.get(
-      `/Admin/Users/${userId}`,{
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.post(
+      `/Admin/Users/Password/${userId}`,undefined,{
     ...options,}
     );
   }
@@ -75,10 +84,11 @@ const patchAdminUsersEmail = (
       changeUserEmailRequest,options
     );
   }
-return {postAdminUsers,deleteAdminUsers,getAdminUsers,patchAdminUsersActivation,getAdminUsersUserId,patchAdminUsersEmail}};
+return {postAdminUsers,deleteAdminUsers,getAdminUsers,patchAdminUsers,patchAdminUsersActivation,postAdminUsersPasswordUserId,patchAdminUsersEmail}};
 export type PostAdminUsersResult = AxiosResponse<string>
 export type DeleteAdminUsersResult = AxiosResponse<unknown>
 export type GetAdminUsersResult = AxiosResponse<GetUserDTO[]>
+export type PatchAdminUsersResult = AxiosResponse<unknown>
 export type PatchAdminUsersActivationResult = AxiosResponse<unknown>
-export type GetAdminUsersUserIdResult = AxiosResponse<string>
+export type PostAdminUsersPasswordUserIdResult = AxiosResponse<unknown>
 export type PatchAdminUsersEmailResult = AxiosResponse<unknown>

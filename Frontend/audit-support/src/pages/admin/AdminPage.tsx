@@ -1,5 +1,6 @@
 import { Grid, GridItem, Heading, Box, Center, Button, Flex } from "@chakra-ui/react";
 import UsersTable from "./UsersTable";
+import { MdAdd } from "react-icons/md";
 
 function AdminPage() {
   const handleAdd = () => {
@@ -13,10 +14,12 @@ function AdminPage() {
           <Flex justify="space-between" align="center" mb={3}>
             <Heading size="2xl">Пользователи системы</Heading>
             <Button 
-              colorPalette="green" 
+              // colorPalette="blue"
+              variant="outline" 
               onClick={handleAdd}
               size="sm"
             >
+              <MdAdd />
               Добавить нового пользователя
             </Button>
           </Flex>

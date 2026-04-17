@@ -32,4 +32,5 @@ export * from './roles';
 export * from './updateDirectionRequest';
 export * from './updateProgramCommand';
 export * from './updateReviewCommand';
+export * from './updateUserRequest';
 export * from './updateYearRequest';

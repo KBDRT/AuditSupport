@@ -1,5 +1,4 @@
 ﻿using Application.Abstractions.Files;
-using Application.DTO.Users;
 using Application.Features.Programs.Commands.ChangeStatus;
 using Application.Features.Programs.Commands.Create;
 using Application.Features.Programs.Commands.CreateVersion;
@@ -100,7 +99,7 @@ namespace Presentation.Controllers
             return FromResult(result);
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteProgram(DeleteProgramCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);

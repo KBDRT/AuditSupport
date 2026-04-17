@@ -13,12 +13,12 @@ namespace Application.Services.Definitions
 
         public Task<UnitResult<ServiceError>> ChangeUserActivation(ChangeUserActivationDTO dto, CancellationToken cancellationToken);
 
-        public Task<Result<string, ServiceError>> ResetPassword(Guid userId, CancellationToken cancellationToken);
+        public Task<UnitResult<ServiceError>> ResetPassword(Guid userId, CancellationToken cancellationToken);
 
         public Task<Result<List<GetUserDTO>, ServiceError>> GetUsers(PaginationDTO pagination, CancellationToken cancellationToken);
 
         public Task<UnitResult<ServiceError>> ChangeEmail(ChangeUserEmailDTO dto, CancellationToken cancellationToken);
 
-
+        public Task<UnitResult<ServiceError>> UpdateUser(UpdateUserDTO dto, CancellationToken cancellationToken);
     }
 }

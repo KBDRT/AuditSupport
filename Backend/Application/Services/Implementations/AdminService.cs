@@ -27,7 +27,6 @@ namespace Application.Services.Implementations
             _notificationService = notificationService;
         }
 
-
         public async Task<Result<Guid, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken)
         {
             var userInBase = await _repository.GetByLogin(dto.Login, cancellationToken);
@@ -78,12 +77,12 @@ namespace Application.Services.Implementations
             return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result<string, ServiceError>> ResetPassword(Guid userId, CancellationToken cancellationToken)
+        public async Task<UnitResult<ServiceError>> ResetPassword(Guid userId, CancellationToken cancellationToken)
         {
             var user = await _repository.GetById(userId, cancellationToken);
             if (user == null)
             {
-                return Result.Failure<string, ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
                 //result.AddMessage("Пользователь с таким логином уже зарегистрирован!", "Login");
                 //return result;
             }
@@ -97,7 +96,7 @@ namespace Application.Services.Implementations
 
             //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
 
-            return Result.Success<string, ServiceError>(password);
+            return UnitResult.Success<ServiceError>();
         }
 
         public async Task<Result<List<GetUserDTO>, ServiceError>> GetUsers(PaginationDTO dto, CancellationToken cancellationToken)
@@ -122,5 +121,24 @@ namespace Application.Services.Implementations
 
             return UnitResult.Success<ServiceError>();
         }
+
+        public async Task<UnitResult<ServiceError>> UpdateUser(UpdateUserDTO dto, CancellationToken cancellationToken)
+        {
+            var user = await _repository.GetById(dto.UserId, cancellationToken);
+            if (user == null)
+            {
+                return UnitResult.Failure<ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь не найден!"));
+            }
+
+            user.Email = dto.Email;
+            user.Role = dto.Role;
+            user.IsActive = dto.IsActive;
+            user.Initials = new() { Name = dto.Name, Surname = dto.Surname, Patronymic = dto.Patronymic};
+
+            await _repository.Update(user, cancellationToken);
+
+            return UnitResult.Success<ServiceError>();
+        }
     }
 }
+

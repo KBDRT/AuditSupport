@@ -54,7 +54,7 @@ namespace Presentation.Controllers
             return FromResult(result);
         }
 
-        [HttpGet("{userId}")]
+        [HttpPost("Password/{userId}")]
         [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> ResetPassword(Guid userId, CancellationToken cancellationToken)
         {
@@ -79,6 +79,15 @@ namespace Presentation.Controllers
             var dto = _mapper.Map<ChangeUserEmailDTO>(request);
 
             var result = await _service.ChangeEmail(dto, cancellationToken);
+            return FromResult(result);
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUser(UpdateUserRequest request, CancellationToken cancellationToken)
+        {
+            var dto = _mapper.Map<UpdateUserDTO>(request);
+
+            var result = await _service.UpdateUser(dto, cancellationToken);
             return FromResult(result);
         }
 
