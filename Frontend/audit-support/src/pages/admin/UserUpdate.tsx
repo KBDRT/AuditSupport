@@ -1,42 +1,60 @@
-import { Button, Dialog, Field, Input, Portal, Stack, Select, CloseButton, Text, HStack} from "@chakra-ui/react"
+import { Button, Dialog, Field, Input, Portal, Stack, Select, CloseButton, Text} from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import type { Roles, UpdateUserRequest } from "@/api/models";
-import { ROLE_COLLECTION, STATUS_ITEMS, STATUS_COLLECTION} from "@/constants/roles"
+import { ROLE_COLLECTION, STATUS_COLLECTION} from "@/constants/roles"
 import { MdSave, MdLockReset, MdDelete  } from "react-icons/md";
 import { useUsersStore } from "@/stores/UsersStore";
+import { withMask } from "use-mask-input"
+
+interface UserInvalidFields {
+  surname: boolean,
+  name: boolean,
+  email: boolean
+}
 
 interface UserUpdateProps {
   open: boolean  
   item: UpdateUserRequest
   userLogin: string
   onClose: () => void
-  onSave: (item: UpdateUserRequest) => void
-  onDelete: (id: string) => void
 }
 
-const UserUpdate = ({ open, item, userLogin, onClose, onSave, onDelete }: UserUpdateProps) => {
+const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
   const [formData, setFormData] = useState<UpdateUserRequest>(item)
-  const { resetPassword } = useUsersStore()
+  const { resetPassword, deleteItem, updateItem} = useUsersStore()
+  const [invalidFields, setInvalidFields] = useState<UserInvalidFields>({email: false, name: false, surname: false})
 
   useEffect(() => {
     setFormData(item)
   }, [item])
 
-  const handleSave = () => {
-    onSave(formData)
-    onClose()         
+  const handleSave = async() => {
+
+    if (formData.email?.length == 0 || formData.name?.length == 0 || formData.surname?.length == 0)
+    {
+      setInvalidFields({...invalidFields, email: formData.email?.length == 0, name: formData.name?.length == 0, surname: formData.surname?.length == 0 })
+    }
+    else
+    {
+      const isSuccess = await updateItem(formData.userId ?? "", formData)  
+      if (isSuccess)
+      {
+        onClose()       
+      } 
+    } 
   }
 
-  const handleDelete = () => {
-    onDelete(formData?.userId || ""); 
-    onClose(); 
+  const handleDelete = async() => {
+    const isSuccess = await deleteItem(formData.userId ?? "")
+    if (isSuccess)
+    {
+      onClose()       
+    } 
   }
 
   const handleResetPassword = () => {
     resetPassword(formData?.userId || ""); 
   }
-
-
 
   return (
     <>
@@ -58,23 +76,23 @@ const UserUpdate = ({ open, item, userLogin, onClose, onSave, onDelete }: UserUp
             </Dialog.Header>
             <Dialog.Body pb="2">
               <Stack gap="2">
-                <Field.Root orientation="horizontal">
+                <Field.Root orientation="horizontal"  >
                   <Field.Label>Логин</Field.Label>
                   <Input value={userLogin|| ""} readOnly autoFocus/>
                 </Field.Root>
-                <Field.Root orientation="horizontal">
+                <Field.Root orientation="horizontal" invalid={invalidFields["surname"]}>
                   <Field.Label>Фамилия</Field.Label>
                   <Input
                     value={formData.surname || ""}
-                    onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
+                    onChange={(e) => {setFormData({ ...formData, surname: e.target.value }); setInvalidFields({...invalidFields, surname: false})}}
                     placeholder="Введите фамилию"
                   />
                 </Field.Root>
-                <Field.Root orientation="horizontal">
+                <Field.Root orientation="horizontal" invalid={invalidFields["name"]}>
                   <Field.Label>Имя</Field.Label>
                   <Input
                     value={formData.name || ""}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => {setFormData({ ...formData, name: e.target.value }); setInvalidFields({...invalidFields, name: false})}}
                     placeholder="Введите имя"
                   />
                 </Field.Root>
@@ -86,11 +104,12 @@ const UserUpdate = ({ open, item, userLogin, onClose, onSave, onDelete }: UserUp
                     placeholder="Введите отчество"
                   />
                 </Field.Root>
-                <Field.Root orientation="horizontal">
+                <Field.Root orientation="horizontal" invalid={invalidFields["email"]}>
                   <Field.Label>Email</Field.Label>
                   <Input
                     value={formData.email || ""}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    ref={withMask("email")}
+                    onChange={(e) => {setFormData({ ...formData, email: e.target.value }); setInvalidFields({...invalidFields, email: false})}}
                     placeholder="Введите email"
                   />
                 </Field.Root>
@@ -222,9 +241,6 @@ const UserUpdate = ({ open, item, userLogin, onClose, onSave, onDelete }: UserUp
                         </Text>
                         <Text fontWeight="bold" color="black.600" my={2}>
                           {formData.surname} {formData.name} {formData.patronymic}
-                        </Text>
-                        <Text fontSize="sm" color="gray.500">
-                          Это действие нельзя отменить.
                         </Text>
                       </Dialog.Body>
                       <Dialog.Footer>

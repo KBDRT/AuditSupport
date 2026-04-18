@@ -1,5 +1,5 @@
 import { Box, HStack, Portal, Button, Separator } from "@chakra-ui/react"
-import { useState, useRef, useEffect } from "react"
+import { useState,  useEffect } from "react"
 import { useUsersStore } from "@/stores/UsersStore"
 import { Input, InputGroup } from "@chakra-ui/react"
 import { LuSearch } from "react-icons/lu"
@@ -15,7 +15,6 @@ const FilterTable = () => {
   const [searchValue, setSearchValue] = useState(filter.searchField)
   const [statusValue, setStatusValue] = useState(filter.statusCode)
   const [rolesValue, setRolesValue] = useState<string[]>(filter.roles)
-  const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     setSearchValue(filter.searchField)
@@ -57,7 +56,6 @@ const FilterTable = () => {
     setSearchValue("")
     setStatusValue("active")
     setRolesValue([])
-    inputRef.current?.focus()
   }
 
   const endElement = searchValue ? (
@@ -66,7 +64,6 @@ const FilterTable = () => {
       onClick={() => {
         setSearchValue("")
         filterUsers({ searchField: "" })
-        inputRef.current?.focus()
       }}
       me="-2"
     />
@@ -77,7 +74,6 @@ const FilterTable = () => {
       <HStack gap={3}>
         <InputGroup startElement={<LuSearch />} endElement={endElement}>
           <Input
-            ref={inputRef}
             value={searchValue}
             placeholder="ФИО или Логин"
             size="sm"

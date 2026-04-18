@@ -1,9 +1,11 @@
-import type { CreateUserRequest, DeleteAdminUsersParams, Direction, GetAdminUsersParams, GetUserDTO, UpdateUserRequest } from '@/api/models';
+import type { CreateUserRequest, DeleteAdminUsersParams, GetAdminUsersParams, GetUserDTO, UpdateUserRequest } from '@/api/models';
 import { create } from 'zustand';
 import { getAdmin } from '@/api/admin/admin';
 import { mergeUpdateToUser } from '@/utils/Mappers';
 import { axiosInstance } from '@/services/axiosInstanse';
 import { showToast } from '@/components/common/Alert';
+import { AxiosError } from 'axios'
+import type { ErrorsApi } from '@/types/ErrorsApi';
 
 interface FilterUsers
 {
@@ -17,9 +19,9 @@ interface UsersStore {
   allItems: GetUserDTO[]
   loading: boolean
   filter: FilterUsers
-  addItem: (item: Omit<CreateUserRequest, 'id'>) => void
-  updateItem: (id: string, item: Partial<UpdateUserRequest>) => void
-  deleteItem: (id: string) => void
+  addItem: (item: Omit<CreateUserRequest, 'id'>) => Promise<boolean>
+  updateItem: (id: string, item: Partial<UpdateUserRequest>) => Promise<boolean>
+  deleteItem: (id: string) => Promise<boolean>
   getItem: (id: string) => GetUserDTO | undefined
   fetchUsers: () => Promise<void>
   useFilter: () => void
@@ -50,32 +52,79 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
       }
 
       const response = await adminApi.getAdminUsers(params)
-      if (response.data != null)
+      if (response.status == 200)
       {
         set({ items: response.data, allItems: response.data, loading: false });
         get().useFilter()
       }
-    } catch (error) {
-      console.error('Error:', error);
-      set({ loading: false });
+    }
+    catch (error)
+    {
+      const err = error as AxiosError
+      const errors = err.response?.data as ErrorsApi
+      showToast("Произошла ошибка!", `${errors.message}`, "error")
     }
   },
 
-  addItem: (newItem) => set((state) => ({
-    items: [...state.items, { ...newItem, id: Date.now().toString() }]
-  })),
   
-  updateItem: async (id, updatedItem) => {
-    const response = await adminApi.patchAdminUsers(updatedItem)
-
-    if (response.status == 200)
+  addItem: async (newItem) => {
+    try
     {
-      set((state) => ({
-      allItems: state.allItems.map(item => 
-        item.id === id ? mergeUpdateToUser(item, updatedItem) : item
-      )}))
-      get().filterUsers({ statusCode: "all", searchField: "", roles: [] })
-      showToast("Обновлено!", "", "success")
+      const response = await adminApi.postAdminUsers(newItem)
+
+      console.log(response)
+      if (response.status == 200)
+      {
+        set((state) => ({
+          allItems: [...state.allItems, { ...newItem, id: response.data?.userId }]
+        }))
+        get().filterUsers({ statusCode: "all", searchField: "", roles: [] })
+        showToast("Сохранено!", "", "success")
+        return true
+      }
+      else
+      {
+        showToast("Внимание!", `${response?.data}`, "warning")
+        return false
+      }
+    }
+    catch (error)
+    {
+      const err = error as AxiosError
+      const errors = err.response?.data as ErrorsApi
+      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      return false
+    }
+  },
+
+
+  updateItem: async (id, updatedItem) => {
+    try
+    {
+      const response = await adminApi.patchAdminUsers(updatedItem)
+
+      if (response.status == 200)
+      {
+        set((state) => ({
+        allItems: state.allItems.map(item => 
+          item.id === id ? mergeUpdateToUser(item, updatedItem) : item
+        )}))
+        get().filterUsers({ statusCode: "all", searchField: "", roles: [] })
+        showToast("Обновлено!", "", "success")
+        return true
+      }
+      else
+      {
+        showToast("Внимание!", `${response?.data}`, "warning")
+        return false
+      }
+    }
+    catch (error)
+    {
+      const err = error as AxiosError
+      const errors = err.response?.data as ErrorsApi
+      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      return false
     }
   },
   
@@ -84,14 +133,30 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
       userId: id
     }
 
-    const response = await adminApi.deleteAdminUsers(request)
-    if (response.status == 200)
+    try
     {
-      set((state) => ({
-        items: state.items.filter(item => item.id !== id),
-        allitems: state.allItems.filter(item2 => item2.id !== id)
-      }))
-      showToast("Удалено!", "", "success")
+      const response = await adminApi.deleteAdminUsers(request)
+      if (response.status == 200)
+      {
+        set((state) => ({
+          items: state.items.filter(item => item.id !== id),
+          allitems: state.allItems.filter(item2 => item2.id !== id)
+        }))
+        showToast("Удалено!", "", "success")
+        return true
+      }
+      else
+      {
+        showToast("Внимание!", `${response?.data}`, "warning")
+        return false
+      }
+    }
+    catch (error)
+    {
+      const err = error as AxiosError
+      const errors = err.response?.data as ErrorsApi
+      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      return false
     }
   },
   
@@ -136,7 +201,24 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
   },
 
   resetPassword: async(userId) => {
-    await adminApi.postAdminUsersPasswordUserId(userId);
+    try
+    {
+      const response = await adminApi.postAdminUsersPasswordUserId(userId);
+      if (response.status == 200)
+      {
+        showToast("Отправлено!", "", "success")
+      }
+      else
+      {
+        showToast("Внимание!", `${response?.data}`, "warning")
+      }
+    }
+    catch (error)
+    {
+      const err = error as AxiosError
+      const errors = err.response?.data as ErrorsApi
+      showToast("Произошла ошибка!", `${errors.message}`, "error")
+    }
   },
 
 

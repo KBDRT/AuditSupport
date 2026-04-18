@@ -15,6 +15,7 @@ import type {
   ChangeUserActivationRequest,
   ChangeUserEmailRequest,
   CreateUserRequest,
+  CreateUserResponse,
   DeleteAdminUsersParams,
   GetAdminUsersParams,
   GetUserDTO,
@@ -27,11 +28,10 @@ import type {
   export const getAdmin = (axiosInstance: AxiosInstance = axios.default) => {
 const postAdminUsers = (
     createUserRequest: CreateUserRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<string>> => {
+ ): Promise<AxiosResponse<CreateUserResponse>> => {
     return axiosInstance.post(
       `/Admin/Users`,
-      createUserRequest,{
-    ...options,}
+      createUserRequest,options
     );
   }
 const deleteAdminUsers = (
@@ -70,7 +70,7 @@ const patchAdminUsersActivation = (
   }
 const postAdminUsersPasswordUserId = (
     userId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<string>> => {
     return axiosInstance.post(
       `/Admin/Users/Password/${userId}`,undefined,{
     ...options,}
@@ -85,10 +85,10 @@ const patchAdminUsersEmail = (
     );
   }
 return {postAdminUsers,deleteAdminUsers,getAdminUsers,patchAdminUsers,patchAdminUsersActivation,postAdminUsersPasswordUserId,patchAdminUsersEmail}};
-export type PostAdminUsersResult = AxiosResponse<string>
+export type PostAdminUsersResult = AxiosResponse<CreateUserResponse>
 export type DeleteAdminUsersResult = AxiosResponse<unknown>
 export type GetAdminUsersResult = AxiosResponse<GetUserDTO[]>
 export type PatchAdminUsersResult = AxiosResponse<unknown>
 export type PatchAdminUsersActivationResult = AxiosResponse<unknown>
-export type PostAdminUsersPasswordUserIdResult = AxiosResponse<unknown>
+export type PostAdminUsersPasswordUserIdResult = AxiosResponse<string>
 export type PatchAdminUsersEmailResult = AxiosResponse<unknown>

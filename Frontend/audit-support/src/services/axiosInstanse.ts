@@ -10,6 +10,8 @@ export const axiosInstance = axios.create({
   timeout: 10000, 
 });
 
+
+
 // // Интерцепторы для всех запросов
 // axiosInstance.interceptors.request.use(
 //   (config) => {

@@ -18,4 +18,5 @@ export interface CreateUserRequest {
   /** @nullable */
   email?: string | null;
   role?: Roles;
+  isSendPassword?: boolean;
 }

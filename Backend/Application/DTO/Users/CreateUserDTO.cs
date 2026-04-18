@@ -9,6 +9,7 @@ namespace Application.DTO.Users
         string Patronymic,
         string Login,
         string Email,
-        Roles Role
+        Roles Role,
+        bool IsSendPassword
     );
 }

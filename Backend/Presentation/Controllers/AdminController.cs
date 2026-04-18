@@ -25,7 +25,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost]
-        [ProducesResponseType(typeof(Guid), 200)]
+        [ProducesResponseType(typeof(CreateUserResponse), 200)]
         public async Task<IActionResult> RegisterUser(CreateUserRequest request, CancellationToken cancellationToken)
         {
             var serviceRequest = _mapper.Map<CreateUserDTO>(request);   

@@ -20,10 +20,12 @@ namespace Presentation.Controllers
             if (serviceResult.IsSuccess)
                 return Ok();
 
-            var statusCode = GetStatusCode(serviceResult.Error.Code);
-            return new JsonResult(serviceResult.Error)
+            return serviceResult.Error.Code switch
             {
-                StatusCode = statusCode
+                ErrorsCode.NOT_FOUND => NotFound(serviceResult.Error),
+                ErrorsCode.INCORRECT_PARAMETERS => BadRequest(serviceResult.Error),
+                ErrorsCode.EXISTING_RECORD => Conflict(serviceResult.Error),
+                _ => StatusCode(500, serviceResult.Error)
             };
         }
 
@@ -33,25 +35,14 @@ namespace Presentation.Controllers
             if (serviceResult.IsSuccess)
                 return Ok(serviceResult.Value);
 
-            var statusCode = GetStatusCode(serviceResult.Error.Code);
-            return new JsonResult(serviceResult.Error)
+            return serviceResult.Error.Code switch
             {
-                StatusCode = statusCode
+                ErrorsCode.NOT_FOUND => NotFound(serviceResult.Error),
+                ErrorsCode.INCORRECT_PARAMETERS => BadRequest(serviceResult.Error),
+                ErrorsCode.EXISTING_RECORD => Conflict(serviceResult.Error),
+                _ => StatusCode(500, serviceResult.Error)
             };
         }
-
-
-        private int GetStatusCode(ErrorsCode code)
-        {
-            return code switch
-            {
-                ErrorsCode.NOT_FOUND => StatusCodes.Status404NotFound,
-                ErrorsCode.INCORRECT_PARAMETERS => StatusCodes.Status400BadRequest,
-                ErrorsCode.EXISTING_RECORD => StatusCodes.Status409Conflict,
-                _ => StatusCodes.Status409Conflict,
-            };
-        }
-
 
     }
 }

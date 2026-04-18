@@ -13,6 +13,7 @@ export * from './createDirectionRequest';
 export * from './createProgramCommand';
 export * from './createReviewCommand';
 export * from './createUserRequest';
+export * from './createUserResponse';
 export * from './createYearRequest';
 export * from './deleteAdminUsersParams';
 export * from './deleteDirectionParams';

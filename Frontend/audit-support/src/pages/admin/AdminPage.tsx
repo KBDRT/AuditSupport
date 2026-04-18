@@ -1,13 +1,24 @@
 import { Grid, GridItem, Heading, Box, Center, Button, Flex } from "@chakra-ui/react";
 import UsersTable from "./UsersTable";
 import { MdAdd } from "react-icons/md";
+import UserCreate from "./UserCreate";
+import { useState } from "react";
+import { FixDialog } from "@/utils/DialogFix";
 
 function AdminPage() {
+  const [isOpenCreate, setIsOpenCreate] = useState(false)
+
+  const handleCloseCreate = () => {
+    setIsOpenCreate(false)
+    FixDialog()
+  }
+      
   const handleAdd = () => {
-    console.log("Добавить новую запись");
+    setIsOpenCreate(true)
   };
 
   return (
+    <>
     <Center mt="20px">
       <Grid w="60%" maxW="60%">
         <GridItem>
@@ -32,6 +43,14 @@ function AdminPage() {
         </GridItem>
       </Grid>
     </Center>
+    
+    {isOpenCreate &&  (
+         <UserCreate 
+          open={isOpenCreate}
+          onClose={handleCloseCreate} />
+      )}
+    
+    </>
   );
 }
 

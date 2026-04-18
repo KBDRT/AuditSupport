@@ -1,4 +1,4 @@
-import { Table, Box,  Center, Badge} from "@chakra-ui/react"
+import { Table, Box,  Center, Badge, Spinner} from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
 import { useUsersStore } from "@/stores/UsersStore";
 import type {  UpdateUserRequest } from "@/api/models";
@@ -9,40 +9,30 @@ import { FixDialog } from "@/utils/DialogFix";
 
 
 const UsersTable = () => {
-  const { items, deleteItem, updateItem, fetchUsers } = useUsersStore()
+  const { items, fetchUsers, loading } = useUsersStore()
   const [selectedLogin, setSelectedLogin] = useState("") 
   const [selectedItem, setSelectedItem] = useState<UpdateUserRequest | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpenUpdate, setIsOpenUpdate] = useState(false)
   const tableRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    await deleteItem(id)
-    setSelectedItem(null)
-  }
-
   const handleClose = () => {
-    setIsOpen(false)
+    setIsOpenUpdate(false)
     setSelectedItem(null)
     FixDialog()
   }
 
-  const handleSave = (updatedItem: UpdateUserRequest) => {
-    updateItem(updatedItem.userId ?? "", updatedItem)  
-    handleClose()  
-  }
-
   return (
     <>
+
       <Box 
         ref={tableRef}
         overflowX="auto" 
         maxW="100%"
       >
-
         <FilterTable />
 
         <Table.Root 
@@ -64,72 +54,91 @@ const UsersTable = () => {
               <Table.ColumnHeader w="150px" textAlign="center">Статус</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
-          <Table.Body>
-            {items.map((item) => (
-              <Table.Row 
-                key={item.id}
-                onDoubleClick={() => {setSelectedItem(
-                  {
-                    email: item.email, 
-                    userId: item.id, 
-                    isActive: item.isActive, 
-                    name: item.initials?.name, 
-                    surname: item.initials?.surname,
-                    patronymic: item.initials?.patronymic,
-                    role: item.role
-                  } as UpdateUserRequest);   
-                    setSelectedLogin(item.login ?? "")
-                    setIsOpen(true)
-                }}
-                style={{ cursor: "pointer" }}
-                bg={selectedItem?.userId === item.id ? "blue.50" : undefined}
-                _hover={{ bg: "gray.50" }}
-              >
-                <Table.Cell w="200px" verticalAlign="middle">
-                  {item.initials?.surname} {item.initials?.name} {item.initials?.patronymic}
-                </Table.Cell>
 
-                <Table.Cell w="250px" verticalAlign="middle">
-                  {item.login || '—'}
-                </Table.Cell>
-
-                <Table.Cell w="250px" verticalAlign="middle">
-                  {item.email || '—'}
-                </Table.Cell>
-
-                <Table.Cell w="150px" verticalAlign="middle">
-                  {GetRoleName(item.role ?? 0)}
-                </Table.Cell>
-
-                <Table.Cell w="150px" verticalAlign="middle" textAlign="center">
+          {loading ? (
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell colSpan={5} textAlign="center" h="200px">
                   <Center>
-                    <Badge 
-                      colorPalette={item.isActive ? "green" : "red"}
-                      variant="solid"
-                      borderRadius="full"
-                      px={3}
-                      py={1}
-                    >
-                      {item.isActive ? 'Активен' : 'Неактивен'}
-                    </Badge>
+                    <Spinner size="xl" />
                   </Center>
                 </Table.Cell>
               </Table.Row>
-            ))}
-          </Table.Body>
+            </Table.Body>
+          ) : items.length === 0 ? (
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell colSpan={5} textAlign="center" color="gray.500" h="200px">
+                  Нет данных
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          ) : (
+            <Table.Body>
+              {items.map((item) => (
+                <Table.Row 
+                  key={item.id}
+                  onDoubleClick={() => {
+                    setSelectedItem({
+                      email: item.email, 
+                      userId: item.id, 
+                      isActive: item.isActive, 
+                      name: item.initials?.name, 
+                      surname: item.initials?.surname,
+                      patronymic: item.initials?.patronymic,
+                      role: item.role
+                    } as UpdateUserRequest)
+                    setSelectedLogin(item.login ?? "")
+                    setIsOpenUpdate(true)
+                  }}
+                  style={{ cursor: "pointer" }}
+                  bg={selectedItem?.userId === item.id ? "blue.50" : undefined}
+                  _hover={{ bg: "gray.50" }}
+                >
+                  <Table.Cell w="200px" verticalAlign="middle">
+                    {`${item.initials?.surname || ''} ${item.initials?.name || ''} ${item.initials?.patronymic || ''}`.trim() || '—'}
+                  </Table.Cell>
+
+                  <Table.Cell w="250px" verticalAlign="middle">
+                    {item.login || '—'}
+                  </Table.Cell>
+
+                  <Table.Cell w="250px" verticalAlign="middle">
+                    {item.email || '—'}
+                  </Table.Cell>
+
+                  <Table.Cell w="150px" verticalAlign="middle">
+                    {GetRoleName(item.role ?? 0)}
+                  </Table.Cell>
+
+                  <Table.Cell w="150px" verticalAlign="middle" textAlign="center">
+                    <Center>
+                      <Badge 
+                        colorPalette={item.isActive ? "green" : "red"}
+                        variant="solid"
+                        borderRadius="full"
+                        px={3}
+                        py={1}
+                      >
+                        {item.isActive ? 'Активен' : 'Неактивен'}
+                      </Badge>
+                    </Center>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          )}
         </Table.Root>
       </Box>
 
-      {isOpen && selectedItem && (
+      {isOpenUpdate && selectedItem && (
         <UserUpdate 
-          open={isOpen}
+          open={isOpenUpdate}
           item={selectedItem}
           userLogin={selectedLogin}
-          onClose={handleClose}
-          onSave={handleSave}
-          onDelete={handleDelete}
-        />
+          onClose={handleClose} />
       )}
+
     </>
   )
 }

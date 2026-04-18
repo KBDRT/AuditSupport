@@ -20,6 +20,7 @@ namespace Presentation.MappingProfiles
             CreateMap<ChangeUserEmailRequest, ChangeUserEmailDTO>();
             CreateMap<LoginUserRequest, LoginUserDTO>();
             CreateMap<UpdateUserRequest, UpdateUserDTO>();
+            CreateMap<CreateUserResponseDTO, CreateUserResponse>();
 
             CreateMap<CreateYearRequest, CreateYearDTO>();
             CreateMap<UpdateYearRequest, UpdateYearDTO>();

@@ -10,6 +10,7 @@ namespace Presentation.Contracts.User
         string Patronymic,
         string Login,
         [Required, EmailAddress] string Email,
-        Roles Role
+        Roles Role,
+        bool IsSendPassword
     );
 }
