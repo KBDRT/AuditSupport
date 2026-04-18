@@ -76,9 +76,18 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
             </Dialog.Header>
             <Dialog.Body pb="2">
               <Stack gap="2">
-                <Field.Root orientation="horizontal"  >
+                <Field.Root orientation="horizontal" disabled>
                   <Field.Label>Логин</Field.Label>
                   <Input value={userLogin|| ""} readOnly autoFocus/>
+                </Field.Root>
+                <Field.Root orientation="horizontal" invalid={invalidFields["email"]}>
+                  <Field.Label>Email</Field.Label>
+                  <Input
+                    value={formData.email || ""}
+                    ref={withMask("email")}
+                    onChange={(e) => {setFormData({ ...formData, email: e.target.value }); setInvalidFields({...invalidFields, email: false})}}
+                    placeholder="Введите email"
+                  />
                 </Field.Root>
                 <Field.Root orientation="horizontal" invalid={invalidFields["surname"]}>
                   <Field.Label>Фамилия</Field.Label>
@@ -101,16 +110,7 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                   <Input
                     value={formData.patronymic || ""}
                     onChange={(e) => setFormData({ ...formData, patronymic: e.target.value })}
-                    placeholder="Введите отчество"
-                  />
-                </Field.Root>
-                <Field.Root orientation="horizontal" invalid={invalidFields["email"]}>
-                  <Field.Label>Email</Field.Label>
-                  <Input
-                    value={formData.email || ""}
-                    ref={withMask("email")}
-                    onChange={(e) => {setFormData({ ...formData, email: e.target.value }); setInvalidFields({...invalidFields, email: false})}}
-                    placeholder="Введите email"
+                    placeholder=""
                   />
                 </Field.Root>
                 <Field.Root orientation="horizontal">

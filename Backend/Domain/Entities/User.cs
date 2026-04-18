@@ -4,6 +4,7 @@ using Domain.Values;
 
 namespace Domain.Entities
 {
+
     public class User : Identifier
     {
         public PersonInitials Initials { get; set; } = new();

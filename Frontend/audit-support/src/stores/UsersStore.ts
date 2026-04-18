@@ -62,7 +62,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     {
       const err = error as AxiosError
       const errors = err.response?.data as ErrorsApi
-      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      showToast("Произошла ошибка!", errors != undefined ? `${errors.message}` : "Неизвестная ошибка", "error")
     }
   },
 
@@ -71,12 +71,10 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     try
     {
       const response = await adminApi.postAdminUsers(newItem)
-
-      console.log(response)
       if (response.status == 200)
       {
         set((state) => ({
-          allItems: [...state.allItems, { ...newItem, id: response.data?.userId }]
+          allItems: [...state.allItems, { ...newItem, id: response.data?.userId, isActive: true, initials: {surname: newItem.surname, name: newItem.name, patronymic: newItem.surname} }]
         }))
         get().filterUsers({ statusCode: "all", searchField: "", roles: [] })
         showToast("Сохранено!", "", "success")
@@ -92,7 +90,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     {
       const err = error as AxiosError
       const errors = err.response?.data as ErrorsApi
-      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      showToast("Произошла ошибка!", errors != undefined ? `${errors.message}` : "Неизвестная ошибка", "error")
       return false
     }
   },
@@ -123,7 +121,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     {
       const err = error as AxiosError
       const errors = err.response?.data as ErrorsApi
-      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      showToast("Произошла ошибка!", errors != undefined ? `${errors.message}` : "Неизвестная ошибка", "error")
       return false
     }
   },
@@ -140,7 +138,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
       {
         set((state) => ({
           items: state.items.filter(item => item.id !== id),
-          allitems: state.allItems.filter(item2 => item2.id !== id)
+          allItems: state.allItems.filter(item => item.id !== id)
         }))
         showToast("Удалено!", "", "success")
         return true
@@ -155,7 +153,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     {
       const err = error as AxiosError
       const errors = err.response?.data as ErrorsApi
-      showToast("Произошла ошибка!", `${errors.message}`, "error")
+      showToast("Произошла ошибка!", errors != undefined ? `${errors.message}` : "Неизвестная ошибка", "error")
       return false
     }
   },
@@ -166,7 +164,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     const { allItems, filter } = get()
     
     let filtered = [...allItems]
-    
+
     if (filter.statusCode === "active") {
       filtered = filtered.filter(user => user.isActive === true)
     } else if (filter.statusCode === "inactive") {

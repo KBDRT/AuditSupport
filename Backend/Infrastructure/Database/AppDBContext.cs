@@ -20,6 +20,11 @@ namespace Infrastructure.Database
 
         public DbSet<ProgramHistory> ProgramHistories { get; set; } = null!;
 
+        public DbSet<RuleWord> RuleWords { get; set; } = null!;
+
+        public DbSet<RuleSection> RuleSections { get; set; } = null!;
+
+        public DbSet<TechCheck> TechinalChecks { get; set; } = null!;
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
