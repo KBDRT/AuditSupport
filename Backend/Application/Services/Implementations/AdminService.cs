@@ -27,12 +27,12 @@ namespace Application.Services.Implementations
             _notificationService = notificationService;
         }
 
-        public async Task<Result<CreateUserResponseDTO, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken)
+        public async Task<Result<CreateOperationResponseDTO, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken)
         {
             var userInBase = await _repository.GetByLogin(dto.Login, cancellationToken);
             if (userInBase != null)
             {
-                return Result.Failure<CreateUserResponseDTO, ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь с таким логином уже зарегистрирован!"));
+                return Result.Failure<CreateOperationResponseDTO, ServiceError>(new(ErrorsCode.EXISTING_RECORD, "Пользователь с таким логином уже зарегистрирован!"));
             }
 
             var newUser = _mapper.Map<User>(dto);
@@ -47,7 +47,7 @@ namespace Application.Services.Implementations
 
             //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
 
-            return Result.Success<CreateUserResponseDTO, ServiceError>(new(id)); 
+            return Result.Success<CreateOperationResponseDTO, ServiceError>(new(id)); 
         }
 
         public async Task<UnitResult<ServiceError>> ChangeUserActivation(ChangeUserActivationDTO dto, CancellationToken cancellationToken)

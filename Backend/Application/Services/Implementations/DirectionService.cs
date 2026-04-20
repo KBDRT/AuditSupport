@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Common;
+using Application.DTO.Common;
 using Application.DTO.Directions;
 using Application.Helpers;
 using Application.Services.Definitions;
@@ -18,12 +19,12 @@ namespace Application.Services.Implementations
             _repository = directionRepository;
         }
 
-        public async Task<Result<Guid, ServiceError>> Create(CreateDirectionDTO dto, CancellationToken cancellationToken)
+        public async Task<Result<CreateOperationResponseDTO, ServiceError>> Create(CreateDirectionDTO dto, CancellationToken cancellationToken)
         {
             if (String.IsNullOrWhiteSpace(dto.Name))
             {
                 //_result.AddMessage("Empty name");
-                return Result.Failure<Guid, ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
+                return Result.Failure<CreateOperationResponseDTO, ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
             }
 
             Direction newDirection = new()
@@ -35,7 +36,7 @@ namespace Application.Services.Implementations
             };
 
             var newGuid = await _repository.AddNew(newDirection, cancellationToken);
-            return Result.Success<Guid, ServiceError>(newGuid);
+            return Result.Success<CreateOperationResponseDTO, ServiceError>(new(newGuid));
         }
 
         public async Task<UnitResult<ServiceError>> Delete(Guid directionId, CancellationToken cancellationToken)

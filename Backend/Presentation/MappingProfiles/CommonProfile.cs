@@ -9,6 +9,8 @@ namespace Presentation.MappingProfiles
         public CommonProfile()
         {
             CreateMap<PaginationRequest, PaginationDTO>();
+
+            CreateMap<CreateOperationResponseDTO, CreateResponse>();
         }
     }
 }

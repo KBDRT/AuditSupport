@@ -83,6 +83,8 @@ namespace Presentation.Extensions
             _services.AddScoped<IBaseRepository<EduProgram>, BaseRepository<EduProgram>>();
             _services.AddScoped<IBaseRepository<ProgramReview>, BaseRepository<ProgramReview>>();
             _services.AddScoped<IBaseRepository<ProgramHistory>, BaseRepository<ProgramHistory>>();
+            _services.AddScoped<IBaseRepository<RuleSection>, BaseRepository<RuleSection>>();
+            _services.AddScoped<IBaseRepository<RuleWord>, BaseRepository<RuleWord>>();
 
             _services.AddScoped<IUserRepository, UserRepository>();
 

@@ -1,7 +1,9 @@
-﻿using Application.DTO.Directions;
+﻿using Application.DTO.Common;
+using Application.DTO.Directions;
 using Application.DTO.Users;
 using Application.DTO.Years;
 using AutoMapper;
+using Presentation.Contracts.Common;
 using Presentation.Contracts.Direction;
 using Presentation.Contracts.User;
 using Presentation.Contracts.Year;
@@ -20,7 +22,6 @@ namespace Presentation.MappingProfiles
             CreateMap<ChangeUserEmailRequest, ChangeUserEmailDTO>();
             CreateMap<LoginUserRequest, LoginUserDTO>();
             CreateMap<UpdateUserRequest, UpdateUserDTO>();
-            CreateMap<CreateUserResponseDTO, CreateUserResponse>();
 
             CreateMap<CreateYearRequest, CreateYearDTO>();
             CreateMap<UpdateYearRequest, UpdateYearDTO>();

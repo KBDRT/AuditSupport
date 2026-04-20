@@ -7,7 +7,7 @@ namespace Application.Services.Definitions
 {
     public interface IAdminService
     {
-        public Task<Result<CreateUserResponseDTO, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken);
+        public Task<Result<CreateOperationResponseDTO, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken);
 
         public Task<UnitResult<ServiceError>> DeleteUser(Guid userId, CancellationToken cancellationToken);
 

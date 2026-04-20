@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.DTO.Common;
 using Application.DTO.Years;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
@@ -7,7 +8,7 @@ namespace Application.Services.Definitions
 {
     public interface IEduYearService
     {
-        public Task<Result<Guid, ServiceError>> Create(CreateYearDTO dto, CancellationToken cancellationToken);
+        public Task<Result<CreateOperationResponseDTO, ServiceError>> Create(CreateYearDTO dto, CancellationToken cancellationToken);
 
         public Task<UnitResult<ServiceError>> Delete(Guid yearId, CancellationToken cancellationToken);
 

@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Common;
+using Application.DTO.Common;
 using Application.DTO.Years;
 using Application.Helpers;
 using Application.Services.Definitions;
@@ -32,12 +33,12 @@ namespace Application.Services.Implementations
             return UnitResult.Success<ServiceError>();
         }
 
-        public async Task<Result<Guid, ServiceError>> Create(CreateYearDTO dto, CancellationToken cancellationToken)
+        public async Task<Result<CreateOperationResponseDTO, ServiceError>> Create(CreateYearDTO dto, CancellationToken cancellationToken)
         {
             if (dto.StartYear <= 2000)
             {
                 //_result.AddMessage("Incorrect id");
-                return Result.Failure<Guid, ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
+                return Result.Failure<CreateOperationResponseDTO, ServiceError>(new(ErrorsCode.INCORRECT_PARAMETERS, ""));
             }
 
             EduYear newEduYear = new()
@@ -49,7 +50,7 @@ namespace Application.Services.Implementations
             };
 
             var newGuid = await _repository.AddNew(newEduYear, cancellationToken);
-            return Result.Success<Guid, ServiceError>(newGuid);
+            return Result.Success<CreateOperationResponseDTO, ServiceError>(new(newGuid));
         }
 
         public async Task<UnitResult<ServiceError>> Delete(Guid yearId, CancellationToken cancellationToken)
