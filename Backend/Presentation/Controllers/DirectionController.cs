@@ -1,10 +1,12 @@
-﻿using Application.DTO.Directions;
+﻿using Application.DTO.Common;
+using Application.DTO.Directions;
 using Application.DTO.Users;
 using Application.Helpers;
 using Application.Services.Definitions;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Contracts.Common;
 using Presentation.Contracts.Direction;
 
 namespace Presentation.Controllers
@@ -26,7 +28,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Guid), 200)]
+        [ProducesResponseType(typeof(CreateOperationResponseDTO), 200)]
         public async Task<IActionResult> AddNewDirection(CreateDirectionRequest request, CancellationToken cancellationToken)
         {
             var dto = _mapper.Map<CreateDirectionDTO>(request);

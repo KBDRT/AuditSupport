@@ -1,4 +1,4 @@
-import type { GetUserDTO, UpdateUserRequest } from "@/api/models";
+import type { EduYear, GetUserDTO, UpdateUserRequest, UpdateYearRequest } from "@/api/models";
 
 export const mergeUpdateToUser = (
   item: GetUserDTO, 
@@ -20,3 +20,17 @@ export const mergeUpdateToUser = (
     ].filter(Boolean).join(' ')
   }
 });
+
+
+export const mergeUpdateToYear = (
+  item: EduYear, 
+  updates: UpdateYearRequest
+): EduYear => ({
+  ...item,
+  id: updates.yearId ?? item.id,
+  description: updates.description ?? item.description,
+  startYear: updates.startYear ?? item.startYear,
+  endYear: updates.startYear != undefined ? updates.startYear + 1 : 0,
+  period: updates.startYear != undefined ? `${updates.startYear}-${updates.startYear + 1}`: "-",
+  });
+

@@ -17,5 +17,8 @@ namespace Application.Services.Definitions
         public Task<UnitResult<ServiceError>> Update(UpdateYearDTO dto, CancellationToken cancellationToken);
 
         public Task<UnitResult<ServiceError>> ChangeStatus(ChangeYearStatusDTO dto, CancellationToken cancellationToken);
+
+        public Task<UnitResult<ServiceError>> NotificateUsers(Guid yearId, CancellationToken cancellationToken);
+
     }
 }

@@ -10,7 +10,5 @@ export interface UpdateDirectionRequest {
   /** @nullable */
   name?: string | null;
   /** @nullable */
-  shortName?: string | null;
-  /** @nullable */
   description?: string | null;
 }

@@ -4,7 +4,6 @@
     (
         Guid DirectionId,
         string Name,
-        string ShortName,
         string Description
     );
 }

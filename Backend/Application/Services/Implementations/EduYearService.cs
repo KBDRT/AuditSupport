@@ -1,8 +1,8 @@
-﻿using Application.Abstractions.Repositories;
+﻿using Application.Abstractions.Notifications;
+using Application.Abstractions.Repositories;
 using Application.Common;
 using Application.DTO.Common;
 using Application.DTO.Years;
-using Application.Helpers;
 using Application.Services.Definitions;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
@@ -12,10 +12,13 @@ namespace Application.Services.Implementations
     public class EduYearService : IEduYearService
     {
         private readonly IBaseRepository<EduYear> _repository;
+        private readonly INotification _notificationService;
 
-        public EduYearService(IBaseRepository<EduYear> repository)
+        public EduYearService(IBaseRepository<EduYear> repository,
+                              INotification notificationService)
         {
             _repository = repository;
+            _notificationService = notificationService;
         }
 
         public async Task<UnitResult<ServiceError>> ChangeStatus(ChangeYearStatusDTO dto, CancellationToken cancellationToken)
@@ -29,6 +32,8 @@ namespace Application.Services.Implementations
             
             oldEduYear?.IsOpened = dto.IsOpenYear;
             await _repository.Update(oldEduYear, cancellationToken);
+
+            // add notificationts
 
             return UnitResult.Success<ServiceError>();
         }
@@ -71,6 +76,15 @@ namespace Application.Services.Implementations
             var directions = await _repository.GetAll(cancellationToken) ?? [];
 
             return Result.Success<List<EduYear>, ServiceError>(directions);
+        }
+
+        public async Task<UnitResult<ServiceError>> NotificateUsers(Guid yearId, CancellationToken cancellationToken)
+        {
+            // get users
+            // notificate
+
+
+            return UnitResult.Success<ServiceError>();
         }
 
         public async Task<UnitResult<ServiceError>> Update(UpdateYearDTO dto, CancellationToken cancellationToken)

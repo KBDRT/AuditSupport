@@ -5,6 +5,7 @@ import { ROLE_COLLECTION, STATUS_COLLECTION} from "@/constants/roles"
 import { MdSave, MdLockReset, MdDelete  } from "react-icons/md";
 import { useUsersStore } from "@/stores/UsersStore";
 import { withMask } from "use-mask-input"
+import { z } from 'zod'
 
 interface UserInvalidFields {
   surname: boolean,
@@ -19,6 +20,12 @@ interface UserUpdateProps {
   onClose: () => void
 }
 
+const userSchemaUpdate = z.object({
+  email: z.string().email('Неверный формат email').min(1, 'Email обязателен'),
+  name: z.string().min(1, 'Имя обязательно'),
+  surname: z.string().min(1, 'Фамилия обязательна'),
+})
+
 const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
   const [formData, setFormData] = useState<UpdateUserRequest>(item)
   const { resetPassword, deleteItem, updateItem} = useUsersStore()
@@ -29,19 +36,31 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
   }, [item])
 
   const handleSave = async() => {
-
-    if (formData.email?.length == 0 || formData.name?.length == 0 || formData.surname?.length == 0)
-    {
-      setInvalidFields({...invalidFields, email: formData.email?.length == 0, name: formData.name?.length == 0, surname: formData.surname?.length == 0 })
-    }
-    else
-    {
+    try {
+      userSchemaUpdate.parse(formData)
+      
+      setInvalidFields({ email: false, name: false, surname: false })
+      
       const isSuccess = await updateItem(formData.userId ?? "", formData)  
-      if (isSuccess)
-      {
-        onClose()       
-      } 
+      if (isSuccess) {
+        onClose()
+      }
     } 
+    catch (error) 
+    {
+      if (error instanceof z.ZodError) {
+        const newErrors = { email: false, name: false, surname: false}
+        
+        error.issues.forEach(issue => {
+          const field = issue.path[0] as keyof UserInvalidFields
+          if (field in newErrors) {
+            newErrors[field] = true
+          }
+        })
+        
+        setInvalidFields(newErrors)
+      }
+    }   
   }
 
   const handleDelete = async() => {
@@ -197,11 +216,12 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                       </Dialog.Header>
                       <Dialog.Body>
                         <Text>
-                        Внимание, новый пароль будет отправлен на почту:
+                          Внимание, новый пароль будет отправлен на почту: 
+                          <Text as="span" fontWeight="bold" color="black.600" mt={2} mb={3}>
+                            {` ${formData.email}`}
+                          </Text>
                         </Text>
-                        <Text fontWeight="bold" color="black.600" mt={2} mb={3}>
-                          {formData.email}
-                        </Text>
+                        <br />
                         <Text>
                           Продолжить?
                         </Text>
@@ -237,10 +257,11 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                       </Dialog.Header>
                       <Dialog.Body>
                         <Text>
-                          Вы уверены, что хотите удалить пользователя?
-                        </Text>
-                        <Text fontWeight="bold" color="black.600" my={2}>
-                          {formData.surname} {formData.name} {formData.patronymic}
+                          Вы уверены, что хотите удалить пользователя:
+                          <Text as="span" fontWeight="bold" color="black.600" my={2}>
+                            {` ${formData.surname} ${formData.name} ${formData.patronymic} `}
+                          </Text>
+                          ?
                         </Text>
                       </Dialog.Body>
                       <Dialog.Footer>

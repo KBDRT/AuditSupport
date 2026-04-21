@@ -8,4 +8,5 @@
 export interface ChangeYearStatusRequest {
   yearId?: string;
   isOpenYear?: boolean;
+  isNotificateUsers?: boolean;
 }

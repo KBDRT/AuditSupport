@@ -95,6 +95,8 @@ namespace Presentation.Extensions
             _services.AddScoped<IAuthService, AuthService>();
 
             _services.AddScoped<IMinioService, MinioService>();
+            _services.AddScoped<IRuleService<RuleSection>, RuleService<RuleSection>>();
+            _services.AddScoped<IRuleService<RuleWord>, RuleService<RuleWord>>();
 
             _services.AddScoped<JwtGenerator>();
 

@@ -30,7 +30,7 @@ namespace Application.Services.Implementations
             Direction newDirection = new()
             {
                 Name = dto.Name,
-                Description = dto.ShortName,
+                Description = dto.Description,
                 ShortName = dto.ShortName,
                 Id = Guid.NewGuid(),
             };
@@ -68,7 +68,6 @@ namespace Application.Services.Implementations
             }
 
             direction.Description = dto.Description; 
-            direction.ShortName = dto.ShortName;
             direction.Name = dto.Name;
 
             await _repository.Update(direction, cancellationToken);

@@ -3,6 +3,7 @@
     public record ChangeYearStatusDTO
     (
         Guid YearId, 
-        bool IsOpenYear
+        bool IsOpenYear,
+        bool IsNotificateUsers
     );
 }

@@ -3,6 +3,7 @@
     public record ChangeYearStatusRequest
     (
         Guid YearId,
-        bool IsOpenYear
+        bool IsOpenYear,
+        bool IsNotificateUsers
     );
 }

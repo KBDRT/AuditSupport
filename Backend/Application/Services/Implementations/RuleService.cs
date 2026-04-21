@@ -63,9 +63,9 @@ namespace Application.Services.Implementations
                 return UnitResult.Failure<ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
             }
 
-            var updatedRule = _mapper.Map<T>(dto);
+            _mapper.Map(dto, rule);
 
-            await _repository.Update(updatedRule, cancellationToken);
+            await _repository.Update(rule, cancellationToken);
 
             return UnitResult.Success<ServiceError>();
         }

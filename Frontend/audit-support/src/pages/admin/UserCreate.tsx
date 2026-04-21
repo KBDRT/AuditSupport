@@ -6,6 +6,7 @@ import { MdSave  } from "react-icons/md";
 import { useUsersStore } from "@/stores/UsersStore";
 import { withMask } from "use-mask-input"
 import { z } from 'zod'
+import { Checkbox } from "@chakra-ui/react"
 
 interface UserInvalidFields {
   surname: boolean,
@@ -112,7 +113,7 @@ const UserCreate = ({ open, onClose}: UserCreateProps) => {
                     onChange={(e) => {setFormData({ ...formData, email: e.target.value }); setInvalidFields({...invalidFields, email: false})}}
                     placeholder="Введите email"
                   />
-                  <Field.ErrorText>Неверный формат.</Field.ErrorText>
+                  <Field.ErrorText>Поле является обязательным.</Field.ErrorText>
                 </Field.Root>
                 <Field.Root orientation="horizontal" invalid={invalidFields["surname"]}>
                   <Field.Label>Фамилия</Field.Label>
@@ -171,6 +172,11 @@ const UserCreate = ({ open, onClose}: UserCreateProps) => {
                     </Portal>
                   </Select.Root>
                 </Field.Root>
+                <Checkbox.Root checked={formData.isSendPassword} onCheckedChange={(e) => setFormData({ ...formData, isSendPassword: !!e.checked })}>
+                  <Checkbox.HiddenInput />
+                  <Checkbox.Label>Отправить<br/>пароль</Checkbox.Label>
+                  <Checkbox.Control ml={1.5}/>
+                </Checkbox.Root>
               </Stack>
             </Dialog.Body>
             <Dialog.Footer>

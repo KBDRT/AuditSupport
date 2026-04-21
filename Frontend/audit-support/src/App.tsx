@@ -1,7 +1,9 @@
-import AdminPage from './pages/admin/AdminPage'
+import UsersPage from './pages/admin/UsersPage'
 import Header from './components/common/Header'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from "./components/ui/toaster"
+import DirectionPage from './pages/direction/DirectionsPage'
+import YearsPage from './pages/year/YearsPage'
 
 function App() {
 
@@ -12,10 +14,10 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-            <Route path="/admin" element={<AdminPage />} />
-            {/* <Route path="/units" element={<Units />} />
-            <Route path="/documents" element={<ReceiptDocuments />} />
-            <Route path="/receiptDocumentsEdit/:id" element={<ReceiptDocumentEdit />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/directions" element={<DirectionPage />} />
+            <Route path="/eduyears" element={<YearsPage />} />
+            {/* <Route path="/receiptDocumentsEdit/:id" element={<ReceiptDocumentEdit />} />
             <Route path="/receiptDocumentsAdd/" element={<ReceiptDocumentAdd />} />
             <Route path="/*" element={<Resources />} /> */}
         </Routes>

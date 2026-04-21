@@ -13,8 +13,11 @@ import type {
 
 import type {
   ChangeYearStatusRequest,
+  CreateOperationResponseDTO,
   CreateYearRequest,
   DeleteEduYearParams,
+  EduYear,
+  PostEduYearNotificationsParams,
   UpdateYearRequest
 } from '../models';
 
@@ -24,7 +27,7 @@ import type {
   export const getEduYear = (axiosInstance: AxiosInstance = axios.default) => {
 const postEduYear = (
     createYearRequest: CreateYearRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<CreateOperationResponseDTO>> => {
     return axiosInstance.post(
       `/EduYear`,
       createYearRequest,options
@@ -32,7 +35,7 @@ const postEduYear = (
   }
 const getEduYear = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<EduYear[]>> => {
     return axiosInstance.get(
       `/EduYear`,options
     );
@@ -62,9 +65,19 @@ const patchEduYear = (
       changeYearStatusRequest,options
     );
   }
-return {postEduYear,getEduYear,deleteEduYear,putEduYear,patchEduYear}};
-export type PostEduYearResult = AxiosResponse<unknown>
-export type GetEduYearResult = AxiosResponse<unknown>
+const postEduYearNotifications = (
+    params?: PostEduYearNotificationsParams, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axiosInstance.post(
+      `/EduYear/Notifications`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+return {postEduYear,getEduYear,deleteEduYear,putEduYear,patchEduYear,postEduYearNotifications}};
+export type PostEduYearResult = AxiosResponse<CreateOperationResponseDTO>
+export type GetEduYearResult = AxiosResponse<EduYear[]>
 export type DeleteEduYearResult = AxiosResponse<unknown>
 export type PutEduYearResult = AxiosResponse<unknown>
 export type PatchEduYearResult = AxiosResponse<unknown>
+export type PostEduYearNotificationsResult = AxiosResponse<unknown>

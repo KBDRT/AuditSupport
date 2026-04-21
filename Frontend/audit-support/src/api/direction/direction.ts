@@ -13,6 +13,7 @@ import type {
 
 import type {
   CreateDirectionRequest,
+  CreateOperationResponseDTO,
   DeleteDirectionParams,
   Direction,
   UpdateDirectionRequest
@@ -24,11 +25,10 @@ import type {
   export const getDirection = (axiosInstance: AxiosInstance = axios.default) => {
 const postDirection = (
     createDirectionRequest: CreateDirectionRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<string>> => {
+ ): Promise<AxiosResponse<CreateOperationResponseDTO>> => {
     return axiosInstance.post(
       `/Direction`,
-      createDirectionRequest,{
-    ...options,}
+      createDirectionRequest,options
     );
   }
 const getDirection = (
@@ -56,7 +56,7 @@ const putDirection = (
     );
   }
 return {postDirection,getDirection,deleteDirection,putDirection}};
-export type PostDirectionResult = AxiosResponse<string>
+export type PostDirectionResult = AxiosResponse<CreateOperationResponseDTO>
 export type GetDirectionResult = AxiosResponse<Direction[]>
 export type DeleteDirectionResult = AxiosResponse<unknown>
 export type PutDirectionResult = AxiosResponse<unknown>

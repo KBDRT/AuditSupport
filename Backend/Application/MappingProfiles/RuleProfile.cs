@@ -11,21 +11,18 @@ namespace Application.MappingProfiles
         public RuleProfile()
         {
             CreateMap<CreateRuleDTO, RuleWord>();
-            CreateMap<CreateRuleDTO, RuleSection>();
+            CreateMap<CreateRuleDTO, RuleSection>()
+                .ForMember(dest => dest.SectionName, opt => opt.MapFrom(src => src.Word));
 
-            CreateMap<RuleWord, GetRuleResponseDTO>();
-            CreateMap<RuleSection, GetRuleResponseDTO>();
+            CreateMap<RuleWord, GetRuleResponseDTO>().ConstructUsing(src => new GetRuleResponseDTO(src.Id, src.Word));
 
-            CreateMap<UpdateRuleDTO, RuleWord>();
-            CreateMap<UpdateRuleDTO, RuleSection>();
-            //CreateMap<CreateUserDTO, User>()
-            //.ForMember(dest => dest.Initials, opt => opt.MapFrom(src => new PersonInitials() { Name = src.Name, Surname = src.Surname, Patronymic = src.Patronymic }));
+            CreateMap<RuleSection, GetRuleResponseDTO>().ConstructUsing(src => new GetRuleResponseDTO(src.Id, src.SectionName));
+
+            CreateMap<UpdateRuleDTO, RuleWord>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RuleId));
+            CreateMap<UpdateRuleDTO, RuleSection>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RuleId))
+                .ForMember(dest => dest.SectionName, opt => opt.MapFrom(src => src.Word));
         }
     }
 }
-
-
-
-// CreateRuleDTO -> RuleWord RuleSection
-// RuleWord RuleSection -> GetRuleResponseDTO 
-// UpdateRuleDTO  -> RuleWord RuleSection

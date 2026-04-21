@@ -1,6 +1,8 @@
-﻿using Application.DTO.Years;
+﻿using Application.DTO.Common;
+using Application.DTO.Years;
 using Application.Services.Definitions;
 using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.Year;
 
@@ -22,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CreateOperationResponseDTO), 200)]
         public async Task<IActionResult> AddNewYear(CreateYearRequest request, CancellationToken cancellationToken)
         {
             var dto = _mapper.Map<CreateYearDTO>(request);
@@ -32,6 +35,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<EduYear>), 200)]
         public async Task<IActionResult> GetYears(CancellationToken cancellationToken)
         {
             var result = await _service.Get(cancellationToken);
@@ -61,6 +65,14 @@ namespace Presentation.Controllers
             var dto = _mapper.Map<ChangeYearStatusDTO>(request);
 
             var result = await _service.ChangeStatus(dto, cancellationToken);
+            return FromResult(result);
+        }
+
+
+        [HttpPost("Notifications")]
+        public async Task<IActionResult> NotificateUsers(Guid yearId, CancellationToken cancellationToken)
+        {
+            var result = await _service.NotificateUsers(yearId, cancellationToken);
             return FromResult(result);
         }
 
