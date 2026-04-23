@@ -46,15 +46,14 @@ namespace Presentation.Extensions
                 options.AddPolicy("AllowReactApp",
                     policy =>
                     {
-                        policy.AllowAnyOrigin()
+                        policy.WithOrigins("https://localhost:5173")
+                              .AllowCredentials()
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
             });
 
             
-
-
             _services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
@@ -168,7 +167,7 @@ namespace Presentation.Extensions
 
             });
 
-            _services.AddAuthorization(options =>
+            _services.AddAuthorization(options => 
             {
                 options.AddPolicy("RoleAdmin", policy => policy.Requirements.Add(new RoleRequirement("Admin")));
                 //options.AddPolicy("RoleTeacher", policy => policy.Requirements.Add(new RoleRequirement("Teacher")));

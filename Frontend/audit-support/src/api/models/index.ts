@@ -5,6 +5,7 @@
  * OpenAPI spec version: v1
  */
 
+export * from './authSuccessResponse';
 export * from './changeProgramStatusCommand';
 export * from './changeUserActivationRequest';
 export * from './changeUserEmailRequest';

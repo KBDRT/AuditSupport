@@ -11,6 +11,7 @@ namespace Presentation.Contracts.User
         string Login,
         [Required, EmailAddress] string Email,
         Roles Role,
-        bool IsSendPassword
+        bool IsSendPassword,
+        string? Password
     );
 }

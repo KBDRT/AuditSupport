@@ -82,7 +82,7 @@ const YearCreate = ({ open, onClose}: YearCreateProps) => {
                     maxLength={4}
                     minLength={4}
                     value={formData.startYear || ""}
-                    onChange={(e) => {setFormData({ ...formData, startYear: Number(e.target.value) }); setInvalidFields({...invalidFields, name: false})}}
+                    onChange={(e) => {setFormData({ ...formData, startYear: Number(e.target.value) }); setInvalidFields({...invalidFields, startYear: false})}}
                     placeholder="Введите начало года"
                   />
                   <Field.ErrorText>Некорректный формат</Field.ErrorText>

@@ -6,6 +6,6 @@ namespace Application.Services.Definitions
 {
     public interface IAuthService
     {
-        public Task<Result<string, ServiceError>> LoginUser(LoginUserDTO dto, CancellationToken cancellationToken);
+        public Task<Result<LoginUserResponseDTO, ServiceError>> LoginUser(LoginUserDTO dto, CancellationToken cancellationToken);
     }
 }

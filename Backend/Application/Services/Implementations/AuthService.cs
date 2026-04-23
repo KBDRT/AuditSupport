@@ -23,7 +23,7 @@ namespace Application.Services.Implementations
         }
 
 
-        public async Task<Result<string, ServiceError>> LoginUser(LoginUserDTO dto, CancellationToken cancellationToken)
+        public async Task<Result<LoginUserResponseDTO, ServiceError>> LoginUser(LoginUserDTO dto, CancellationToken cancellationToken)
         {
             var user = await _repository.GetByLogin(dto.Login, cancellationToken);
             if (user != null)
@@ -33,7 +33,7 @@ namespace Application.Services.Implementations
                 {
                     var claims = CreateClaimForUser(user);
                     var token = _tokenGenerator.GetNewJwtTokenString(claims);
-                    return Result.Success<string, ServiceError>(token);
+                    return Result.Success<LoginUserResponseDTO, ServiceError>(new(token, user.Id.ToString(), user.Role.ToString()));
                 }
                 else
                 {
@@ -45,14 +45,15 @@ namespace Application.Services.Implementations
                 //result.AddMessage("Пользователь не найден!", "Login");
             }
 
-            return Result.Failure<string, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
+            return Result.Failure<LoginUserResponseDTO, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
         }
 
         private List<Claim> CreateClaimForUser(User user)
         {
             return
             [
-                new Claim("user", user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             ];
         }
 

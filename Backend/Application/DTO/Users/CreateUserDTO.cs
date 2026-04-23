@@ -10,6 +10,7 @@ namespace Application.DTO.Users
         string Login,
         string Email,
         Roles Role,
-        bool IsSendPassword
+        bool IsSendPassword,
+        string? Password
     );
 }

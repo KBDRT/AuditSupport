@@ -35,7 +35,6 @@ namespace Presentation.Controllers
             return FromResult(result);
         }
 
-
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(Guid userId, CancellationToken cancellationToken)
         {

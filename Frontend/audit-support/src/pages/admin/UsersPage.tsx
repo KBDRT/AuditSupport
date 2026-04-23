@@ -19,7 +19,7 @@ function UsersPage() {
 
   return (
     <>
-    <Center mt="20px">
+    <Center>
       <Grid w="60%" maxW="60%">
         <GridItem>
           <Flex justify="space-between" align="center" mb={3}>

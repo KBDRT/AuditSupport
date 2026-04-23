@@ -1,8 +1,9 @@
 // api/axiosInstance.ts
-import axios from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: 'https://localhost:5001',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -12,28 +13,27 @@ export const axiosInstance = axios.create({
 
 
 
-// // Интерцепторы для всех запросов
-// axiosInstance.interceptors.request.use(
-//   (config) => {
-//     // Добавляем токен авторизации
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
+// // Интерсептор для обработки ошибок
+// axiosInstance.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//         if (error.response?.status === 401) {
+//             // Перенаправление на логин
+//             if (typeof window !== 'undefined') {
+//                 window.location.href = '/login';
+//             }
+//         }
+//         return Promise.reject(error);
 //     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
 // );
 
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     // Обработка ошибок
-//     if (error.response?.status === 401) {
-//       // Неавторизован
-//       localStorage.removeItem('token');
-//       window.location.href = '/login';
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+// Интерсептор для добавления токена (если нужно)
+axiosInstance.interceptors.request.use(
+    (config: InternalAxiosRequestConfig) => {
+        // Можно добавить логирование или другие заголовки
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);

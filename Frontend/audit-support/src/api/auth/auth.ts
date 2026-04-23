@@ -12,6 +12,7 @@ import type {
 } from 'axios';
 
 import type {
+  AuthSuccessResponse,
   LoginUserRequest
 } from '../models';
 
@@ -21,7 +22,7 @@ import type {
   export const getAuth = (axiosInstance: AxiosInstance = axios.default) => {
 const getAuthCheckAuth = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<AuthSuccessResponse>> => {
     return axiosInstance.get(
       `/Auth/CheckAuth`,options
     );
@@ -35,13 +36,13 @@ const postAuthLogout = (
   }
 const postAuthLogin = (
     loginUserRequest: LoginUserRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<AuthSuccessResponse>> => {
     return axiosInstance.post(
       `/Auth/Login`,
       loginUserRequest,options
     );
   }
 return {getAuthCheckAuth,postAuthLogout,postAuthLogin}};
-export type GetAuthCheckAuthResult = AxiosResponse<unknown>
+export type GetAuthCheckAuthResult = AxiosResponse<AuthSuccessResponse>
 export type PostAuthLogoutResult = AxiosResponse<unknown>
-export type PostAuthLoginResult = AxiosResponse<unknown>
+export type PostAuthLoginResult = AxiosResponse<AuthSuccessResponse>

@@ -1,14 +1,14 @@
 const config = {
   development: {
-    url: 'http://localhost:5000',
+    url: 'https://localhost:5001',
     timeout: 5000,
   },
   production: {
-    url: 'http://localhost:5000',
+    url: 'https://localhost:5001',
     timeout: 10000,
   },
   staging: {
-    url: 'http://localhost:5000',
+    url: 'https://localhost:5001',
     timeout: 8000,
   }
 }

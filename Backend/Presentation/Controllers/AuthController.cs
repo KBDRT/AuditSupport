@@ -1,10 +1,13 @@
 ﻿using Application.DTO.Users;
 using Application.Services.Definitions;
 using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Presentation.Contracts.User;
 using Presentation.Settings;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace Presentation.Controllers
 {
@@ -26,11 +29,15 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("CheckAuth")]
+        [ProducesResponseType(typeof(AuthSuccessResponse), 200)]
         public async Task<IActionResult> CheckAuth()
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return Ok();
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+                var role = User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
+
+                return Ok(new AuthSuccessResponse(userId, role));
             }
             return Unauthorized();
         }
@@ -45,6 +52,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("Login")]
+        [ProducesResponseType(typeof(AuthSuccessResponse), 200)]
         public async Task<IActionResult> LoginUser(LoginUserRequest request, CancellationToken cancellationToken)
         {
             var dto = _mapper.Map<LoginUserDTO>(request);
@@ -52,12 +60,15 @@ namespace Presentation.Controllers
 
             if (result.IsSuccess)
             {
-                Response.Cookies.Append(_authSettings.Value.CookieNameForToken, result.Value,
+                var resultValue = result.Value;
+                Response.Cookies.Append(_authSettings.Value.CookieNameForToken, resultValue.Token,
                 new CookieOptions
                 {
                     Expires = DateTime.UtcNow.Add(_authSettings.Value.TokenLifeTime),
+                    Secure = false
                 });
-                return Ok();
+
+                return Ok(new AuthSuccessResponse(resultValue.UserId, resultValue.Role));
             }
 
             return NotFound();

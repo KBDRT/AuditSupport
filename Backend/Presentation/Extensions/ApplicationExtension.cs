@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.CookiePolicy;
-using Presentation.Middlewares;
-
 namespace Presentation.Extensions
 {
     public static class ApplicationExtension
     {
         public static void Configure(this WebApplication app)
         {
-
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
@@ -16,6 +13,9 @@ namespace Presentation.Extensions
             });
 
             app.UseCors("AllowReactApp");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             //app.UseCookiePolicy(new CookiePolicyOptions
             //{
@@ -28,10 +28,8 @@ namespace Presentation.Extensions
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
 
-            app.UseMiddleware<AuthMiddleware>();
+            //app.UseMiddleware<AuthMiddleware>();
 
             app.MapControllers();
 

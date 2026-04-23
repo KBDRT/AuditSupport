@@ -52,7 +52,7 @@ const DirectionsTable = () => {
               <Table.Row>
                 <Table.Cell colSpan={5} textAlign="center" h="200px">
                   <Center>
-                    <Spinner size="xl" />
+                    <Spinner size="xl" color="blue"/>
                   </Center>
                 </Table.Cell>
               </Table.Row>

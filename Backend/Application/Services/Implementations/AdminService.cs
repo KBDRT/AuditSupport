@@ -38,8 +38,18 @@ namespace Application.Services.Implementations
             var newUser = _mapper.Map<User>(dto);
             newUser.Id = Guid.NewGuid();
 
-            string password = PasswordGenerator.GeneratePassword(12, true);
 
+            string password = string.Empty;
+            if (dto.Password == null)
+            {
+                password = PasswordGenerator.GeneratePassword(12, true);
+            }
+            else
+            {
+                password = dto.Password;
+            }
+            
+            
             var hashedPassword = new PasswordHasher<User>().HashPassword(newUser, password);
             newUser.PasswordHashed = hashedPassword;
 
