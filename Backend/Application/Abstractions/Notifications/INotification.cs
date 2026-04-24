@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.References;
 
 namespace Application.Abstractions.Notifications
 {

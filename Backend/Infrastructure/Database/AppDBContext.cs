@@ -1,6 +1,8 @@
 ﻿//using Infrastructure.Database.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
+using Domain.Entities.References;
+using Domain.Entities.Rules;
+using Domain.Entities.ProgramContext;
 
 namespace Infrastructure.Database
 {
@@ -25,6 +27,8 @@ namespace Infrastructure.Database
         public DbSet<RuleSection> RuleSections { get; set; } = null!;
 
         public DbSet<TechCheck> TechinalChecks { get; set; } = null!;
+
+        public DbSet<RuleSectionStructure> RuleStructures { get; set; } = null!;
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {

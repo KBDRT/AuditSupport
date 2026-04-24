@@ -1,7 +1,7 @@
 ﻿using Application.DTO.Programs;
 using Application.DTO.Users;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using Domain.Values;
 
 namespace Application.MappingProfiles

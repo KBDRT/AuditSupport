@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ProgramContext;
 using Domain.Enums;
 
 namespace Application.DTO.Programs

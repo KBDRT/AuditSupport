@@ -1,5 +1,5 @@
 ﻿using Application.DTO.Common;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using Domain.Enums;
 
 namespace Application.Abstractions.Repositories.Builders

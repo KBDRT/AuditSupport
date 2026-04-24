@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Repositories.Builders;
 using Application.DTO.Common;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 

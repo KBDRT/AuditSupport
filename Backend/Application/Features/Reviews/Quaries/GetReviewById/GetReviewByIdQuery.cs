@@ -1,6 +1,6 @@
 ﻿using Application.Common;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using MediatR;
 
 namespace Application.Features.Reviews.Quaries.GetReviewById

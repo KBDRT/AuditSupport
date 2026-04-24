@@ -1,10 +1,8 @@
-﻿using Application.DTO.Common;
-using Application.DTO.Directions;
+﻿using Application.DTO.Directions;
 using Application.DTO.Rules;
 using Application.DTO.Users;
 using Application.DTO.Years;
 using AutoMapper;
-using Presentation.Contracts.Common;
 using Presentation.Contracts.Direction;
 using Presentation.Contracts.Rule;
 using Presentation.Contracts.User;
@@ -29,8 +27,11 @@ namespace Presentation.MappingProfiles
             CreateMap<UpdateYearRequest, UpdateYearDTO>();
             CreateMap<ChangeYearStatusRequest, ChangeYearStatusDTO>();
 
-            CreateMap<CreateRuleRequest, CreateRuleDTO>();
-            CreateMap<UpdateRuleRequest, UpdateRuleDTO>();
+            CreateMap<CreateSectionRuleRequest, CreateSectionRuleDTO>();
+            CreateMap<UpdateSectionRuleRequest, UpdateSectionRuleDTO>();
+
+            CreateMap<CreateWordRuleRequest, CreateWordRuleDTO>();
+            CreateMap<UpdateWordRuleRequest, UpdateWordRuleDTO>();
         }
 
     }

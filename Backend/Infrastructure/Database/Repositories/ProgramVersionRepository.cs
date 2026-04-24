@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Repositories;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Repositories

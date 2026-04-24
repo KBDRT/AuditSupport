@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Repositories;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 
 namespace Infrastructure.Database.Repositories
 {

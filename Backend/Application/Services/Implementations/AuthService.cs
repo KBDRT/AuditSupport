@@ -4,7 +4,7 @@ using Application.DTO.Users;
 using Application.Helpers;
 using Application.Services.Definitions;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
+using Domain.Entities.References;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 

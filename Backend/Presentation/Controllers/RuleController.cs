@@ -1,11 +1,9 @@
-﻿using Application.DTO.Directions;
-using Application.DTO.Rules;
+﻿using Application.DTO.Rules;
 using Application.Services.Definitions;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities.Rules;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.Common;
-using Presentation.Contracts.Direction;
 using Presentation.Contracts.Rule;
 
 namespace Presentation.Controllers
@@ -14,13 +12,13 @@ namespace Presentation.Controllers
     [ApiController]
     public class RuleController : BaseController
     {
-        private readonly IRuleService<RuleWord> _wordService;
-        private readonly IRuleService<RuleSection> _sectionService;
+        private readonly IWordRulesService _wordService;
+        private readonly ISectionRulesService _sectionService;
 
         private readonly IMapper _mapper;
 
-        public RuleController(IRuleService<RuleWord> wordService,
-                              IRuleService<RuleSection> sectionService,
+        public RuleController(IWordRulesService wordService,
+                              ISectionRulesService sectionService,
                               IMapper mapper)
         {
             _wordService = wordService;
@@ -30,9 +28,9 @@ namespace Presentation.Controllers
 
         [HttpPost("Word")]
         [ProducesResponseType(typeof(CreateResponse), 200)]
-        public async Task<IActionResult> AddRuleWord(CreateRuleRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddRuleWord(CreateWordRuleRequest request, CancellationToken cancellationToken)
         {
-            var dto = _mapper.Map<CreateRuleDTO>(request);
+            var dto = _mapper.Map<CreateWordRuleDTO>(request);
 
             var result = await _wordService.CreateRule(dto, cancellationToken);
             return FromResult(result);
@@ -40,7 +38,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet("Word")]
-        [ProducesResponseType(typeof(List<GetRuleResponseDTO>), 200)]
+        [ProducesResponseType(typeof(List<GetWordRuleResponseDTO>), 200)]
         public async Task<IActionResult> GetRulesWord(CancellationToken cancellationToken)
         {
             var result = await _wordService.GetRules(cancellationToken);
@@ -56,9 +54,9 @@ namespace Presentation.Controllers
 
 
         [HttpPut("Word")]
-        public async Task<IActionResult> UpdateRuleWord(UpdateRuleRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateRuleWord(UpdateWordRuleRequest request, CancellationToken cancellationToken)
         {
-            var dto = _mapper.Map<UpdateRuleDTO>(request);
+            var dto = _mapper.Map<UpdateWordRuleDTO>(request);
 
             var result = await _wordService.UpdateRule(dto, cancellationToken);
             return FromResult(result);
@@ -66,9 +64,9 @@ namespace Presentation.Controllers
 
         [HttpPost("Section")]
         [ProducesResponseType(typeof(CreateResponse), 200)]
-        public async Task<IActionResult> AddRuleSection(CreateRuleRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddRuleSection(CreateSectionRuleRequest request, CancellationToken cancellationToken)
         {
-            var dto = _mapper.Map<CreateRuleDTO>(request);
+            var dto = _mapper.Map<CreateSectionRuleDTO>(request);
 
             var result = await _sectionService.CreateRule(dto, cancellationToken);
             return FromResult(result);
@@ -76,7 +74,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet("Section")]
-        [ProducesResponseType(typeof(List<GetRuleResponseDTO>), 200)]
+        [ProducesResponseType(typeof(List<GetSectionRuleResponseDTO>), 200)]
         public async Task<IActionResult> GetRulesSection(CancellationToken cancellationToken)
         {
             var result = await _sectionService.GetRules(cancellationToken);
@@ -92,9 +90,9 @@ namespace Presentation.Controllers
 
 
         [HttpPut("Section")]
-        public async Task<IActionResult> UpdateRuleSection(UpdateRuleRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateRuleSection(UpdateSectionRuleRequest request, CancellationToken cancellationToken)
         {
-            var dto = _mapper.Map<UpdateRuleDTO>(request);
+            var dto = _mapper.Map<UpdateSectionRuleDTO>(request);
 
             var result = await _sectionService.UpdateRule(dto, cancellationToken);
             return FromResult(result);

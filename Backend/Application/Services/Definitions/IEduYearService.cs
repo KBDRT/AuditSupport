@@ -2,7 +2,7 @@
 using Application.DTO.Common;
 using Application.DTO.Years;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
+using Domain.Entities.References;
 
 namespace Application.Services.Definitions
 {

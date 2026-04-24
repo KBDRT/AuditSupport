@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Notifications;
-using Domain.Entities;
+using Domain.Entities.References;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;

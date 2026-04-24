@@ -4,7 +4,7 @@ using Application.DTO.Users;
 using Application.Helpers;
 using Application.Services.Definitions;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities.References;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.Common;
 using Presentation.Contracts.Direction;

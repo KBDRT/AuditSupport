@@ -7,7 +7,7 @@ using Application.Helpers;
 using Application.Services.Definitions;
 using AutoMapper;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
+using Domain.Entities.References;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services.Implementations

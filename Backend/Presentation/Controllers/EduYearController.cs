@@ -2,7 +2,7 @@
 using Application.DTO.Years;
 using Application.Services.Definitions;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities.References;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.Year;
 

@@ -2,7 +2,7 @@
 using Application.Common;
 using Application.Features.Reviews.Commands.Create;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using MediatR;
 
 namespace Application.Features.Reviews.Commands.Delete

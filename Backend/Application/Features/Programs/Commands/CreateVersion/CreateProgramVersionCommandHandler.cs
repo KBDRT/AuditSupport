@@ -2,7 +2,7 @@
 using Application.Abstractions.Repositories;
 using Application.Common;
 using CSharpFunctionalExtensions;
-using Domain.Entities;
+using Domain.Entities.ProgramContext;
 using MediatR;
 
 namespace Application.Features.Programs.Commands.CreateVersion
