@@ -47,6 +47,7 @@ namespace Application.Services.Implementations
                 Id = newRuleId,
                 SectionName = dto.SectionName,
                 Structure = lines,
+                Type = dto.Type,
                 Commentary = dto.Commentary,
             };
 
@@ -84,6 +85,7 @@ namespace Application.Services.Implementations
 
             rule.Commentary = dto.Commentary;
             rule.SectionName = dto.SectionName;
+            rule.Type = dto.Type;
 
             rule.Structure = dto.Structure?.Select(item => new RuleSectionStructure
             {

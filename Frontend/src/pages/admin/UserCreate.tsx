@@ -1,7 +1,7 @@
 import { Button, Dialog, Field, Input, Portal, Stack, Select, CloseButton} from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { Roles, type CreateUserRequest } from "@/api/models";
-import { ROLE_COLLECTION} from "@/constants/roles"
+import { ROLE_COLLECTION} from "@/constants/common"
 import { MdSave  } from "react-icons/md";
 import { useUsersStore } from "@/stores/UsersStore";
 import { withMask } from "use-mask-input"

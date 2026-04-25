@@ -7,7 +7,7 @@ import { Select } from "@chakra-ui/react"
 import { SegmentGroup } from "@chakra-ui/react"
 import { MdFilterAltOff } from "react-icons/md"
 import { CloseButton } from "@chakra-ui/react"
-import { ROLES_COLLECTION, STATUS_ITEMS } from "@/constants/roles"
+import { ROLES_COLLECTION, STATUS_ITEMS } from "@/constants/common"
 
 const FilterTable = () => {
   const { clearFiler, filterUsers, filter } = useUsersStore()

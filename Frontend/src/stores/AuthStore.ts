@@ -19,7 +19,7 @@ export const api = getAuth(axiosInstance);
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       loading: false,
       user: null,
 

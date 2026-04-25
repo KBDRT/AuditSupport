@@ -5,7 +5,6 @@ import { mergeUpdateToUser } from '@/utils/Mappers';
 import { axiosInstance } from '@/services/axiosInstanse';
 import { ShowError, ShowToast } from '@/components/common/Alert';
 import { AxiosError } from 'axios'
-import type { ErrorsApi } from '@/types/ErrorsApi';
 
 interface FilterUsers
 {
@@ -180,7 +179,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     set({ items: filtered })
   },
 
-  clearFiler: () => {set((state) => ({
+  clearFiler: () => {set(() => ({
     filter: {   roles: [], statusCode: "active", searchField: undefined }}))
     get().useFilter()
   },

@@ -1,22 +1,22 @@
-import type { CreateWordRuleRequest, DeleteRuleWordParams, GetWordRuleResponseDTO, UpdateWordRuleRequest} from '@/api/models';
+import type { CreateSectionRuleRequest, DeleteRuleWordParams, GetSectionRuleResponseDTO, UpdateSectionRuleRequest} from '@/api/models';
 import { create } from 'zustand';
 import { axiosInstance } from '@/services/axiosInstanse';
 import { ShowError, ShowToast } from '@/components/common/Alert';
 import { AxiosError } from 'axios'
 import { getRule } from '@/api/rule/rule';
 
-interface WordRulesStore {
-  items: GetWordRuleResponseDTO[]
+interface SectionRulesStore {
+  items: GetSectionRuleResponseDTO[]
   loading: boolean
-  addItem: (item: Omit<CreateWordRuleRequest, 'id'>) => Promise<boolean>
-  updateItem: (id: string, item: Partial<UpdateWordRuleRequest>) => Promise<boolean>
+  addItem: (item: Omit<CreateSectionRuleRequest, 'id'>) => Promise<boolean>
+  updateItem: (id: string, item: Partial<UpdateSectionRuleRequest>) => Promise<boolean>
   deleteItem: (id: string) => Promise<boolean>
   fetch: () => Promise<void>
 }
 
 export const api = getRule(axiosInstance);
 
-export const useWordRulesStore = create<WordRulesStore>((set) => ({
+export const useSectionRulesStore = create<SectionRulesStore>((set) => ({
   items: [],
   loading: false,
 
@@ -24,7 +24,7 @@ export const useWordRulesStore = create<WordRulesStore>((set) => ({
     set({ loading: true });
     try {
 
-      const response = await api.getRuleWord()
+      const response = await api.getRuleSection()
       if (response.status == 200)
       {
         set({ items: response.data, loading: false });
@@ -41,11 +41,11 @@ export const useWordRulesStore = create<WordRulesStore>((set) => ({
   addItem: async (newItem) => {
     try
     {
-      const response = await api.postRuleWord(newItem)
+      const response = await api.postRuleSection(newItem)
       if (response.status == 200)
       {
         set((state) => ({
-          items: [...state.items, { ...newItem, ruleId: response.data?.id}]
+          items: [...state.items, { ...newItem, ruleId: response.data?.id, sectionName: newItem.sectionName, commentary: newItem.commentary, structure: newItem.structure, type: newItem.type}]
         }))
         ShowToast("Сохранено!", "", "success")
         return true
@@ -65,14 +65,15 @@ export const useWordRulesStore = create<WordRulesStore>((set) => ({
 
 
   updateItem: async (id, updatedItem) => {
+    console.log(updatedItem)
     try
     {
-      const response = await api.putRuleWord(updatedItem)
+      const response = await api.putRuleSection(updatedItem)
       if (response.status == 200)
       {
         set((state) => ({
         items: state.items.map(item => 
-          item.ruleId === id ? {ruleId: updatedItem.ruleId, word: updatedItem.word, commentary: updatedItem.commentary} : item
+          item.ruleId === id ? {ruleId: updatedItem.ruleId, sectionName: updatedItem.sectionName, commentary: updatedItem.commentary, structure: updatedItem.structure, type: updatedItem.type} : item
         )}))
         // get().filterUsers({ statusCode: "all", searchField: "", roles: [] })
         ShowToast("Обновлено!", "", "success")
@@ -98,7 +99,7 @@ export const useWordRulesStore = create<WordRulesStore>((set) => ({
 
     try
     {
-      const response = await api.deleteRuleWord(request)
+      const response = await api.deleteRuleSection(request)
       if (response.status == 200)
       {
         set((state) => ({

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useUsersStore } from "@/stores/UsersStore";
 import type {  UpdateUserRequest } from "@/api/models";
 import FilterTable from "./FilterPanel";
-import GetRoleName from "@/utils/TextUtils";
+import { GetRoleName } from "@/utils/TextUtils";
 import UserUpdate from "./UserUpdate";
 import { FixDialog } from "@/utils/DialogFix";
 

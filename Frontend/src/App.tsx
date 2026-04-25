@@ -10,6 +10,7 @@ import MainLayout from './components/common/MainLayout';
 import YearsPage from './pages/year/YearsPage';
 import PageLoading from './components/common/PageLoading';
 import WordRulesPage from './pages/wordRules/WordRulesPage';
+import SectionRulesPage from './pages/sectionRules/SectionRulesPage';
 
 function App() {
  const { checkAuth, loading } = useAuthStore()
@@ -37,7 +38,7 @@ function App() {
               <Route path="/directions" element={<DirectionPage />} />
               <Route path="/years" element={<YearsPage />} />
               <Route path="/rules/words" element={<WordRulesPage />} />
-              <Route path="/rules/sections" element={<WordRulesPage />} />
+              <Route path="/rules/sections" element={<SectionRulesPage />} />
             </Route>
           </Route>
 

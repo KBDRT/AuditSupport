@@ -30,3 +30,12 @@ export const STATUS_COLLECTION = createListCollection({
     { label: "Неактивен", value: "inactive" },
   ],
 })
+
+
+export const SECTION_RULE_TYPE_COLLECTION = createListCollection({
+  items: [
+    { label: "Текстовый", value: "0" },
+    { label: "Табличный", value: "1" },
+    { label: "Строки", value: "2" },
+  ],
+})

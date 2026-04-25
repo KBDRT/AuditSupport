@@ -1,6 +1,6 @@
-import type { Roles } from "@/api/models";
+import type { Roles, RuleSectionType } from "@/api/models";
 
-const GetRoleName = (role: Roles) => {
+export const GetRoleName = (role: Roles) => {
     switch (role) {
       case 0: return 'Педагог';
       case 1: return 'Методист';
@@ -10,4 +10,12 @@ const GetRoleName = (role: Roles) => {
     }
 }
 
-export default GetRoleName
+export const GetSectionTypeName = (ruleType: RuleSectionType) => {
+    switch (ruleType) {
+      case 0: return 'Текстовый';
+      case 1: return 'Табличный';
+      case 2: return 'Строки';
+      default: return 'Не указано';
+    }
+}
+
