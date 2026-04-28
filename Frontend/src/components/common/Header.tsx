@@ -167,18 +167,20 @@ const Header = () => {
                     <Avatar.Image />
                   </Avatar.Root>
                   <Box textAlign="left" display={{ base: "none", md: "block" }}>
-                    <Text fontSize="14px" fontWeight="600" color="gray.700">
-                      {user?.login || user?.email?.split('@')[0]}
-                    </Text>
-                    <Badge 
-                      colorScheme="blue"
-                      fontSize="10px"
-                      borderRadius="full"
-                      px={2}
-                    >
-                      {user?.login || user?.email?.split('@')[0]}
-                      {getViewText(user?.role || "")}
-                    </Badge>
+                    <HStack>
+                      <Badge 
+                        colorScheme="blue"
+                        fontSize="12px"
+                        borderRadius="full"
+                        px={2}
+                        // mt={1}
+                      >
+                        { getViewText(user?.role || "") }
+                      </Badge>
+                      <Text fontSize="14px" fontWeight="600" color="gray.700">
+                        {user?.userName && user?.userName?.length > 0 ? user?.userName : user?.login}
+                      </Text>
+                    </HStack>
                   </Box>
                   <Icon as={MdExpandMore} color="gray.600" />
                 </Flex>

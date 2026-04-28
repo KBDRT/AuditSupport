@@ -9,6 +9,7 @@
         ReadyToChange,
         Changed,
         ReadyToApprove,
-        Deleted
+        Deleted,
+        Approved
     }
 }

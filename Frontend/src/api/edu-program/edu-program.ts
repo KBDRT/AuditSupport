@@ -15,6 +15,7 @@ import type {
   ChangeProgramStatusCommand,
   CreateProgramCommand,
   DeleteProgramCommand,
+  EduProgramDTO,
   GetEduProgramParams,
   PostEduProgramVersionBody,
   ShortYearDTO,
@@ -86,7 +87,7 @@ const getEduProgramVersionFileVersionId = (
   }
 const getEduProgramProgramId = (
     programId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<EduProgramDTO>> => {
     return axiosInstance.get(
       `/EduProgram/${programId}`,options
     );
@@ -120,7 +121,7 @@ export type DeleteEduProgramResult = AxiosResponse<unknown>
 export type PatchEduProgramResult = AxiosResponse<unknown>
 export type PostEduProgramVersionResult = AxiosResponse<unknown>
 export type GetEduProgramVersionFileVersionIdResult = AxiosResponse<unknown>
-export type GetEduProgramProgramIdResult = AxiosResponse<unknown>
+export type GetEduProgramProgramIdResult = AxiosResponse<EduProgramDTO>
 export type GetEduProgramVersionVersionIdResult = AxiosResponse<unknown>
 export type PatchEduProgramStatusResult = AxiosResponse<unknown>
 export type GetEduProgramYearsTeacherIdResult = AxiosResponse<ShortYearDTO[]>

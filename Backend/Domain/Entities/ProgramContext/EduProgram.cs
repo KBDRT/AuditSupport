@@ -9,16 +9,16 @@ namespace Domain.Entities.ProgramContext
         public string Name { get; set; } = string.Empty;
 
         public string AgesOfChildrens { get; set; } = string.Empty;
-        
-        public double Duration { get; set; }
+
+        public string Duration { get; set; } = string.Empty; 
 
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
-        public Guid YearId { get; set; }
+        public Guid EduYearId { get; set; }
         public EduYear Year { get; set; } = null!;
 
-        public Guid DirectionId { get; set; }
-        public Direction Direction { get; set; } = null!;
+        public Guid? DirectionId { get; set; } 
+        public Direction? Direction { get; set; }
 
         public Guid TeacherId { get; set; }
         public User Teacher { get; set; } = null!;

@@ -9,7 +9,7 @@ namespace Application.Features.Programs.Commands.Update
         Guid ProgramId,
         string Name,
         string AgesOfChildrens,
-        double Duration,
+        string Duration,
         Guid DirectionId
     ) : IRequest<UnitResult<ServiceError>>;
 }

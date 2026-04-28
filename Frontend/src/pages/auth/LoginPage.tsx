@@ -153,6 +153,7 @@ const LoginPage = () => {
 
             <Button 
               onClick={handleSubmit}
+              bg="linear-gradient(135deg, #3182CE 0%, #2C5282 100%)"
               bgGradient="linear(to-r, #3182CE, #2C5282)"
               color="white"
               w="full"

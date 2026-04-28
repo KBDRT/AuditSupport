@@ -69,6 +69,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet("{programId}")]
+        [ProducesResponseType(typeof(EduProgramDTO), 200)]
         public async Task<IActionResult> GetProgramById(Guid programId, CancellationToken cancellationToken)
         {
             GetProgramByIdQuery query = new(programId);

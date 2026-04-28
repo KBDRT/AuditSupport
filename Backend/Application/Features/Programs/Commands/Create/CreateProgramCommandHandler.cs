@@ -25,7 +25,7 @@ namespace Application.Features.Programs.Commands.Create
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 TeacherId = request.TeacherId,
-                YearId = request.YearId,
+                EduYearId = request.YearId,
             };
 
             await _repository.AddNew(program, cancellationToken);

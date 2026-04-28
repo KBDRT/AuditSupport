@@ -1,4 +1,4 @@
-import type { Roles, RuleSectionType } from "@/api/models";
+import type { ProgramStatuses, Roles, RuleSectionType } from "@/api/models";
 
 export const GetRoleName = (role: Roles) => {
     switch (role) {
@@ -19,3 +19,18 @@ export const GetSectionTypeName = (ruleType: RuleSectionType) => {
     }
 }
 
+
+export const GetStatusTypeName = (status: ProgramStatuses) => {
+    switch (status) {
+      case 0: return 'Создана';
+      case 1: return 'Готова к проверке';
+      case 2: return 'Проверяется';
+      case 3: return 'Проверена';
+      case 4: return 'На исправлении';
+      case 5: return 'Исправлена';
+      case 6: return 'Готова к подписанию';
+      case 7: return 'Удалена';
+      case 8: return 'Подписана';
+      default: return 'Неизвестно';
+    }
+}

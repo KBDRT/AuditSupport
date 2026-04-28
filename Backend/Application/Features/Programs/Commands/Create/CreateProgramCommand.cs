@@ -9,9 +9,9 @@ namespace Application.Features.Programs.Commands.Create
         Guid TeacherId,
         string Name,
         string AgesOfChildrens,
-        double Duration,
+        string Duration,
         Guid YearId,
-        Guid DirectionId
+        Guid? DirectionId
     ) : IRequest<UnitResult<ServiceError>>;
 }
 

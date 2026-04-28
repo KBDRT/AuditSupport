@@ -27,7 +27,7 @@ namespace Infrastructure.Database.Repositories.Builders
 
         public IProgramQueryBuilder ForYear(Guid yearId)
         {
-            _query = _query.Where(x => x.YearId == yearId);
+            _query = _query.Where(x => x.EduYearId == yearId);
             return this;
         }
 
@@ -57,7 +57,7 @@ namespace Infrastructure.Database.Repositories.Builders
 
         public IProgramQueryBuilder ForDirections(List<Guid> directionIds)
         {
-            _query = _query.Where(x => directionIds.Contains(x.DirectionId));
+            _query = _query.Where(x => directionIds.Contains((Guid)x.DirectionId));
             return this;
         }
 

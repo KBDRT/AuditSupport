@@ -32,7 +32,9 @@ export const useAuthStore = create<AuthStore>()(
           if (response.status == 200) {
             const userData = { 
               role: response.data.role ?? "", 
-              userId: response.data.userId ?? ""  
+              userId: response.data.userId ?? "",
+              userName: response.data.userName ?? "",
+              login: response.data.login ?? ""
             };
             set({ user: userData, loading: false });
             ShowToast("Успешно!", "", "success")
@@ -68,7 +70,9 @@ export const useAuthStore = create<AuthStore>()(
           if (response.status == 200) {
             const userData = { 
               role: response.data.role ?? "", 
-              userId: response.data.userId ?? "" 
+              userId: response.data.userId ?? "",
+              userName: response.data.userName ?? "",
+              login: response.data.login ?? ""
             };
             set({ user: userData, loading: false });
             return true;

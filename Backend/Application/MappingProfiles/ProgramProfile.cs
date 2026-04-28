@@ -28,6 +28,7 @@ namespace Application.MappingProfiles
                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                .ForMember(dest => dest.Year, opt => opt.MapFrom(src => src.Year.Period))
                .ForMember(dest => dest.Direction, opt => opt.MapFrom(src => src.Direction.Name))
+               .ForMember(dest => dest.DirectionId, opt => opt.MapFrom(src => src.Direction.Id))
                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => src.Teacher.Initials.Short))
                .ForMember(dest => dest.ProgramStatus, opt => opt.MapFrom(src => src.ProgramStatus))
                .ForMember(dest => dest.Versions, opt => opt.MapFrom(src => src.Versions));

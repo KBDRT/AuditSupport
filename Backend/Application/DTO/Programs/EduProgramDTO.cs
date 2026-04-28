@@ -8,9 +8,10 @@ namespace Application.DTO.Programs
         Guid Id,
         string Name,
         string AgesOfChildrens,
-        double Duration,
+        string Duration,
         string Year,
         string Direction,
+        Guid DirectionId,
         string Teacher,
         ProgramStatuses ProgramStatus,
         List<ProgramVersion> Versions

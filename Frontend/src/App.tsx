@@ -12,6 +12,8 @@ import PageLoading from './components/common/PageLoading';
 import WordRulesPage from './pages/wordRules/WordRulesPage';
 import SectionRulesPage from './pages/sectionRules/SectionRulesPage';
 import EduYearsPage from './pages/eduYears/EduYearsPage';
+import './index.css'; 
+import EduProgram from './pages/program/EduProgram';
 
 function App() {
  const { checkAuth, loading } = useAuthStore()
@@ -52,6 +54,7 @@ function App() {
           <Route element={<PrivateRoute allowedRoles={['Teacher']} />}>
             <Route element={<MainLayout />}> 
               <Route path="/EduYears" element={<EduYearsPage />} />
+              <Route path="/EduProgram/:id" element={<EduProgram />} />
             </Route> 
           </Route>
                 

@@ -11,6 +11,6 @@ export interface UpdateProgramCommand {
   name?: string | null;
   /** @nullable */
   agesOfChildrens?: string | null;
-  duration?: number;
+  duration?: string;
   directionId?: string;
 }

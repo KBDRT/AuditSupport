@@ -8,7 +8,7 @@ namespace Application.DTO.Programs
         Guid Id,
         string Name,
         string AgesOfChildrens,
-        double Duration,
+        string Duration,
         string Year,
         string Direction,
         string Teacher,
