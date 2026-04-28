@@ -6,10 +6,10 @@ import PageLoading from "@/components/common/PageLoading";
 import { MdLock, MdLogin, MdPerson } from "react-icons/md";
 
 export const roleRedirects: Record<string, string> = {
-  'Admin': '/users',
-  'Head': '/years',
-  'Teacher': '/profile',
-  'Manager': '/reports',
+  'Admin': '/Users',
+  'Head': '/Years',
+  'Teacher': '/EduYears',
+  'Methodist': '/Reports',
 };
 
 const LoginPage = () => {

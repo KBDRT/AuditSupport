@@ -9,7 +9,7 @@ export type RuleSectionType = typeof RuleSectionType[keyof typeof RuleSectionTyp
 
 
 export const RuleSectionType = {
-  Text: 0,
-  Table: 1,
-  Lines: 2,
+  NUMBER_0: 0,
+  NUMBER_1: 1,
+  NUMBER_2: 2,
 } as const;

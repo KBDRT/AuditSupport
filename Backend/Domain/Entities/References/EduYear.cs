@@ -25,7 +25,7 @@ namespace Domain.Entities.References
 
         public bool IsOpened { get; set; } = false;
 
-        public List<ProgramVersion> Programs = [];
+        public List<EduProgram> Programs = [];
 
     }
 }

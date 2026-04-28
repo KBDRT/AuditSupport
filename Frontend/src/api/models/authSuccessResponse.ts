@@ -10,4 +10,8 @@ export interface AuthSuccessResponse {
   userId?: string | null;
   /** @nullable */
   role?: string | null;
+  /** @nullable */
+  userName?: string | null;
+  /** @nullable */
+  login?: string | null;
 }

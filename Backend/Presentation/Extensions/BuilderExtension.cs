@@ -128,12 +128,13 @@ namespace Presentation.Extensions
             _services.AddScoped<IBaseRepository<RuleWord>, BaseRepository<RuleWord>>();
 
             _services.AddScoped<IUserRepository, UserRepository>();
+            _services.AddScoped<IEduYearRepository, EduYearRepository>();
             _services.AddScoped<ISectionRuleRepository, SectionRuleRepository>();
-
-            _services.AddScoped<IProgramQueryBuilder, ProgramQueryBuilder>();
             _services.AddScoped<IProgramRepository, ProgramRepository>();
             _services.AddScoped<IProgramVersionRepository, ProgramVersionRepository>();
             _services.AddScoped<IProgramHistoryRepository, ProgramHistoryRepository>();
+
+            _services.AddScoped<IProgramQueryBuilder, ProgramQueryBuilder>();
         }
 
         private static void AddAuth()

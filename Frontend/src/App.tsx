@@ -11,6 +11,7 @@ import YearsPage from './pages/year/YearsPage';
 import PageLoading from './components/common/PageLoading';
 import WordRulesPage from './pages/wordRules/WordRulesPage';
 import SectionRulesPage from './pages/sectionRules/SectionRulesPage';
+import EduYearsPage from './pages/eduYears/EduYearsPage';
 
 function App() {
  const { checkAuth, loading } = useAuthStore()
@@ -30,21 +31,27 @@ function App() {
       <Toaster />
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/Login" element={<LoginPage />} />
           {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
         
           <Route element={<PrivateRoute allowedRoles={['Head']} />}>
             <Route element={<MainLayout />}> 
-              <Route path="/directions" element={<DirectionPage />} />
-              <Route path="/years" element={<YearsPage />} />
-              <Route path="/rules/words" element={<WordRulesPage />} />
-              <Route path="/rules/sections" element={<SectionRulesPage />} />
+              <Route path="/Directions" element={<DirectionPage />} />
+              <Route path="/Years" element={<YearsPage />} />
+              <Route path="/Rules/Words" element={<WordRulesPage />} />
+              <Route path="/Rules/Sections" element={<SectionRulesPage />} />
             </Route>
           </Route>
 
           <Route element={<PrivateRoute allowedRoles={['Admin']} />}>
             <Route element={<MainLayout />}> 
-              <Route path="/users" element={<UsersPage />} />
+              <Route path="/Users" element={<UsersPage />} />
+            </Route> 
+          </Route>
+
+          <Route element={<PrivateRoute allowedRoles={['Teacher']} />}>
+            <Route element={<MainLayout />}> 
+              <Route path="/EduYears" element={<EduYearsPage />} />
             </Route> 
           </Route>
                 

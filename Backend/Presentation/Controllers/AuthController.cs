@@ -1,13 +1,11 @@
 ﻿using Application.DTO.Users;
 using Application.Services.Definitions;
 using AutoMapper;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Presentation.Contracts.User;
 using Presentation.Settings;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Presentation.Controllers
 {
@@ -36,8 +34,10 @@ namespace Presentation.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
                 var role = User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
+                var userName = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+                var login = User.FindFirstValue(ClaimTypes.GivenName) ?? string.Empty;
 
-                return Ok(new AuthSuccessResponse(userId, role));
+                return Ok(new AuthSuccessResponse(userId, role, userName, login));
             }
             return Unauthorized();
         }
@@ -68,7 +68,7 @@ namespace Presentation.Controllers
                     Secure = false
                 });
 
-                return Ok(new AuthSuccessResponse(resultValue.UserId, resultValue.Role));
+                return Ok(new AuthSuccessResponse(resultValue.UserId, resultValue.Role, resultValue.UserName, resultValue.Login));
             }
 
             return NotFound();

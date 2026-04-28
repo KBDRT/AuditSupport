@@ -31,21 +31,43 @@ const Header = () => {
   const getNavLinks = () => {
     if (user?.role === "Head") {
       return [
-        { name: "Уч. года", href: "/years", icon: MdSchool },
-        { name: "Направленности", href: "/directions", icon: MdCategory },
-        { name: "Термины", href: "/rules/words", icon: MdTextFields },
-        { name: "Разделы", href: "/rules/sections", icon: MdFormatListNumbered },
+        { name: "Уч. года", href: "/Years", icon: MdSchool },
+        { name: "Направленности", href: "/Directions", icon: MdCategory },
+        { name: "Термины", href: "/Rules/Words", icon: MdTextFields },
+        { name: "Разделы", href: "/Rules/Sections", icon: MdFormatListNumbered },
       ]
     }
-    if (user?.role === "Admin") {
+    else if (user?.role === "Admin") {
       return [
-        { name: "Пользователи", href: "/users", icon: MdPeople },
+        { name: "Пользователи", href: "/Users", icon: MdPeople },
+      ]
+    }
+    else if (user?.role === "Teacher")
+    {
+      return [
+        { name: "Учебные года", href: "/EduYears", icon: MdSchool },
       ]
     }
     return []
   }
 
   const navLinks = getNavLinks()
+
+  const getViewText = (role: string) => {
+  switch (role) {
+    case 'Head':
+      return 'Зам. директора';
+    case 'Teacher':
+      return 'Педагог';
+    case 'Methodist':
+      return 'Методист';
+    case 'Admin':
+      return 'Администратор';
+    default:
+      return '-';
+    }
+  };
+
 
   return (
     <Box 
@@ -155,7 +177,7 @@ const Header = () => {
                       px={2}
                     >
                       {user?.login || user?.email?.split('@')[0]}
-                      {user?.role === "Head" ? "Руководитель" : "Администратор"}
+                      {getViewText(user?.role || "")}
                     </Badge>
                   </Box>
                   <Icon as={MdExpandMore} color="gray.600" />

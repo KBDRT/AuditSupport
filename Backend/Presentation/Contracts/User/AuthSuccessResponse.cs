@@ -3,6 +3,8 @@
     public record AuthSuccessResponse
     (
         string UserId,
-        string Role
+        string Role,
+        string UserName,
+        string Login
     );
 }

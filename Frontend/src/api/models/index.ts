@@ -43,6 +43,8 @@ export * from './programStatuses';
 export * from './roles';
 export * from './ruleSectionType';
 export * from './sectionStructureDTO';
+export * from './shortProgramDTO';
+export * from './shortYearDTO';
 export * from './updateDirectionRequest';
 export * from './updateProgramCommand';
 export * from './updateReviewCommand';

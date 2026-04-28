@@ -4,6 +4,8 @@
     (
         string Token,
         string UserId,
-        string Role
+        string Role,
+        string UserName,
+        string Login
     );
 }

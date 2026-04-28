@@ -18,7 +18,7 @@ namespace Domain.Entities.ProgramContext
 
         public Guid TechCheckId { get; set; }
 
-        public TechCheck TechnicalCheck { get; set; }
+        public TechCheck TechnicalCheck { get; set; } = null!;
 
     }
 }

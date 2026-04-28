@@ -33,7 +33,7 @@ namespace Application.Services.Implementations
                 {
                     var claims = CreateClaimForUser(user);
                     var token = _tokenGenerator.GetNewJwtTokenString(claims);
-                    return Result.Success<LoginUserResponseDTO, ServiceError>(new(token, user.Id.ToString(), user.Role.ToString()));
+                    return Result.Success<LoginUserResponseDTO, ServiceError>(new(token, user.Id.ToString(), user.Role.ToString(), user.Initials.Short, user.Login));
                 }
                 else
                 {
@@ -53,7 +53,9 @@ namespace Application.Services.Implementations
             return
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim(ClaimTypes.Name, user.Initials.Short),
+                new Claim(ClaimTypes.GivenName, user.Login)
             ];
         }
 

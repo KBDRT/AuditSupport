@@ -9,14 +9,12 @@ export type ProgramStatuses = typeof ProgramStatuses[keyof typeof ProgramStatuse
 
 
 export const ProgramStatuses = {
-  Created: 0,
-  ReadyToCheck: 1,
-  Check: 2,
-  Checked: 3,
-  ReadyToChange: 4,
-  Changed: 5,
-  ReadyToApprove: 6,
-  Deleted: 7,
+  NUMBER_0: 0,
+  NUMBER_1: 1,
+  NUMBER_2: 2,
+  NUMBER_3: 3,
+  NUMBER_4: 4,
+  NUMBER_5: 5,
+  NUMBER_6: 6,
+  NUMBER_7: 7,
 } as const;
-
-
