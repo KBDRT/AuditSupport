@@ -34,3 +34,16 @@ export const GetStatusTypeName = (status: ProgramStatuses) => {
       default: return 'Неизвестно';
     }
 }
+
+
+export const FormatDateTime = (isoDate: string): string => {
+    const date = new Date(isoDate)
+    
+    const hours = date.getUTCHours().toString().padStart(2, '0')
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0')
+    const day = date.getUTCDate().toString().padStart(2, '0')
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0')
+    const year = date.getUTCFullYear()
+    
+    return `${day}.${month}.${year} ${hours}:${minutes}`
+}

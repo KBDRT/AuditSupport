@@ -3,17 +3,17 @@ using Domain.Enums;
 
 namespace Application.DTO.Programs
 {
-    public record EduProgramDTO
-    (
-        Guid Id,
-        string Name,
-        string AgesOfChildrens,
-        string Duration,
-        string Year,
-        string Direction,
-        Guid DirectionId,
-        string Teacher,
-        ProgramStatuses ProgramStatus,
-        List<ProgramVersion> Versions
-    );
+    public class EduProgramDTO
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string AgesOfChildrens { get; set; }
+        public string Duration { get; set; }
+        public string Year { get; set; }
+        public string Direction { get; set; }
+        public Guid DirectionId { get; set; }
+        public string Teacher { get; set; }
+        public ProgramStatuses ProgramStatus { get; set; }
+        public List<ProgramVersionDTO> Versions { get; set; }
+    };
 }

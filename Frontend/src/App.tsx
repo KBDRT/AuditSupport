@@ -54,6 +54,7 @@ function App() {
           <Route element={<PrivateRoute allowedRoles={['Teacher']} />}>
             <Route element={<MainLayout />}> 
               <Route path="/EduYears" element={<EduYearsPage />} />
+               {/* <Route path="/Test" element={<Test />} /> */}
               <Route path="/EduProgram/:id" element={<EduProgram />} />
             </Route> 
           </Route>

@@ -1,19 +1,17 @@
-import { ProgramStatuses } from "@/api/models"
 import { useAuthStore } from "@/stores/AuthStore"
 import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore"
 import { GetStatusTypeName } from "@/utils/TextUtils"
-import { Box, Button, Container, Flex, HStack, Icon, Text, VStack, Badge, Spacer, AbsoluteCenter } from "@chakra-ui/react"
-import { Accordion, Heading } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import { MdCancel, MdCheckCircle, MdLock, MdAdd, MdCalendarToday } from "react-icons/md"
+import { Box, Button, Container,  HStack, Icon, Text, VStack, Badge,  AbsoluteCenter } from "@chakra-ui/react"
+import { Accordion, } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { MdAdd, MdCalendarToday } from "react-icons/md"
 import { IoMdLock, IoMdUnlock } from "react-icons/io";
 import { Link } from "react-router-dom"
 import { CreateProgram } from "@/services/ProgramService"
 
 const EduYearsPage = () => {
   const { user } = useAuthStore()
-  const { fetch, items } = useTeacherProgramsStore()
-  const [isLoading, setIsLoading] = useState(false)
+  const { fetch, years } = useTeacherProgramsStore()
 
   useEffect(() => {
     if (user?.userId) {
@@ -37,7 +35,7 @@ const EduYearsPage = () => {
             _hover={{ boxShadow: "md" }}
             transition="all 0.3s ease"
           >
-            {items.length === 0 ? (
+            {years.length === 0 ? (
               <VStack py={16} gap={3}>
                 <Icon as={MdCalendarToday} boxSize="48px" color="gray.300" />
                 <Text color="gray.500" fontSize="lg">
@@ -45,8 +43,8 @@ const EduYearsPage = () => {
                 </Text>
               </VStack>
             ) : (
-              <Accordion.Root variant="plain" collapsible defaultValue={items.length > 0 ? [items[0].period || `year-0`] : []}>
-                {items.map((item, index) => (
+              <Accordion.Root variant="plain" collapsible defaultValue={years.length > 0 ? [years[0].period || `year-0`] : []}>
+                {years.map((item, index) => (
                   <Accordion.Item
                     key={item.id}
                     value={item.period || `year-${index}`}
@@ -79,7 +77,7 @@ const EduYearsPage = () => {
                             variant="ghost"
                             colorScheme="blue"
                             size="sm"
-                            onClick={(e) => handleAdd(item.id || "")}
+                            onClick={() => handleAdd(item.id || "")}
                             _hover={{
                               bg: "blue.50",
                               transform: "translateY(-1px)"
@@ -102,10 +100,10 @@ const EduYearsPage = () => {
                               Нет программ
                             </Text>
                           ) : (
-                            item.programs?.map((program, programIndex) => (
-                              <Link to={`/EduProgram/${program.id}`}>
+                            item.programs?.map((program) => (
+                              <Link to={`/EduProgram/${program.id}`} key={program.id}>
                               <Box
-                                key={programIndex}
+                                key={program.id}
                                 p={3}
                                 bg="white"
                                 borderRadius="lg"

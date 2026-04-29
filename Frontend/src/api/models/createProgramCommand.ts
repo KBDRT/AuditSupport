@@ -11,7 +11,9 @@ export interface CreateProgramCommand {
   name?: string | null;
   /** @nullable */
   agesOfChildrens?: string | null;
-  duration?: string;
+  /** @nullable */
+  duration?: string | null;
   yearId?: string;
+  /** @nullable */
   directionId?: string | null;
 }

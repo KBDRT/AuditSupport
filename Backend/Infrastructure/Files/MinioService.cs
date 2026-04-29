@@ -54,7 +54,8 @@ namespace Infrastructure.Files
                 var args = new PutObjectArgs()
                .WithBucket(_bucketName)
                .WithObject(fileName)
-               .WithContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document\"")
+               .WithContentType("application/pdf")
+               //.WithContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document\"")
                .WithStreamData(fileStream)
                .WithObjectSize(fileStream.Length);
 

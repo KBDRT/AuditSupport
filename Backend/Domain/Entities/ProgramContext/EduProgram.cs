@@ -15,7 +15,7 @@ namespace Domain.Entities.ProgramContext
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
         public Guid EduYearId { get; set; }
-        public EduYear Year { get; set; } = null!;
+        public EduYear EduYear { get; set; } = null!;
 
         public Guid? DirectionId { get; set; } 
         public Direction? Direction { get; set; }

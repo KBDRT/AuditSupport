@@ -5,6 +5,7 @@ using Application.Abstractions.Repositories.Builders;
 using Application.Abstractions.Settings;
 using Application.Features.Programs.Commands.Create;
 using Application.Helpers;
+using Application.MappingProfiles;
 using Application.Services.Definitions;
 using Application.Services.Implementations;
 using Domain.Entities.ProgramContext;
@@ -97,7 +98,9 @@ namespace Presentation.Extensions
 
 
             _services.AddAutoMapper(cfg => { }, typeof(RequestsProfile));
-            _services.AddAutoMapper(cfg => { }, typeof(Application.MappingProfiles.UserProfile));
+            _services.AddAutoMapper(cfg => { }, typeof(UserProfile));
+            _services.AddAutoMapper(cfg => { }, typeof(ProgramProfile));
+            
 
             _services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProgramCommand).Assembly));
 

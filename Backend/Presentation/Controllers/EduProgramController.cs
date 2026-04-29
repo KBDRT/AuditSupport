@@ -29,7 +29,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost()]
-        [ProducesResponseType(typeof(Guid), 200)]
+        [ProducesResponseType(typeof(CreateOperationResponseDTO), 200)]
         public async Task<IActionResult> New(CreateProgramCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
@@ -38,6 +38,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("Version")]
+        [ProducesResponseType(typeof(CreateOperationResponseDTO), 200)]
         public async Task<IActionResult> NewVersion([FromForm] CreateVersionRequest request, CancellationToken cancellationToken)
         {
             var file = request.File;
@@ -46,10 +47,10 @@ namespace Presentation.Controllers
                 return BadRequest("Empty file");
             }
 
-            if (Path.GetExtension(file.FileName) != ".docx")
-            {
-                return BadRequest("Incorrect format");
-            }
+            //if (Path.GetExtension(file.FileName) != ".docx")
+            //{
+            //    return BadRequest("Incorrect format");
+            //}
 
             using var stream = file.OpenReadStream();
             CreateProgramVersionCommand command = new(request.ProgramId, request.Changes, stream);
@@ -64,7 +65,9 @@ namespace Presentation.Controllers
 
             var result = await _mediator.Send(query, cancellationToken);
 
-            return File(result.Value, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "example.docx");
+            return File(result.Value, "application/pdf", "example.pdf");
+
+            //return File(result.Value, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "example.pdf");
         }
 
 

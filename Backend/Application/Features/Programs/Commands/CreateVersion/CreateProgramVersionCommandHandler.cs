@@ -31,7 +31,7 @@ namespace Application.Features.Programs.Commands.CreateVersion
             };
 
 
-            await _minioService.PutFile(request.File, "test");
+            await _minioService.PutFile(request.File, newVersion.Id.ToString());
 
 
             await _repository.AddNew(newVersion, cancellationToken);

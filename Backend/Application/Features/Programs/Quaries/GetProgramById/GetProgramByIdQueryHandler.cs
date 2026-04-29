@@ -22,6 +22,8 @@ namespace Application.Features.Programs.Quaries.GetProgramById
         public async Task<Result<EduProgramDTO, ServiceError>> Handle(GetProgramByIdQuery request, CancellationToken cancellationToken)
         {
             var program = await _queryBuilder.ForId(request.ProgramId)
+                                             .IncludeYear()
+                                             .IncludeVersion()
                                              .SingleOrDefaultAsync(cancellationToken);
 
             if (program == null)

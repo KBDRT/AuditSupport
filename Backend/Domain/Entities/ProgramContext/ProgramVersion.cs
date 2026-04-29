@@ -16,9 +16,9 @@ namespace Domain.Entities.ProgramContext
 
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
-        public Guid TechCheckId { get; set; }
+        public Guid? TechCheckId { get; set; }
 
-        public TechCheck TechnicalCheck { get; set; } = null!;
+        public TechCheck? TechnicalCheck { get; set; }
 
     }
 }

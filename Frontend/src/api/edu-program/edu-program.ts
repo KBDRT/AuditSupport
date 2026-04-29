@@ -13,11 +13,12 @@ import type {
 
 import type {
   ChangeProgramStatusCommand,
+  CreateOperationResponseDTO,
   CreateProgramCommand,
+  CreateVersionRequest,
   DeleteProgramCommand,
   EduProgramDTO,
   GetEduProgramParams,
-  PostEduProgramVersionBody,
   ShortYearDTO,
   UpdateProgramCommand
 } from '../models';
@@ -61,26 +62,16 @@ const patchEduProgram = (
     );
   }
 const postEduProgramVersion = (
-    postEduProgramVersionBody: PostEduProgramVersionBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {const formData = new FormData();
-if(postEduProgramVersionBody.ProgramId !== undefined) {
- formData.append(`ProgramId`, postEduProgramVersionBody.ProgramId);
- }
-if(postEduProgramVersionBody.Changes !== undefined) {
- formData.append(`Changes`, postEduProgramVersionBody.Changes);
- }
-if(postEduProgramVersionBody.File !== undefined) {
- formData.append(`File`, postEduProgramVersionBody.File);
- }
-
+    createVersionRequest: CreateVersionRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<CreateOperationResponseDTO>> => {
     return axiosInstance.post(
       `/EduProgram/Version`,
-      formData,options
+      createVersionRequest,options
     );
   }
 const getEduProgramVersionFileVersionId = (
     versionId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<Blob>> => {
     return axiosInstance.get(
       `/EduProgram/Version/File/${versionId}`,options
     );

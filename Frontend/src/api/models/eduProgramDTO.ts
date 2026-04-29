@@ -5,7 +5,7 @@
  * OpenAPI spec version: v1
  */
 import type { ProgramStatuses } from './programStatuses';
-import type { ProgramVersion } from './programVersion';
+import type { ProgramVersionDTO } from './programVersionDTO';
 
 export interface EduProgramDTO {
   id?: string;
@@ -13,16 +13,16 @@ export interface EduProgramDTO {
   name?: string | null;
   /** @nullable */
   agesOfChildrens?: string | null;
-  duration?: string;
+  /** @nullable */
+  duration?: string | null;
   /** @nullable */
   year?: string | null;
   /** @nullable */
   direction?: string | null;
-  /** @nullable */
-  directionId?: string | null;
+  directionId?: string;
   /** @nullable */
   teacher?: string | null;
   programStatus?: ProgramStatuses;
   /** @nullable */
-  versions?: ProgramVersion[] | null;
+  versions?: ProgramVersionDTO[] | null;
 }

@@ -1,34 +1,34 @@
-import { Button, Dialog, Field, Input, Portal, Stack, CloseButton, FileUpload, Icon, Box, Textarea, HStack, Text, VStack, Badge, InputGroup } from "@chakra-ui/react"
+import { Button, Dialog, Field, Input, Portal, Stack, CloseButton, FileUpload, Icon, Box, Textarea, HStack, InputGroup, useFileUpload } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
-import { type CreateYearRequest } from "@/api/models";
-import { MdSave, MdClose, MdUpload, MdDescription } from "react-icons/md";
+import { type CreateVersionRequest } from "@/api/models";
+import { MdSave, MdDescription } from "react-icons/md";
 import { z } from 'zod'
-import { useYearsStore } from "@/stores/YearsStore";
-import { HiUpload } from "react-icons/hi";
-import { LuFileUp, LuUpload } from "react-icons/lu";
+import { LuFileUp } from "react-icons/lu";
+import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
 
-interface YearInvalidFields {
-  comment: boolean,
+interface VersionInvalidFields {
+  changes: boolean,
 }
 
-interface YearCreateProps {
+interface VersionCreateProps {
+  programId: string
   open: boolean  
   onClose: () => void
 }
 
 const yearSchema = z.object({
-  comment: z.string().min(1, 'Комментарий обязателен'),
+  changes: z.string().min(1, 'Комментарий обязателен'),
 })
 
-const VersionCreate = ({ open, onClose}: YearCreateProps) => {
-  const { addItem } = useYearsStore()
-  const [formData, setFormData] = useState<{ comment: string, file?: File }>({ comment: "" })
-  const [invalidFields, setInvalidFields] = useState<YearInvalidFields>({ comment: false })
-
+const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
+  const { addVersion } = useTeacherProgramsStore()
+  const [formData, setFormData] = useState<CreateVersionRequest>({ changes: "", programId: programId })
+  const [invalidFields, setInvalidFields] = useState<VersionInvalidFields>({ changes: false })
+ 
   useEffect(() => {
     if (!open) {
-      setFormData({ comment: "" })
-      setInvalidFields({ comment: false })
+      setFormData({ changes: "" })
+      setInvalidFields({ changes: false })
     }
   }, [open])
 
@@ -36,21 +36,22 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
     try {
       yearSchema.parse(formData)
       
-      setInvalidFields({ comment: false })
+      setInvalidFields({ changes: false })
       
-      // const isSuccess = await addItem(formData)
-      // if (isSuccess) {
-      //   onClose()
-      // }
+
+      const isSuccess = await addVersion({changes: formData?.changes, file: fileUpload.rejectedFiles[0].file, programId: formData?.programId})
+      if (isSuccess) {
+        onClose()
+      }
       onClose()
     } 
     catch (error) 
     {
       if (error instanceof z.ZodError) {
-        const newErrors = { comment: false }
+        const newErrors = { changes: false }
         
         error.issues.forEach(issue => {
-          const field = issue.path[0] as keyof YearInvalidFields
+          const field = issue.path[0] as keyof VersionInvalidFields
           if (field in newErrors) {
             newErrors[field] = true
           }
@@ -60,6 +61,11 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
       }
     }
   }
+
+    const fileUpload = useFileUpload({
+    maxFiles: 1,
+    maxFileSize: 300000,
+  })
 
   return (
     <Dialog.Root 
@@ -109,16 +115,16 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
 
             <Dialog.Body pb={4} pt={4}>
               <Stack gap={5}>
-                <Field.Root invalid={invalidFields["comment"]}>
+                <Field.Root invalid={invalidFields["changes"]}>
                   <Field.Label display="flex" alignItems="center" gap={2} mb={2}>
                     <Icon as={MdDescription} color="blue.500" boxSize="16px" />
                     Комментарий
                   </Field.Label>
                   <Textarea
-                    value={formData.comment || ""}
+                    value={formData.changes || ""}
                     onChange={(e) => {
-                      setFormData({ ...formData, comment: e.target.value })
-                      setInvalidFields({ ...invalidFields, comment: false })
+                      setFormData({ ...formData, changes: e.target.value })
+                      setInvalidFields({ ...invalidFields, changes: false })
                     }}
                     placeholder="Введите комментарий к версии..."
                     rows={4}
@@ -133,10 +139,11 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
                   </Field.ErrorText>
                 </Field.Root>
 
-                 <FileUpload.Root gap="1">
+                 <FileUpload.RootProvider value={fileUpload}>
                   <FileUpload.HiddenInput />
                   <FileUpload.Label>Загрузить файл</FileUpload.Label>
                   <InputGroup
+                  
                     startElement={<LuFileUp />}
                     endElement={
                       <FileUpload.ClearTrigger asChild>
@@ -153,11 +160,12 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
                   >
                     <Input asChild>
                       <FileUpload.Trigger>
-                        <FileUpload.FileText lineClamp={1} />
+                        Загрузить
+                      {/* <FileUpload.FileText  lineClamp={1} /> */}
                       </FileUpload.Trigger>
                     </Input>
                   </InputGroup>
-                </FileUpload.Root>
+                </FileUpload.RootProvider>
               </Stack>
             </Dialog.Body>
 
@@ -167,7 +175,11 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
               pt={4}
               gap={3}
             >
-              <Button
+
+              <Button colorPalette="green" size="sm" onClick={handleSave} variant="ghost">
+                <MdSave />Сохранить
+              </Button>
+              {/* <Button
                 variant="ghost"
                 colorScheme="gray"
                 size="sm"
@@ -198,7 +210,7 @@ const VersionCreate = ({ open, onClose}: YearCreateProps) => {
                   <Icon as={MdSave} />
                   <Text>Сохранить</Text>
                 </HStack>
-              </Button>
+              </Button> */}
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

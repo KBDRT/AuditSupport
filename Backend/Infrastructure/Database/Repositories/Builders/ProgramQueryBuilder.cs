@@ -73,6 +73,12 @@ namespace Infrastructure.Database.Repositories.Builders
             return this;
         }
 
+        public IProgramQueryBuilder IncludeYear()
+        {
+            _query = _query.Include(x => x.EduYear);
+            return this;
+        }
+
         public IProgramQueryBuilder UsePagination(PaginationDTO pagination)
         {
             _query = _query.OrderBy(x => x.Id)

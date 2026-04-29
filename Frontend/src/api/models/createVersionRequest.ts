@@ -5,13 +5,10 @@
  * OpenAPI spec version: v1
  */
 
-export interface UpdateProgramCommand {
+export interface CreateVersionRequest {
   programId?: string;
   /** @nullable */
-  name?: string | null;
+  changes?: string | null;
   /** @nullable */
-  agesOfChildrens?: string | null;
-  /** @nullable */
-  duration?: string | null;
-  directionId?: string;
+  file?: Blob | null;
 }
