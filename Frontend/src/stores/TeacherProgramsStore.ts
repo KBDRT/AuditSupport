@@ -88,6 +88,8 @@ export const useTeacherProgramsStore = create<TeacherProgramsStore>((set, get) =
           createdDate: new Date().toISOString(),
         }
 
+        console.log(newVersion)
+
         set((state) => ({
           programs: {
             ...state.programs,

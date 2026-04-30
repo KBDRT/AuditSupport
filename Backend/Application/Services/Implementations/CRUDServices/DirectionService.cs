@@ -3,11 +3,11 @@ using Application.Common;
 using Application.DTO.Common;
 using Application.DTO.Directions;
 using Application.Helpers;
-using Application.Services.Definitions;
+using Application.Services.Definitions.CRUDServices;
 using CSharpFunctionalExtensions;
 using Domain.Entities.References;
 
-namespace Application.Services.Implementations
+namespace Application.Services.Implementations.CRUDServices
 {
 
     public class DirectionService : IDirectionService

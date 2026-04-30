@@ -2,13 +2,13 @@
 using Application.Common;
 using Application.DTO.Users;
 using Application.Helpers;
-using Application.Services.Definitions;
+using Application.Services.Definitions.CRUDServices;
 using CSharpFunctionalExtensions;
 using Domain.Entities.References;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace Application.Services.Implementations
+namespace Application.Services.Implementations.CRUDServices
 {
     public class AuthService : IAuthService
     {

@@ -2,7 +2,7 @@
 using Application.DTO.Users;
 using CSharpFunctionalExtensions;
 
-namespace Application.Services.Definitions
+namespace Application.Services.Definitions.CRUDServices
 {
     public interface IAuthService
     {

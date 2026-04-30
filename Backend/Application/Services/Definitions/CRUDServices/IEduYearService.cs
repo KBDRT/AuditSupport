@@ -4,7 +4,7 @@ using Application.DTO.Years;
 using CSharpFunctionalExtensions;
 using Domain.Entities.References;
 
-namespace Application.Services.Definitions
+namespace Application.Services.Definitions.CRUDServices
 {
     public interface IEduYearService
     {

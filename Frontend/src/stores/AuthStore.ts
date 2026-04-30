@@ -37,7 +37,7 @@ export const useAuthStore = create<AuthStore>()(
               login: response.data.login ?? ""
             };
             set({ user: userData, loading: false });
-            ShowToast("Успешно!", "", "success")
+            // ShowToast("Успешно!", "", "success")
             return true;
           }
         } catch (error) {

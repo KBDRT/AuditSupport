@@ -1,14 +1,13 @@
-import { Button, Box, Container, HStack, VStack, Text, Icon, Table, Spacer } from "@chakra-ui/react"
+import { Button, Box, Container, HStack, VStack, Text, Icon, Table, Spacer, Badge } from "@chakra-ui/react"
 import { MdInfo, MdDownload, MdVisibility, MdPreview, MdAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import VersionCreate from "./VersionCreate";
 import { FixDialog } from "@/utils/DialogFix";
 import { FormatDateTime } from './../../utils/TextUtils';
-import { useDirectionsStore } from "@/stores/DirectionsStore";
 import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
+import VersionCheckInfo from "./VersionCheckInfo";
 
-const VersionsTable = ({ programId }: { programId?: string }) => {
-  const { fetch, items: directions } = useDirectionsStore()
+const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, onChangeCreatePage: (stat: boolean) => void }) => {
   const { fetchProgram, programs, downloadVersionFile } = useTeacherProgramsStore()
   
   const program = programId ? programs[programId] : undefined
@@ -19,15 +18,23 @@ const VersionsTable = ({ programId }: { programId?: string }) => {
       if (programId && !program) {
         await fetchProgram(programId)
       }
-      fetch()
     };
     loadProgram();
   }, [programId]);
 
   const [isOpenCreate, setIsOpenCreate] = useState(false)
+  const [isOpenInfo, setIsOpenInfo] = useState(false)
+  const [checkId, setCheckId] = useState<string>()
 
   const handleCloseCreate = () => {
+    onChangeCreatePage(true)
     setIsOpenCreate(false)
+    FixDialog()
+  }
+
+  const handleCloseInfo = () => {
+    onChangeCreatePage(true)
+    setIsOpenInfo(false)
     FixDialog()
   }
 
@@ -57,7 +64,7 @@ const VersionsTable = ({ programId }: { programId?: string }) => {
             </Text>
             <Spacer />
             <Button
-              onClick={() => setIsOpenCreate(true)}
+              onClick={() => {setIsOpenCreate(true); onChangeCreatePage(false)}}
               variant="solid"
               colorPalette="blue"
               size="sm"
@@ -77,7 +84,8 @@ const VersionsTable = ({ programId }: { programId?: string }) => {
             _hover={{ boxShadow: "md" }}
             transition="all 0.3s ease"
           >
-            <Table.Root size="sm" interactive variant="outline" w="100%" borderWidth="0" showColumnBorder>
+            <Table.ScrollArea borderWidth="1px" rounded="md" height="480px">
+            <Table.Root size="sm" interactive variant="outline" w="100%" borderWidth="0" showColumnBorder stickyHeader>
               <Table.Header>
                 <Table.Row bg="gray.50">
                   <Table.ColumnHeader w="80px" textAlign="center">№ п/п</Table.ColumnHeader>
@@ -117,7 +125,8 @@ const VersionsTable = ({ programId }: { programId?: string }) => {
                     </Table.Cell>
                     <Table.Cell>
                       <HStack gap={2} justify="center">
-                        <Button variant="ghost" size="xs" colorScheme="gray">
+                        <Badge colorPalette={version.isSuccessCheck ? "green" : "red"} borderRadius="full" px={3}>{version.isSuccessCheck ? "Пройдена" : "Ошибки"}</Badge>
+                        <Button variant="ghost" size="xs" colorScheme="gray"  onClick={() => {setCheckId(version.techCheckId); setIsOpenInfo(true); onChangeCreatePage(false)}}>
                           <HStack gap={1}>
                             <Icon as={MdVisibility} boxSize="14px" />
                             <Text fontSize="12px">Результат</Text>
@@ -129,6 +138,7 @@ const VersionsTable = ({ programId }: { programId?: string }) => {
                 ))}
               </Table.Body>
             </Table.Root>
+            </Table.ScrollArea>
           </Box>
         </VStack>
       </Container>
@@ -138,6 +148,14 @@ const VersionsTable = ({ programId }: { programId?: string }) => {
           programId={programId || ""}
           open={isOpenCreate}
           onClose={handleCloseCreate}
+        />
+      )}
+
+      {isOpenInfo && (
+        <VersionCheckInfo
+          checkId={checkId || ""}
+          open={isOpenInfo}
+          onClose={handleCloseInfo}
         />
       )}
     </>

@@ -3,7 +3,7 @@ using Application.DTO.Common;
 using Application.DTO.Rules;
 using CSharpFunctionalExtensions;
 
-namespace Application.Services.Definitions
+namespace Application.Services.Definitions.CRUDServices
 {
     public interface IWordRulesService
     {

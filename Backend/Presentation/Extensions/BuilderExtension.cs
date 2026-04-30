@@ -6,8 +6,10 @@ using Application.Abstractions.Settings;
 using Application.Features.Programs.Commands.Create;
 using Application.Helpers;
 using Application.MappingProfiles;
-using Application.Services.Definitions;
-using Application.Services.Implementations;
+using Application.Services.Definitions.CRUDServices;
+using Application.Services.Definitions.FileCheckServices;
+using Application.Services.Implementations.CRUDServices;
+using Application.Services.Implementations.FileCheckServices;
 using Domain.Entities.ProgramContext;
 using Domain.Entities.References;
 using Domain.Entities.Rules;
@@ -116,6 +118,13 @@ namespace Presentation.Extensions
             _services.AddScoped<IMinioService, MinioService>();
             _services.AddScoped<IWordRulesService, WordRulesService>();
             _services.AddScoped<INotification, EmailService>();
+            _services.AddScoped<IProgramFileParser, ProgramFileWordParser>();
+
+            _services.AddScoped<IProgramFileChecksService, ProgramFileChecksService>();
+            _services.AddScoped<INHunspellService, NHunspellService>();
+
+            _services.AddScoped<IRuleWordCheckService, RuleWordCheckService>();
+            _services.AddScoped<IRuleSectionCheckService, RuleSectionCheckService>();
         }
 
         private static void AddRepositories()
@@ -129,9 +138,11 @@ namespace Presentation.Extensions
             _services.AddScoped<IBaseRepository<ProgramHistory>, BaseRepository<ProgramHistory>>();
             _services.AddScoped<IBaseRepository<RuleSection>, BaseRepository<RuleSection>>();
             _services.AddScoped<IBaseRepository<RuleWord>, BaseRepository<RuleWord>>();
+            _services.AddScoped<IBaseRepository<TechCheck>, BaseRepository<TechCheck>>();
 
             _services.AddScoped<IUserRepository, UserRepository>();
             _services.AddScoped<IEduYearRepository, EduYearRepository>();
+            _services.AddScoped<ICheckErrorRepository, CheckErrorRepository>();
             _services.AddScoped<ISectionRuleRepository, SectionRuleRepository>();
             _services.AddScoped<IProgramRepository, ProgramRepository>();
             _services.AddScoped<IProgramVersionRepository, ProgramVersionRepository>();

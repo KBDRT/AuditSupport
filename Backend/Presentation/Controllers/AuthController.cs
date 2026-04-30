@@ -1,5 +1,5 @@
 ﻿using Application.DTO.Users;
-using Application.Services.Definitions;
+using Application.Services.Definitions.CRUDServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

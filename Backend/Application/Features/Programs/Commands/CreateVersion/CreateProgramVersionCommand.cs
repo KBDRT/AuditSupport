@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.DTO.Common;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using MediatR;
@@ -10,6 +11,6 @@ namespace Application.Features.Programs.Commands.CreateVersion
         Guid ProgramId,
         string Changes,
         Stream File
-    ) : IRequest<Result<Guid, ServiceError>>;
+    ) : IRequest<Result<CreateOperationResponseDTO, ServiceError>>;
 }
 

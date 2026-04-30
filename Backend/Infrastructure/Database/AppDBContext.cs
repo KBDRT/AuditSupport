@@ -30,6 +30,8 @@ namespace Infrastructure.Database
 
         public DbSet<RuleSectionStructure> RuleStructures { get; set; } = null!;
 
+        public DbSet<CheckError> CheckErrors { get; set; } = null!;
+
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
             Database.EnsureCreated();

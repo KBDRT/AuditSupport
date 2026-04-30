@@ -11,6 +11,11 @@ namespace Application.DTO.Programs
         public string Changes { get; set; }
         public double FileSize { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
+
+        public Guid TechCheckId { get; set; }
+
+        public bool IsSuccessCheck { get; set; }
+
     };
 }
 

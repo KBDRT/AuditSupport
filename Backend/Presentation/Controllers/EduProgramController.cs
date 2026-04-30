@@ -6,6 +6,7 @@ using Application.Features.Programs.Commands.Create;
 using Application.Features.Programs.Commands.CreateVersion;
 using Application.Features.Programs.Commands.Delete;
 using Application.Features.Programs.Commands.Update;
+using Application.Features.Programs.Quaries.GetErrorsByCheckId;
 using Application.Features.Programs.Quaries.GetProgramById;
 using Application.Features.Programs.Quaries.GetProgramsForTeacher;
 using Application.Features.Programs.Quaries.GetProgramsWithFilter;
@@ -125,6 +126,16 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetGroupedPrograms(Guid teacherId, CancellationToken cancellationToken)
         {
             GetProgramsForTeacherQuery query = new(teacherId);
+
+            var result = await _mediator.Send(query, cancellationToken);
+            return FromResult(result);
+        }
+
+        [HttpGet("Errors/{checkId}")]
+        [ProducesResponseType(typeof(List<ShortCheckErrorDTO>), 200)]
+        public async Task<IActionResult> GetErrorsForCheck(Guid checkId, CancellationToken cancellationToken)
+        {
+            GetErrorsByCheckIdQuery query = new(checkId);
 
             var result = await _mediator.Send(query, cancellationToken);
             return FromResult(result);

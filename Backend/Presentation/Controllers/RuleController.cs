@@ -1,5 +1,5 @@
 ﻿using Application.DTO.Rules;
-using Application.Services.Definitions;
+using Application.Services.Definitions.CRUDServices;
 using AutoMapper;
 using Domain.Entities.Rules;
 using Microsoft.AspNetCore.Mvc;

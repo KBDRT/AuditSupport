@@ -1,4 +1,4 @@
-import { Button, Field, Input, Stack, Box, VStack, Heading, Center, Text, Icon, HStack } from "@chakra-ui/react"
+import { Button, Field, Input, Stack, Box, VStack,  Center, Text, Icon, HStack } from "@chakra-ui/react"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useAuthStore } from "@/stores/AuthStore"
@@ -177,7 +177,7 @@ const LoginPage = () => {
             </Button>
           </Stack>
 
-          <Text fontSize="xs" color="gray.500" textAlign="center" mt={4}>
+          <Text fontSize="xs" color="gray.500" textAlign="center" mt={2}>
             Система внутреннего аудита
           </Text>
         </VStack>

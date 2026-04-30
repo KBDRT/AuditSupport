@@ -1,71 +1,73 @@
-import { Button, Dialog, Field,  Portal, Stack, CloseButton, FileUpload, Icon, Box, Textarea, HStack, useFileUpload } from "@chakra-ui/react"
+import { Button, Dialog, Field, Input, Portal, Stack, CloseButton, FileUpload, Icon, Box, Textarea, HStack, InputGroup, useFileUpload, Text, VStack } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
-import { type CreateVersionRequest } from "@/api/models";
+import { type CreateVersionRequest, type ShortCheckErrorDTO } from "@/api/models";
 import { MdSave, MdDescription } from "react-icons/md";
-import { z } from 'zod'
+import { check, z } from 'zod'
+import { LuFileUp } from "react-icons/lu";
 import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
-import { HiUpload } from "react-icons/hi"
+import type { GetEduProgramErrorsCheckIdResult } from "@/api/edu-program/edu-program";
+import { GetErrorsForVersion } from "@/services/ProgramService";
 
-interface VersionInvalidFields {
-  changes: boolean,
-}
 
-interface VersionCreateProps {
-  programId: string
+interface VersionCheckInfoProps {
+  checkId: string
   open: boolean  
   onClose: () => void
 }
 
-const yearSchema = z.object({
-  changes: z.string().min(1, 'Комментарий обязателен'),
-})
 
-const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
-  const { addVersion } = useTeacherProgramsStore()
-  const [formData, setFormData] = useState<CreateVersionRequest>({ changes: "", programId: programId })
-  const [invalidFields, setInvalidFields] = useState<VersionInvalidFields>({ changes: false })
+
+const VersionCheckInfo = ({ checkId, open, onClose}: VersionCheckInfoProps) => {
+
+
+  // const { addVersion } = useTeacherProgramsStore()
+   const [formData, setFormData] = useState<ShortCheckErrorDTO[]>([])
+  // const [invalidFields, setInvalidFields] = useState<VersionInvalidFields>({ changes: false })
  
   useEffect(() => {
-    if (!open) {
-      setFormData({ changes: "" })
-      setInvalidFields({ changes: false })
-    }
-  }, [open])
-
-  const handleSave = async() => {
-    try {
-      yearSchema.parse(formData)
-      
-      setInvalidFields({ changes: false })
-      
-
-      const isSuccess = await addVersion({changes: formData?.changes, file: fileUpload.rejectedFiles[0].file, programId: formData?.programId})
-      if (isSuccess) {
-        onClose()
+    const loadErrors = async () => {
+      if (checkId) {
+        const errors = await GetErrorsForVersion(checkId)
+        setFormData(errors)
       }
-      onClose()
-    } 
-    catch (error) 
-    {
-      if (error instanceof z.ZodError) {
-        const newErrors = { changes: false }
-        
-        error.issues.forEach(issue => {
-          const field = issue.path[0] as keyof VersionInvalidFields
-          if (field in newErrors) {
-            newErrors[field] = true
-          }
-        })
-        
-        setInvalidFields(newErrors)
-      }
-    }
-  }
+    };
+    loadErrors();
+  }, [checkId]);
 
-  const fileUpload = useFileUpload({
-    maxFiles: 1,
-    maxFileSize: 300000,
-  })
+  // const handleSave = async() => {
+  //   try {
+  //     yearSchema.parse(formData)
+      
+  //     setInvalidFields({ changes: false })
+      
+
+  //     const isSuccess = await addVersion({changes: formData?.changes, file: fileUpload.rejectedFiles[0].file, programId: formData?.programId})
+  //     if (isSuccess) {
+  //       onClose()
+  //     }
+  //     onClose()
+  //   } 
+  //   catch (error) 
+  //   {
+  //     if (error instanceof z.ZodError) {
+  //       const newErrors = { changes: false }
+        
+  //       error.issues.forEach(issue => {
+  //         const field = issue.path[0] as keyof VersionInvalidFields
+  //         if (field in newErrors) {
+  //           newErrors[field] = true
+  //         }
+  //       })
+        
+  //       setInvalidFields(newErrors)
+  //     }
+  //   }
+  // }
+
+  //   const fileUpload = useFileUpload({
+  //   maxFiles: 1,
+  //   maxFileSize: 300000,
+  // })
 
   return (
     <Dialog.Root 
@@ -88,7 +90,7 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
           >
             <Dialog.Header borderBottom="1px solid" borderColor="gray.100" pb={2}>
               <HStack gap={3}>
-                <Box
+                {/* <Box
                   as="div"
                   w="32px"
                   h="32px"
@@ -98,10 +100,10 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Icon as={MdDescription} boxSize="16px" color="white" />
-                </Box>
+                  <Icon as={MdDescription} boxSize="16px" color="white" /> 
+                </Box> */}
                 <Dialog.Title fontSize="xl" fontWeight="600" color="gray.800">
-                  Новая версия программы
+                  Результат технической проверки
                 </Dialog.Title>
               </HStack>
               <Dialog.CloseTrigger asChild>
@@ -115,9 +117,24 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
 
             <Dialog.Body pb={4} pt={4}>
               <Stack gap={5}>
+                  {formData.map((error, index) => (
+                    <VStack>
+                      <Text>{error.message} {error.rule}</Text>
+                      <Text>{error.context && error.context.length > 0 ? error.context : "-"}</Text>
+                      {/* <Text></Text> */}
+                       {/* <Text>{error.pageNumber}</Text> */}
+                        {/* <Text>{error.sectionName}</Text>
+                          <Text>{error.pageNumber}</Text> */}
+                    </VStack>
+                  ))}
+              </Stack>
+            </Dialog.Body>
+
+            {/* <Dialog.Body pb={4} pt={4}>
+              <Stack gap={5}>
                 <Field.Root invalid={invalidFields["changes"]}>
                   <Field.Label display="flex" alignItems="center" gap={2} mb={2}>
-                    {/* <Icon as={MdDescription} color="blue.500" boxSize="16px" /> */}
+                    <Icon as={MdDescription} color="blue.500" boxSize="16px" />
                     Комментарий
                   </Field.Label>
                   <Textarea
@@ -139,26 +156,34 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
                   </Field.ErrorText>
                 </Field.Root>
 
-                <FileUpload.RootProvider value={fileUpload}>
-                <FileUpload.HiddenInput />
-                <FileUpload.Label>Файл программы</FileUpload.Label>
-                    <FileUpload.Trigger asChild>
-                      <Button variant="outline" size="sm">
-                        <HiUpload /> Загрузить файл
-                      </Button>
-                    </FileUpload.Trigger>
-                    {fileUpload.rejectedFiles.length > 0 &&
-                    <FileUpload.ItemGroup>
-                      {/* <FileUpload.Label>Выбранный файл</FileUpload.Label> */}
-                      <FileUpload.Item file={fileUpload.rejectedFiles[0].file}>
-                        <FileUpload.ItemPreview />
-                        <FileUpload.ItemName />
-                        <FileUpload.ItemSizeText />
-                      </FileUpload.Item>
-                    </FileUpload.ItemGroup>}
+                 <FileUpload.RootProvider value={fileUpload}>
+                  <FileUpload.HiddenInput />
+                  <FileUpload.Label>Загрузить файл</FileUpload.Label>
+                  <InputGroup
+                  
+                    startElement={<LuFileUp />}
+                    endElement={
+                      <FileUpload.ClearTrigger asChild>
+                        <CloseButton
+                          me="-1"
+                          size="xs"
+                          variant="plain"
+                          focusVisibleRing="inside"
+                          focusRingWidth="2px"
+                          pointerEvents="auto"
+                        />
+                      </FileUpload.ClearTrigger>
+                    }
+                  >
+                    <Input asChild>
+                      <FileUpload.Trigger>
+                        Загрузить
+                      </FileUpload.Trigger>
+                    </Input>
+                  </InputGroup>
                 </FileUpload.RootProvider>
               </Stack>
-            </Dialog.Body>
+            </Dialog.Body> */}
 
             <Dialog.Footer 
               borderTop="1px solid" 
@@ -167,9 +192,9 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
               gap={3}
             >
 
-              <Button colorPalette="green" size="sm" onClick={handleSave} variant="ghost">
+              {/* <Button colorPalette="green" size="sm" onClick={handleSave} variant="ghost">
                 <MdSave />Сохранить
-              </Button>
+              </Button> */}
               {/* <Button
                 variant="ghost"
                 colorScheme="gray"
@@ -210,4 +235,4 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
   )
 }
 
-export default VersionCreate
+export default VersionCheckInfo

@@ -4,13 +4,13 @@ using Application.Common;
 using Application.DTO.Common;
 using Application.DTO.Users;
 using Application.Helpers;
-using Application.Services.Definitions;
+using Application.Services.Definitions.CRUDServices;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using Domain.Entities.References;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services.Implementations
+namespace Application.Services.Implementations.CRUDServices
 {
     public class AdminService : IAdminService
     {

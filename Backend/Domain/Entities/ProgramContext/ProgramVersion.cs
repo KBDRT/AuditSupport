@@ -20,5 +20,7 @@ namespace Domain.Entities.ProgramContext
 
         public TechCheck? TechnicalCheck { get; set; }
 
+        public bool IsSuccessCheck { get; set; }
+
     }
 }

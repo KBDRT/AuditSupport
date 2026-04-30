@@ -2,12 +2,12 @@
 using Application.Common;
 using Application.DTO.Common;
 using Application.DTO.Rules;
-using Application.Services.Definitions;
+using Application.Services.Definitions.CRUDServices;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using Domain.Entities.Rules;
 
-namespace Application.Services.Implementations
+namespace Application.Services.Implementations.CRUDServices
 {
     public class SectionRulesService : ISectionRulesService
     {

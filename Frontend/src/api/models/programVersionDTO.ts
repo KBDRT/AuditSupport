@@ -11,4 +11,6 @@ export interface ProgramVersionDTO {
   changes?: string | null;
   fileSize?: number;
   createdDate?: string;
+  techCheckId?: string;
+  isSuccessCheck?: boolean;
 }

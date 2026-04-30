@@ -15,7 +15,6 @@ import {
   Badge,
   ActionBar,
   Portal,
-  Spinner,
 } from "@chakra-ui/react"
 import { MdWork, MdPerson, MdCalendarToday, MdCategory, MdInfo } from "react-icons/md";
 import { useEffect, useState } from "react";
@@ -24,12 +23,15 @@ import { GetStatusTypeName } from './../../utils/TextUtils';
 import { useDirectionsStore } from "@/stores/DirectionsStore";
 import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
 import VersionsTable from "./VersionsTable";
+import PageLoading from "@/components/common/PageLoading";
 
 const EduProgram = () => {
   const { id } = useParams();
   const { fetch, items: directions } = useDirectionsStore()
   const { fetchProgram, programs, updateProgram } = useTeacherProgramsStore()
-  
+
+  const [openAccordion, setOpenAccordion] = useState<boolean>(true)
+
   const programFromStore = id ? programs[id] : undefined
   
   const [localFormData, setLocalFormData] = useState<EduProgramDTO | undefined>()
@@ -67,13 +69,36 @@ const EduProgram = () => {
     }
   }
 
-  if (!programFromStore) return <Spinner />
+  const handleChangeCreatePage = (stat: boolean) => {
+    setOpenAccordion(stat)
+  }
+
+  if (!programFromStore) return <PageLoading />
 
   return (
-    <Box minH="100vh" bg="gray.50">
+    <Box  bg="gray.50">
       <Container maxW="container.lg" py={2}>
         <VStack align="stretch" gap={3}>
         
+        <HStack gap={3}>
+          <Box
+            as="div"
+            w="32px"
+            h="32px"
+            bg="linear-gradient(135deg, #3182CE 0%, #2C5282 100%)"
+            borderRadius="8px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Icon as={MdInfo} boxSize="16px" color="white" />
+          </Box>
+          <Text fontSize="lg" fontWeight="600" color="gray.700">
+            Информация
+          </Text>
+          {/* <Spacer /> */}
+        </HStack>
+
           <Box
             bg="white"
             borderRadius="2xl"
@@ -221,9 +246,9 @@ const EduProgram = () => {
         </VStack>
       </Container>
 
-      <VersionsTable programId={id} />
+      <VersionsTable programId={id} onChangeCreatePage={handleChangeCreatePage} />
 
-      <ActionBar.Root open={true} placement={"bottom"}>
+      <ActionBar.Root open={openAccordion} placement={"bottom"}>
         <Portal>
           <ActionBar.Positioner>
             <ActionBar.Content>
