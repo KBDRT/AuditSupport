@@ -86,7 +86,8 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
         }
       }}
     >
-      <Portal>       
+      <Portal>     
+        <Dialog.Backdrop />  
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

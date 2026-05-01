@@ -8,6 +8,7 @@ namespace Application.Features.Programs.Commands.ChangeStatus
     public record ChangeProgramStatusCommand
     (
         Guid ProgramId,
-        ProgramStatuses NewStatus
+        ProgramStatuses NewStatus,
+        Guid? VersionId
     ) : IRequest<UnitResult<ServiceError>>;
 }

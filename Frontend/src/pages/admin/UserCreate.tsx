@@ -82,6 +82,7 @@ const UserCreate = ({ open, onClose}: UserCreateProps) => {
       }}
     >
       <Portal>       
+        <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

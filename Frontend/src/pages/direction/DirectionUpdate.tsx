@@ -59,6 +59,7 @@ const DirectionUpdate = ({ open, item, onClose}: DirectionUpdateProps) => {
       }}
     >
       <Portal>       
+        <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

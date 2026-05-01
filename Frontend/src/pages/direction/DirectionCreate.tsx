@@ -67,7 +67,8 @@ const DirectionCreate = ({ open, onClose}: DirectionCreateProps) => {
         }
       }}
     >
-      <Portal>       
+      <Portal>   
+        <Dialog.Backdrop />    
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

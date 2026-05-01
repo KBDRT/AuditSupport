@@ -3,8 +3,8 @@ import { useState, useEffect } from "react"
 import { type CreateVersionRequest } from "@/api/models";
 import { MdSave, MdDescription } from "react-icons/md";
 import { z } from 'zod'
-import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
 import { HiUpload } from "react-icons/hi"
+import { useProgramStore } from "@/stores/ProgramStore";
 
 interface VersionInvalidFields {
   changes: boolean,
@@ -12,7 +12,6 @@ interface VersionInvalidFields {
 
 interface VersionCreateProps {
   programId: string
-  open: boolean  
   onClose: () => void
 }
 
@@ -20,8 +19,8 @@ const yearSchema = z.object({
   changes: z.string().min(1, 'Комментарий обязателен'),
 })
 
-const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
-  const { addVersion } = useTeacherProgramsStore()
+const VersionCreate = ({ programId, onClose}: VersionCreateProps) => {
+  const { addVersion } = useProgramStore()
   const [formData, setFormData] = useState<CreateVersionRequest>({ changes: "", programId: programId })
   const [invalidFields, setInvalidFields] = useState<VersionInvalidFields>({ changes: false })
  
@@ -69,7 +68,7 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
 
   return (
     <Dialog.Root 
-      open={open}
+      open={true}
       placement="center"
       onOpenChange={(details) => {
         if (!details.open) {
@@ -78,6 +77,7 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
       }}
     >
       <Portal>       
+        <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content
             bg="white"
@@ -172,7 +172,7 @@ const VersionCreate = ({ programId, open, onClose}: VersionCreateProps) => {
               </Button>
               {/* <Button
                 variant="ghost"
-                colorScheme="gray"
+                colorPalette="gray"
                 size="sm"
                 onClick={onClose}
                 _hover={{ bg: "gray.100", transform: "translateY(-1px)" }}

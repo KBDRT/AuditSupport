@@ -8,16 +8,19 @@ namespace Application.Features.Programs.Commands.ChangeStatus
 {
     public class ChangeProgramStatusCommandHandler : IRequestHandler<ChangeProgramStatusCommand, UnitResult<ServiceError>>
     {
-        private readonly IBaseRepository<EduProgram> _repository;
+        private readonly IBaseRepository<EduProgram> _programRepository;
+        private readonly IProgramVersionRepository _versionRepository;
 
-        public ChangeProgramStatusCommandHandler(IBaseRepository<EduProgram> repository)
+        public ChangeProgramStatusCommandHandler(IBaseRepository<EduProgram> programRepository, 
+                                                 IProgramVersionRepository versionRepository)
         {
-            _repository = repository;
+            _programRepository = programRepository;
+            _versionRepository = versionRepository;
         }
 
         public async Task<UnitResult<ServiceError>> Handle(ChangeProgramStatusCommand request, CancellationToken cancellationToken)
         {
-            var program = await _repository.GetById(request.ProgramId, cancellationToken);
+            var program = await _programRepository.GetById(request.ProgramId, cancellationToken);
             if (program == null)
             {
                 return UnitResult.Failure<ServiceError>(new(ErrorsCode.NOT_FOUND, "Не найден"));
@@ -26,7 +29,21 @@ namespace Application.Features.Programs.Commands.ChangeStatus
             if (program.ProgramStatus != request.NewStatus)
             {
                 program.ProgramStatus = request.NewStatus;
-                await _repository.Update(program, cancellationToken);
+                await _programRepository.Update(program, cancellationToken, SaveToDb.Deferred);
+
+                if (request.VersionId != null)
+                {
+                    await _versionRepository.SetUnuseForAll(request.ProgramId, cancellationToken);
+
+                    var version = await _versionRepository.GetById((Guid)request.VersionId, cancellationToken);
+                    if (version != null)
+                    {
+                        version.IsUseForReview = true;
+                        await _versionRepository.Update(version, cancellationToken, SaveToDb.Deferred);
+                    }
+                }
+
+                await _programRepository.SaveChanges(cancellationToken);
             }
 
             return Result.Success<ServiceError>();

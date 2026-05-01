@@ -65,7 +65,7 @@ export const useSectionRulesStore = create<SectionRulesStore>((set) => ({
 
 
   updateItem: async (id, updatedItem) => {
-    console.log(updatedItem)
+
     try
     {
       const response = await api.putRuleSection(updatedItem)

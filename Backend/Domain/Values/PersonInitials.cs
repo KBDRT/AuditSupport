@@ -29,7 +29,7 @@ namespace Domain.Values
 
                 if (!String.IsNullOrEmpty(Patronymic))
                 {
-                    output += $" {Patronymic[0]}.";
+                    output += $"{Patronymic[0]}.";
                 }
 
                 return output;

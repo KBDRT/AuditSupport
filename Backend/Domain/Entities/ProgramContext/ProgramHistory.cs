@@ -8,11 +8,11 @@ namespace Domain.Entities.ProgramContext
     {
         public Guid UserId { get; set; }
 
-        public User User { get; set; }  
+        public User User { get; set; } = null!;
 
         public Guid ProgramId { get; set; }
 
-        public EduProgram Program { get; set; }
+        public EduProgram Program { get; set; } = null!;
 
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
 

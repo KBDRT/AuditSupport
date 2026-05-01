@@ -4,7 +4,7 @@ import { axiosInstance } from '@/services/axiosInstanse';
 import { create } from 'zustand';
 import type { User } from '@/types/User';
 import { persist } from 'zustand/middleware';
-import { ShowError, ShowToast } from '@/components/common/Alert';
+import { ShowError } from '@/components/common/Alert';
 import type { AxiosError } from 'axios';
 
 interface AuthStore {

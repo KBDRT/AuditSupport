@@ -19,8 +19,13 @@ namespace Infrastructure.Notifications
         {
             using var emailMessage = new MimeMessage();
 
-            var acc = _config["EmailAccount"];
-            var password = _config["EmailPassword"];
+            var acc = _config["EmailAccount"] ?? string.Empty;
+            var password = _config["EmailPassword"] ?? string.Empty;
+
+            if (acc == string.Empty && password == string.Empty)
+            {
+                return;
+            }
 
             emailMessage.From.Add(new MailboxAddress("Аудит", acc));
             emailMessage.To.Add(new MailboxAddress("", user.Email));

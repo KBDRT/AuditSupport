@@ -8,7 +8,6 @@ import { useWordRulesStore } from "@/stores/WordRules";
 const WordRulesTable = () => {
   const { items, fetch, loading } = useWordRulesStore()
   const [selectedItem, setSelectedItem] = useState<UpdateWordRuleRequest | null>(null)
-  const [selectedOpened, setSelectedOpened] = useState(false)
   const [isOpenUpdate, setIsOpenUpdate] = useState(false)
   const tableRef = useRef<HTMLDivElement>(null)
 
@@ -102,7 +101,6 @@ const WordRulesTable = () => {
         <WordRulesUpdate 
           open={isOpenUpdate}
           item={selectedItem}
-          isOpened={selectedOpened}
           onClose={handleClose} />
       )}
 

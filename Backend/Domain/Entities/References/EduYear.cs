@@ -23,6 +23,15 @@ namespace Domain.Entities.References
             } 
         }
 
+        [NotMapped]
+        public string PeriodSpace
+        {
+            get
+            {
+                return $"{StartYear} {EndYear}";
+            }
+        }
+
         public bool IsOpened { get; set; } = false;
 
         public List<EduProgram> Programs = [];

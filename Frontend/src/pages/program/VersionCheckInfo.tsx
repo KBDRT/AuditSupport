@@ -1,77 +1,41 @@
-import { Button, Dialog, Field, Input, Portal, Stack, CloseButton, FileUpload, Icon, Box, Textarea, HStack, InputGroup, useFileUpload, Text, VStack } from "@chakra-ui/react"
+import {  Dialog, Portal, CloseButton, HStack, Text, VStack, Box, Icon, Button } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
-import { type CreateVersionRequest, type ShortCheckErrorDTO } from "@/api/models";
-import { MdSave, MdDescription } from "react-icons/md";
-import { check, z } from 'zod'
-import { LuFileUp } from "react-icons/lu";
-import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
-import type { GetEduProgramErrorsCheckIdResult } from "@/api/edu-program/edu-program";
+import { type ShortCheckErrorDTO } from "@/api/models";
 import { GetErrorsForVersion } from "@/services/ProgramService";
-
+import { MdCheckCircle, MdClose, MdContentCopy, MdError, MdInfo } from "react-icons/md";
+import PageLoading from "@/components/common/PageLoading";
+import { ShowToast } from "@/components/common/Alert";
 
 interface VersionCheckInfoProps {
   checkId: string
-  open: boolean  
   onClose: () => void
 }
 
-
-
-const VersionCheckInfo = ({ checkId, open, onClose}: VersionCheckInfoProps) => {
-
-
-  // const { addVersion } = useTeacherProgramsStore()
-   const [formData, setFormData] = useState<ShortCheckErrorDTO[]>([])
-  // const [invalidFields, setInvalidFields] = useState<VersionInvalidFields>({ changes: false })
+const VersionCheckInfo = ({ checkId, onClose}: VersionCheckInfoProps) => {
+  const [formData, setFormData] = useState<ShortCheckErrorDTO[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
  
   useEffect(() => {
     const loadErrors = async () => {
       if (checkId) {
+        setLoading(true)
         const errors = await GetErrorsForVersion(checkId)
-        setFormData(errors)
+        if (errors.length > 0)
+        {
+          setFormData(errors)
+        }
+        setLoading(false)
       }
     };
     loadErrors();
   }, [checkId]);
 
-  // const handleSave = async() => {
-  //   try {
-  //     yearSchema.parse(formData)
-      
-  //     setInvalidFields({ changes: false })
-      
 
-  //     const isSuccess = await addVersion({changes: formData?.changes, file: fileUpload.rejectedFiles[0].file, programId: formData?.programId})
-  //     if (isSuccess) {
-  //       onClose()
-  //     }
-  //     onClose()
-  //   } 
-  //   catch (error) 
-  //   {
-  //     if (error instanceof z.ZodError) {
-  //       const newErrors = { changes: false }
-        
-  //       error.issues.forEach(issue => {
-  //         const field = issue.path[0] as keyof VersionInvalidFields
-  //         if (field in newErrors) {
-  //           newErrors[field] = true
-  //         }
-  //       })
-        
-  //       setInvalidFields(newErrors)
-  //     }
-  //   }
-  // }
-
-  //   const fileUpload = useFileUpload({
-  //   maxFiles: 1,
-  //   maxFileSize: 300000,
-  // })
 
   return (
     <Dialog.Root 
-      open={open}
+      size={"lg"}
+      open={true}
       placement="center"
       onOpenChange={(details) => {
         if (!details.open) {
@@ -79,18 +43,19 @@ const VersionCheckInfo = ({ checkId, open, onClose}: VersionCheckInfoProps) => {
         }
       }}
     >
-      <Portal>       
+      <Portal>      
+        <Dialog.Backdrop />  
         <Dialog.Positioner>
           <Dialog.Content
             bg="white"
             borderRadius="2xl"
             boxShadow="2xl"
-            maxW="500px"
+            maxW="600px"
             w="full"
           >
-            <Dialog.Header borderBottom="1px solid" borderColor="gray.100" pb={2}>
+            <Dialog.Header borderBottom="1px solid" borderColor="gray.100" py={4} px={6}>
               <HStack gap={3}>
-                {/* <Box
+                <Box
                   as="div"
                   w="32px"
                   h="32px"
@@ -100,8 +65,8 @@ const VersionCheckInfo = ({ checkId, open, onClose}: VersionCheckInfoProps) => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Icon as={MdDescription} boxSize="16px" color="white" /> 
-                </Box> */}
+                  <Icon as={MdInfo} boxSize="16px" color="white" />
+                </Box>
                 <Dialog.Title fontSize="xl" fontWeight="600" color="gray.800">
                   Результат технической проверки
                 </Dialog.Title>
@@ -115,118 +80,150 @@ const VersionCheckInfo = ({ checkId, open, onClose}: VersionCheckInfoProps) => {
               </Dialog.CloseTrigger>
             </Dialog.Header>
 
-            <Dialog.Body pb={4} pt={4}>
-              <Stack gap={5}>
-                  {formData.map((error, index) => (
-                    <VStack>
-                      <Text>{error.message} {error.rule}</Text>
-                      <Text>{error.context && error.context.length > 0 ? error.context : "-"}</Text>
-                      {/* <Text></Text> */}
-                       {/* <Text>{error.pageNumber}</Text> */}
-                        {/* <Text>{error.sectionName}</Text>
-                          <Text>{error.pageNumber}</Text> */}
-                    </VStack>
-                  ))}
-              </Stack>
-            </Dialog.Body>
 
-            {/* <Dialog.Body pb={4} pt={4}>
-              <Stack gap={5}>
-                <Field.Root invalid={invalidFields["changes"]}>
-                  <Field.Label display="flex" alignItems="center" gap={2} mb={2}>
-                    <Icon as={MdDescription} color="blue.500" boxSize="16px" />
-                    Комментарий
-                  </Field.Label>
-                  <Textarea
-                    value={formData.changes || ""}
-                    onChange={(e) => {
-                      setFormData({ ...formData, changes: e.target.value })
-                      setInvalidFields({ ...invalidFields, changes: false })
-                    }}
-                    placeholder="Введите комментарий к версии..."
-                    rows={4}
-                    resize="vertical"
-                    _focus={{
-                      borderColor: "blue.500",
-                      boxShadow: "0 0 0 1px #3182CE"
-                    }}
-                  />
-                  <Field.ErrorText color="red.500" fontSize="12px">
-                    Некорректный формат
-                  </Field.ErrorText>
-                </Field.Root>
+            {loading ? (<Dialog.Body maxH="100px" pb={4} pt={4} px={6}><PageLoading /></Dialog.Body>) : 
+            <Dialog.Body pb={4} pt={4} px={6} maxH="500px" overflowY="auto">
 
-                 <FileUpload.RootProvider value={fileUpload}>
-                  <FileUpload.HiddenInput />
-                  <FileUpload.Label>Загрузить файл</FileUpload.Label>
-                  <InputGroup
+              {formData.length === 0 ? (
+                <VStack py={8} gap={3}>
+                  <Icon as={MdCheckCircle} boxSize="48px" color="green.500" />
+                  <Text fontSize="lg" fontWeight="500" color="gray.700">
+                    Ошибок не найдено
+                  </Text>
+                  <Text fontSize="14px" color="gray.500">
+                    Техническая проверка пройдена успешно
+                  </Text>
+                </VStack>
+              ) : (
+                <VStack align="stretch" gap={4}>
+                  <HStack justify="space-between" mb={1}>
+                    <Text fontSize="14px" fontWeight="600" color="gray.500">
+                      Найдено ошибок: {formData.length}
+                    </Text>
+                    {/* <Badge colorPalette="red" borderRadius="full" px={3}>
+                      Требуется исправление
+                    </Badge> */}
+                  </HStack>
                   
-                    startElement={<LuFileUp />}
-                    endElement={
-                      <FileUpload.ClearTrigger asChild>
-                        <CloseButton
-                          me="-1"
-                          size="xs"
-                          variant="plain"
-                          focusVisibleRing="inside"
-                          focusRingWidth="2px"
-                          pointerEvents="auto"
-                        />
-                      </FileUpload.ClearTrigger>
-                    }
-                  >
-                    <Input asChild>
-                      <FileUpload.Trigger>
-                        Загрузить
-                      </FileUpload.Trigger>
-                    </Input>
-                  </InputGroup>
-                </FileUpload.RootProvider>
-              </Stack>
-            </Dialog.Body> */}
+                  {formData.map((error, index) => (
+                    <Box
+                      key={index}
+                      p={2}
+                      bg="red.50"
+                      borderRadius="lg"
+                      border="1px solid"
+                      borderColor="red.200"
+                      _hover={{
+                        borderColor: "red.300",
+                        boxShadow: "sm"
+                      }}
+                      transition="all 0.2s"
+                    >
+                      <VStack align="stretch" gap={3}>
+                        <HStack gap={2}>
+                          <Icon as={MdError} color="red.500" boxSize="20px" />
+                          <Text fontWeight="600" color="red.700" fontSize="14px">
+                            {error.message}
+                          </Text>
+                        </HStack>
+                        
+                        {error.rule && (
+                          <HStack gap={2} pl={1}>
+                            <Text fontSize="12px" color="gray.500" fontWeight="500">
+                              Правило:
+                            </Text>
+                            <Box flex="1">
+                              <Text fontWeight="bold" colorPalette="blue" fontSize="12px" borderRadius="full" whiteSpace="normal" wordBreak="break-word" display="inline-block">
+                                {error.rule}
+                              </Text>
+                            </Box>
+                          </HStack>
+                        )}
+                        
+                        {error.context && error.context.length > 0 && (
+                    
+
+                            <HStack gap={2} pl="1">
+                            <Text fontSize="12px" color="gray.500" fontWeight="500">
+                              Контекст:
+                            </Text>
+                                 <Box
+                            p={1}
+                            bg="white"
+                            borderRadius="md"
+                            border="1px solid"
+                            borderColor="red.100"
+                   
+                          >
+                              <Text fontSize="12px"  whiteSpace="normal">
+                                {error.context}
+                              </Text>
+                            </Box>
+                          </HStack>
+
+                        )}
+                      </VStack>
+                    </Box>
+                  ))}
+                </VStack>
+              )}
+            </Dialog.Body>
+            }
 
             <Dialog.Footer 
               borderTop="1px solid" 
               borderColor="gray.100" 
               pt={4}
+              pb={4}
+              px={6}
               gap={3}
+              justifyContent="flex-end"
             >
 
-              {/* <Button colorPalette="green" size="sm" onClick={handleSave} variant="ghost">
-                <MdSave />Сохранить
-              </Button> */}
-              {/* <Button
+              {formData.length > 0 && (
+                <Button
+                  colorPalette="blue"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      formData.map(e => {
+                      let message = ``
+                      
+                      if (e.ruleType === 1) {
+                        message = `${e.message}: ${e.rule}, Контекст: ${e.context}`
+                      }
+                      
+                      if (e.ruleType === 0) {
+                        message = `${e.message}: ${e.rule}`
+                      }
+                      
+                      return message
+                      }).join('\n')
+                    )
+
+                    ShowToast("Успешно!", "Скопировано в буфер обмена", "success")
+                  }}
+                >
+                  <HStack gap={2}>
+                    <Icon as={MdContentCopy} />
+                    <Text>Копировать ошибки</Text>
+                  </HStack>
+                </Button>
+              )}
+
+              <Button
                 variant="ghost"
-                colorScheme="gray"
+                colorPalette="gray"
                 size="sm"
                 onClick={onClose}
                 _hover={{ bg: "gray.100", transform: "translateY(-1px)" }}
               >
                 <HStack gap={2}>
                   <Icon as={MdClose} />
-                  <Text>Отмена</Text>
+                  <Text>Закрыть</Text>
                 </HStack>
               </Button>
-              <Button
-                bgGradient="linear(to-r, #3182CE, #2C5282)"
-                color="white"
-                size="sm"
-                onClick={handleSave}
-                _hover={{
-                  bgGradient: "linear(to-r, #2C5282, #1A365D)",
-                  transform: "translateY(-1px)",
-                  boxShadow: "lg"
-                }}
-                _active={{
-                  transform: "translateY(0)"
-                }}
-                transition="all 0.2s"
-              >
-                <HStack gap={2}>
-                  <Icon as={MdSave} />
-                  <Text>Сохранить</Text>
-                </HStack>
-              </Button> */}
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

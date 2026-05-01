@@ -23,6 +23,7 @@ import type {
   ShortYearDTO,
   UpdateProgramCommand
 } from '../models';
+import type { CreateVersionResponseDTO } from '../models/createVersionResponseDTO';
 
 
 
@@ -63,7 +64,7 @@ const patchEduProgram = (
   }
 const postEduProgramVersion = (
     createVersionRequest: CreateVersionRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<CreateOperationResponseDTO>> => {
+ ): Promise<AxiosResponse<CreateVersionResponseDTO>> => {
     return axiosInstance.post(
       `/EduProgram/Version`,
       createVersionRequest,options
@@ -117,7 +118,7 @@ export type PostEduProgramResult = AxiosResponse<CreateOperationResponseDTO>
 export type GetEduProgramResult = AxiosResponse<unknown>
 export type DeleteEduProgramResult = AxiosResponse<unknown>
 export type PatchEduProgramResult = AxiosResponse<unknown>
-export type PostEduProgramVersionResult = AxiosResponse<CreateOperationResponseDTO>
+export type PostEduProgramVersionResult = AxiosResponse<CreateVersionResponseDTO>
 export type GetEduProgramVersionFileVersionIdResult = AxiosResponse<unknown>
 export type GetEduProgramProgramIdResult = AxiosResponse<EduProgramDTO>
 export type GetEduProgramVersionVersionIdResult = AxiosResponse<unknown>

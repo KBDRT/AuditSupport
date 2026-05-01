@@ -22,5 +22,7 @@ namespace Domain.Entities.ProgramContext
 
         public bool IsSuccessCheck { get; set; }
 
+        public bool IsUseForReview { get; set; } = false;
+
     }
 }

@@ -66,7 +66,7 @@ const YearUpdate = ({ open, item, isOpened, onClose}: YearUpdateProps) => {
   }
 
   const handleNotificate = async() => {
-    const isSuccess = await notificateUsers(formData.yearId ?? "")
+    await notificateUsers(formData.yearId ?? "")
     // if (isSuccess)
     // {
     //   onClose()       
@@ -85,6 +85,7 @@ const YearUpdate = ({ open, item, isOpened, onClose}: YearUpdateProps) => {
       }}
     >
       <Portal>       
+        <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

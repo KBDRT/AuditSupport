@@ -39,7 +39,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("Version")]
-        [ProducesResponseType(typeof(CreateOperationResponseDTO), 200)]
+        [ProducesResponseType(typeof(CreateVersionResponseDTO), 200)]
         public async Task<IActionResult> NewVersion([FromForm] CreateVersionRequest request, CancellationToken cancellationToken)
         {
             var file = request.File;
@@ -66,9 +66,12 @@ namespace Presentation.Controllers
 
             var result = await _mediator.Send(query, cancellationToken);
 
-            return File(result.Value, "application/pdf", "example.pdf");
+            var encodedFileName = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(result.Value.FileName));
 
-            //return File(result.Value, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "example.pdf");
+            Response.Headers.Append("X-File-Name", encodedFileName);
+            Response.Headers.Append("Access-Control-Expose-Headers", "X-File-Name");
+
+            return File(result.Value.FileStream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         }
 
 

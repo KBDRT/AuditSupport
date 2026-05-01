@@ -4,14 +4,26 @@ import { useEffect, useState } from "react";
 import VersionCreate from "./VersionCreate";
 import { FixDialog } from "@/utils/DialogFix";
 import { FormatDateTime } from './../../utils/TextUtils';
-import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore";
 import VersionCheckInfo from "./VersionCheckInfo";
+import PreviewProgramFile from "./PreviewProgramFile";
+import { useProgramStore } from "@/stores/ProgramStore";
+
+const DialogName = {
+  None: 0,
+  CreateVersion: 1,
+  VersionCheckInfo: 2,
+  PreviewVersionFile: 3,
+} as const;
+
+type DialogName = typeof DialogName[keyof typeof DialogName];
+
 
 const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, onChangeCreatePage: (stat: boolean) => void }) => {
-  const { fetchProgram, programs, downloadVersionFile } = useTeacherProgramsStore()
-  
-  const program = programId ? programs[programId] : undefined
+  const { fetchProgram, program: programFromStore, downloadVersionFile, setSelectedVersion, selectedVersion } = useProgramStore()
+  const program = programId ? programFromStore : undefined
   const versions = program?.versions || []
+  const [openedDialog, setOpenedDialog] = useState<DialogName>(DialogName.None)
+  const [dialogId, setDialogId] = useState<string>()
 
   useEffect(() => {
     const loadProgram = async () => {
@@ -22,19 +34,10 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
     loadProgram();
   }, [programId]);
 
-  const [isOpenCreate, setIsOpenCreate] = useState(false)
-  const [isOpenInfo, setIsOpenInfo] = useState(false)
-  const [checkId, setCheckId] = useState<string>()
 
-  const handleCloseCreate = () => {
+  const handleCloseDialog = () => {
     onChangeCreatePage(true)
-    setIsOpenCreate(false)
-    FixDialog()
-  }
-
-  const handleCloseInfo = () => {
-    onChangeCreatePage(true)
-    setIsOpenInfo(false)
+    setOpenedDialog(DialogName.None);
     FixDialog()
   }
 
@@ -64,7 +67,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
             </Text>
             <Spacer />
             <Button
-              onClick={() => {setIsOpenCreate(true); onChangeCreatePage(false)}}
+              onClick={() => {setOpenedDialog(DialogName.CreateVersion); onChangeCreatePage(false)}}
               variant="solid"
               colorPalette="blue"
               size="sm"
@@ -84,12 +87,12 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
             _hover={{ boxShadow: "md" }}
             transition="all 0.3s ease"
           >
-            <Table.ScrollArea borderWidth="1px" rounded="md" height="480px">
+            <Table.ScrollArea borderWidth="1px" rounded="md" maxH="480px">
             <Table.Root size="sm" interactive variant="outline" w="100%" borderWidth="0" showColumnBorder stickyHeader>
               <Table.Header>
                 <Table.Row bg="gray.50">
-                  <Table.ColumnHeader w="80px" textAlign="center">№ п/п</Table.ColumnHeader>
-                  <Table.ColumnHeader w="200px">Дата и время создания</Table.ColumnHeader>
+                  <Table.ColumnHeader w="60px" textAlign="center">№ п/п</Table.ColumnHeader>
+                  <Table.ColumnHeader w="150px">Дата и время создания</Table.ColumnHeader>
                   <Table.ColumnHeader>Комментарий</Table.ColumnHeader>
                   <Table.ColumnHeader w="200px" textAlign="center">Файл</Table.ColumnHeader>
                   <Table.ColumnHeader w="180px" textAlign="center">Статус тех. проверки</Table.ColumnHeader>
@@ -98,7 +101,14 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
 
               <Table.Body>
                 {versions.map((version, index) => (
-                  <Table.Row _hover={{ bg: "gray.50" }} transition="all 0.2s" key={version.id}>
+                  <Table.Row 
+                    bg={selectedVersion?.id === version.id ? "blue.100" : undefined}
+                    _hover={{ bg: "gray.50" }} 
+                    style={{ cursor: "pointer" }} 
+                    // transition="all 0.2s" 
+                    key={version.id} 
+                    onClick={() => {setSelectedVersion(version); 
+                  }}>
                     <Table.Cell textAlign="center" fontWeight="500">{index + 1}</Table.Cell>
                     <Table.Cell>{FormatDateTime(version.createdDate || "")}</Table.Cell>
                     <Table.Cell color="gray.600">{version.changes || "—"}</Table.Cell>
@@ -107,7 +117,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
                         <Button
                           variant="ghost"
                           size="xs"
-                          colorScheme="blue"
+                          colorPalette="blue"
                           onClick={() => handleDownloadFile(version.id || "")}
                         >
                           <HStack gap={1}>
@@ -115,7 +125,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
                             <Text fontSize="12px">Скачать</Text>
                           </HStack>
                         </Button>
-                        <Button variant="ghost" size="xs" colorScheme="gray">
+                        <Button variant="ghost" size="xs" colorPalette="gray" onClick={() => {setDialogId(version.id || ""); setOpenedDialog(DialogName.PreviewVersionFile); onChangeCreatePage(false)}}>
                           <HStack gap={1}>
                             <Icon as={MdPreview} boxSize="14px" />
                             <Text fontSize="12px">Предпросмотр</Text>
@@ -126,7 +136,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
                     <Table.Cell>
                       <HStack gap={2} justify="center">
                         <Badge colorPalette={version.isSuccessCheck ? "green" : "red"} borderRadius="full" px={3}>{version.isSuccessCheck ? "Пройдена" : "Ошибки"}</Badge>
-                        <Button variant="ghost" size="xs" colorScheme="gray"  onClick={() => {setCheckId(version.techCheckId); setIsOpenInfo(true); onChangeCreatePage(false)}}>
+                        <Button variant="ghost" size="xs" colorPalette="gray" onClick={() => {setDialogId(version.techCheckId); setOpenedDialog(DialogName.VersionCheckInfo); onChangeCreatePage(false)}}>
                           <HStack gap={1}>
                             <Icon as={MdVisibility} boxSize="14px" />
                             <Text fontSize="12px">Результат</Text>
@@ -143,20 +153,24 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
         </VStack>
       </Container>
 
-      {isOpenCreate && (
+      {openedDialog == DialogName.CreateVersion && (
         <VersionCreate
           programId={programId || ""}
-          open={isOpenCreate}
-          onClose={handleCloseCreate}
+          onClose={handleCloseDialog}
         />
       )}
 
-      {isOpenInfo && (
+      {openedDialog == DialogName.VersionCheckInfo && (
         <VersionCheckInfo
-          checkId={checkId || ""}
-          open={isOpenInfo}
-          onClose={handleCloseInfo}
+          checkId={dialogId || ""}
+          onClose={handleCloseDialog}
         />
+      )}
+
+      {openedDialog == DialogName.PreviewVersionFile && (
+        <PreviewProgramFile  
+          versionId={dialogId || ""}
+          onClose={handleCloseDialog}/>
       )}
     </>
   )

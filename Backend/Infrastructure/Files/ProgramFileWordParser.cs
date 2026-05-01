@@ -81,7 +81,7 @@ namespace Infrastructure.Files
 
         private void GetSections(Table table)
         {
-            bool isFirstRow = true;
+            //bool isFirstRow = true;
             foreach (var row in table.Elements<TableRow>())
             {
                 var cells = row.Elements<TableCell>().ToList();

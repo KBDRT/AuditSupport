@@ -3,7 +3,7 @@ import { ProgressCircle, Text, VStack} from "@chakra-ui/react"
 
 const PageLoading = () =>  {
   return (
-    <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+    <Box  display="flex" alignItems="center" justifyContent="center">
       <VStack gap={4} alignItems="center">
         <ProgressCircle.Root value={null} size="lg" colorPalette="blue">
           <ProgressCircle.Circle>

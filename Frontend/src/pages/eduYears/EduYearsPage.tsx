@@ -20,7 +20,7 @@ const EduYearsPage = () => {
   }, [user?.userId])
 
   const handleAdd = async (yearId: string) => {
-    await CreateProgram({agesOfChildrens: "", directionId: null, duration: "", name: "test", teacherId: user?.userId, yearId: yearId})
+    await CreateProgram({agesOfChildrens: "", directionId: null, duration: "", name: "", teacherId: user?.userId, yearId: yearId})
   }
 
   return (
@@ -75,7 +75,7 @@ const EduYearsPage = () => {
                         {item.isOpened && (
                           <Button
                             variant="ghost"
-                            colorScheme="blue"
+                            colorPalette="blue"
                             size="sm"
                             onClick={() => handleAdd(item.id || "")}
                             _hover={{
@@ -94,7 +94,7 @@ const EduYearsPage = () => {
 
                     <Accordion.ItemContent>
                       <Box px={6} py={4} bg="gray.50" borderTop="1px solid" borderColor="gray.100">
-                        <VStack align="stretch" gap={3}>
+                        <VStack align="stretch">
                           {item.programs?.length === 0 ? (
                             <Text color="gray.500" fontSize="14px" textAlign="center" py={2}>
                               Нет программ
@@ -116,20 +116,8 @@ const EduYearsPage = () => {
                                 }}
                               >
                                 <HStack gap={2}>
-                                  <Box
-                                    w="8px"
-                                    h="8px"
-                                    borderRadius="full"
-                                    // bg={
-                                    //   program.status === ProgramStatuses.Completed
-                                    //     ? "green.500"
-                                    //     : program.status === ProgramStatuses.InProgress
-                                    //     ? "blue.500"
-                                    //     : "gray.400"
-                                    // }
-                                  />
                                   <Text fontSize="14px" color="gray.700">
-                                    <Badge as="span" fontWeight="500" px={3}>
+                                    <Badge as="span" fontWeight="500">
                                       {program.status != undefined && GetStatusTypeName(program.status)}
                                     </Badge>
                                     <Text as="span" color="gray.500">

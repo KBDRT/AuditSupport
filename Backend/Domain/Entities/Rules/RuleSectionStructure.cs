@@ -7,7 +7,7 @@ namespace Domain.Entities.Rules
         public string Name { get; set; } = string.Empty;
 
         public Guid SectionId { get; set; }
-        public RuleSection Section { get; set; }
+        public RuleSection Section { get; set; } = null!;
 
     }
 }

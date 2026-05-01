@@ -54,11 +54,16 @@ namespace Presentation.Extensions
                         policy.WithOrigins("https://localhost:5173")
                               .AllowCredentials()
                               .AllowAnyHeader()
-                              .AllowAnyMethod();
+                              .AllowAnyMethod()
+                              .WithExposedHeaders("X-File-Name");
                     });
             });
 
-            
+
+            //Response.Headers.Add("X-File-Name", encodedFileName);
+            //Response.Headers.Add("Access-Control-Expose-Headers", "X-File-Name");
+
+
             _services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
@@ -125,6 +130,8 @@ namespace Presentation.Extensions
 
             _services.AddScoped<IRuleWordCheckService, RuleWordCheckService>();
             _services.AddScoped<IRuleSectionCheckService, RuleSectionCheckService>();
+
+            _services.AddScoped<INHunspellService, NHunspellService>();
         }
 
         private static void AddRepositories()

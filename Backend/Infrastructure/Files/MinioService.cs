@@ -62,7 +62,7 @@ namespace Infrastructure.Files
                 fileStream.Position = 0;
                 await _minioClient.PutObjectAsync(args).ConfigureAwait(false);
             }
-            catch (Exception ex) 
+            catch
             {
                 throw new Exception("[MinioProblem]");
             }

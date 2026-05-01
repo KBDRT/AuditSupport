@@ -169,7 +169,7 @@ const Header = () => {
                   <Box textAlign="left" display={{ base: "none", md: "block" }}>
                     <HStack>
                       <Badge 
-                        colorScheme="blue"
+                        colorPalette="blue"
                         fontSize="12px"
                         borderRadius="full"
                         px={2}

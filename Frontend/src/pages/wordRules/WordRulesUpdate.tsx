@@ -11,12 +11,11 @@ interface WordRulesInvalidFields {
 interface WordRulesUpdateProps {
   open: boolean  
   item: UpdateWordRuleRequest
-  isOpened: boolean
   onClose: () => void
 }
 
 
-const WordRulesUpdate = ({ open, item, isOpened, onClose}: WordRulesUpdateProps) => {
+const WordRulesUpdate = ({ open, item, onClose}: WordRulesUpdateProps) => {
   const [formData, setFormData] = useState<UpdateWordRuleRequest>(item)
   const { deleteItem, updateItem} = useWordRulesStore()
   const [invalidFields, setInvalidFields] = useState<WordRulesInvalidFields>({word: false})
@@ -59,7 +58,8 @@ const WordRulesUpdate = ({ open, item, isOpened, onClose}: WordRulesUpdateProps)
         }
       }}
     >
-      <Portal>       
+      <Portal> 
+        <Dialog.Backdrop />      
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

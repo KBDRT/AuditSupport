@@ -68,6 +68,7 @@ const YearCreate = ({ open, onClose}: YearCreateProps) => {
       }}
     >
       <Portal>       
+        <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

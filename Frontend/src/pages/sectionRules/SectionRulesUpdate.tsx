@@ -28,7 +28,7 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
   useEffect(() => {
     setFormData(item)
     if (formData.structure && formData.structure.length > 0) {
-      const convertedStructure = formData.structure.map((item, index) => ({
+      const convertedStructure = formData.structure.map((item) => ({
         id: Date.now(),
         value: item.name || ""
       }))
@@ -94,6 +94,7 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
       }}
     >
       <Portal>       
+        <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />
@@ -153,7 +154,7 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
                     </Portal>
                   </Select.Root>
                 </Field.Root>
-                {formData.type != RuleSectionType.Text && 
+                {formData.type != RuleSectionType.NUMBER_0 && 
                 <Box mt={2}>
                   <Center>  
                     <Text fontWeight="semibold">Структура раздела
@@ -181,7 +182,7 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
                                 <IconButton 
                                   variant="ghost" 
                                   size="sm"
-                                  colorScheme="red"
+                                  colorPalette="red"
                                   onClick={() => {handleDeleteStructure(item.id)}}>
                                   <LuTrash2 />
                                 </IconButton>

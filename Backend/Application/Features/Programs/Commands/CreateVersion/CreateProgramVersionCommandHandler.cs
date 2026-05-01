@@ -2,6 +2,7 @@
 using Application.Abstractions.Repositories;
 using Application.Common;
 using Application.DTO.Common;
+using Application.DTO.Programs;
 using Application.Services.Definitions.FileCheckServices;
 using CSharpFunctionalExtensions;
 using Domain.Entities.ProgramContext;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Application.Features.Programs.Commands.CreateVersion
 {
-    public class CreateProgramVersionCommandHandler : IRequestHandler<CreateProgramVersionCommand, Result<CreateOperationResponseDTO, ServiceError>>
+    public class CreateProgramVersionCommandHandler : IRequestHandler<CreateProgramVersionCommand, Result<CreateVersionResponseDTO, ServiceError>>
     {
         private readonly IProgramVersionRepository _repository;
         private readonly IMinioService _minioService;
@@ -28,7 +29,7 @@ namespace Application.Features.Programs.Commands.CreateVersion
             _techRepository = techRepository;
         }
 
-        public async Task<Result<CreateOperationResponseDTO, ServiceError>> Handle(CreateProgramVersionCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CreateVersionResponseDTO, ServiceError>> Handle(CreateProgramVersionCommand request, CancellationToken cancellationToken)
         {
             var lastVersion = await _repository.GetLastVersion(request.ProgramId, cancellationToken);
 
@@ -45,7 +46,7 @@ namespace Application.Features.Programs.Commands.CreateVersion
             TechCheck newCheck = new()
             {
                 Id = Guid.NewGuid(),
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTimeOffset.UtcNow,
                 Errors = checksResult.Value,
                 VersionId = newVersion.Id,
                 ProgramVersion = newVersion,
@@ -59,7 +60,7 @@ namespace Application.Features.Programs.Commands.CreateVersion
 
             await _minioService.PutFile(request.File, newVersion.Id.ToString());
 
-            return Result.Success<CreateOperationResponseDTO, ServiceError>(new(newVersion.Id));
+            return Result.Success<CreateVersionResponseDTO, ServiceError>(new(newVersion.Id, newCheck.Id, newVersion.IsSuccessCheck));
 
         }
     }

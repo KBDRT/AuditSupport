@@ -8,7 +8,7 @@ namespace Application.DTO.Programs
     public class ProgramVersionDTO
     {
         public Guid Id { get; set; }
-        public string Changes { get; set; }
+        public string Changes { get; set; } = string.Empty;
         public double FileSize { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
 

@@ -66,7 +66,8 @@ const WordRulesCreate = ({ open, onClose}: WordRulesCreateProps) => {
         }
       }}
     >
-      <Portal>       
+      <Portal>   
+        <Dialog.Backdrop />    
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />

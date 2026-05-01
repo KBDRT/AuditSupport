@@ -13,7 +13,9 @@ namespace Infrastructure.Database.Repositories
 
         public async Task<List<CheckError>> GetErrorsByCheckId(Guid checkId, CancellationToken cancellationToken = default)
         {
-            return await _context.CheckErrors.Where(x => x.TechCheckId == checkId).ToListAsync(cancellationToken);
+            return await _context.CheckErrors.Where(x => x.TechCheckId == checkId)
+                                             .OrderBy(x => x.RuleType)
+                                             .ToListAsync(cancellationToken);
         }
     }
 }

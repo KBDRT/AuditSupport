@@ -9,4 +9,5 @@ import type { ProgramStatuses } from './programStatuses';
 export interface ChangeProgramStatusCommand {
   programId?: string;
   newStatus?: ProgramStatuses;
+  versionId?: string;
 }

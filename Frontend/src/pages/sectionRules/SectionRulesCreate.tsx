@@ -33,7 +33,7 @@ const SectionRulesCreate = ({ open, onClose}: SectionRulesCreateProps) => {
     {
       sectionName: "", 
       commentary: "", 
-      type: RuleSectionType.Text,
+      type: RuleSectionType.NUMBER_0,
       structure: [] 
     })
   const [invalidFields, setInvalidFields] = useState<SectionRulesUpdateInvalidFields>({sectionName: false})
@@ -101,7 +101,8 @@ const SectionRulesCreate = ({ open, onClose}: SectionRulesCreateProps) => {
         }
       }}
     >
-      <Portal>       
+      <Portal>  
+        <Dialog.Backdrop />     
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.CloseTrigger />
@@ -161,7 +162,7 @@ const SectionRulesCreate = ({ open, onClose}: SectionRulesCreateProps) => {
                     </Portal>
                   </Select.Root>
                 </Field.Root>
-                {formData.type != RuleSectionType.Text && <Box mt={2}>
+                {formData.type != RuleSectionType.NUMBER_0 && <Box mt={2}>
                   <Center>  
                     <Text fontWeight="semibold">Структура раздела
                         <IconButton variant="outline" size="xs" ml={2} onClick={handleAddStructure}>
@@ -188,7 +189,7 @@ const SectionRulesCreate = ({ open, onClose}: SectionRulesCreateProps) => {
                                 <IconButton 
                                   variant="ghost" 
                                   size="sm"
-                                  colorScheme="red"
+                                  colorPalette="red"
                                   onClick={() => {handleDeleteStructure(item.id)}}>
                                   <LuTrash2 />
                                 </IconButton>
