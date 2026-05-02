@@ -1,7 +1,7 @@
 import type { CreateUserRequest, DeleteAdminUsersParams, GetAdminUsersParams, GetUserDTO, UpdateUserRequest } from '@/api/models';
 import { create } from 'zustand';
 import { getAdmin } from '@/api/admin/admin';
-import { mergeUpdateToUser } from '@/utils/Mappers';
+import { mapUpdateToUser } from '@/utils/Mappers';
 import { axiosInstance } from '@/services/axiosInstanse';
 import { ShowError, ShowToast } from '@/components/common/Alert';
 import { AxiosError } from 'axios'
@@ -100,7 +100,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
       {
         set((state) => ({
         allItems: state.allItems.map(item => 
-          item.id === id ? mergeUpdateToUser(item, updatedItem) : item
+          item.id === id ? mapUpdateToUser(item, updatedItem) : item
         )}))
         get().filterUsers({ statusCode: "all", searchField: "", roles: [] })
         ShowToast("Обновлено!", "", "success")

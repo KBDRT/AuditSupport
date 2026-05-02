@@ -97,6 +97,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<EduProgramShortDTO>), 200)]
         public async Task<IActionResult> GetProgramsWithFilter([FromQuery] GetProgramsWithFilterQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);

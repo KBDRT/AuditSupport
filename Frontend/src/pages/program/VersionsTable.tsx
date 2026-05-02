@@ -99,6 +99,14 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
                 </Table.Row>
               </Table.Header>
 
+            {versions.length === 0 ? (
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell colSpan={5} textAlign="center" color="gray.500" h="200px">
+                  Нет данных
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>) : 
               <Table.Body>
                 {versions.map((version, index) => (
                   <Table.Row 
@@ -146,7 +154,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
                     </Table.Cell>
                   </Table.Row>
                 ))}
-              </Table.Body>
+              </Table.Body> }
             </Table.Root>
             </Table.ScrollArea>
           </Box>

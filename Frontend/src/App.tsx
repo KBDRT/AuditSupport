@@ -14,6 +14,9 @@ import SectionRulesPage from './pages/sectionRules/SectionRulesPage';
 import EduYearsPage from './pages/eduYears/EduYearsPage';
 import './index.css'; 
 import EduProgram from './pages/program/EduProgram';
+import { Box } from '@chakra-ui/react';
+import ProgramsPage from './pages/programs/ProgramsPage';
+
 
 function App() {
  const { checkAuth, loading } = useAuthStore()
@@ -25,7 +28,15 @@ function App() {
   }, []); 
 
   if (loading) {
-    <PageLoading />
+    <Box 
+      minH="100vh" 
+      display="flex" 
+      alignItems="center" 
+      justifyContent="center"
+    >
+      
+      <PageLoading />
+    </Box>
   }
 
   return (
@@ -56,6 +67,12 @@ function App() {
               <Route path="/EduYears" element={<EduYearsPage />} />
                {/* <Route path="/Test" element={<Test />} /> */}
               <Route path="/EduProgram/:id" element={<EduProgram />} />
+            </Route> 
+          </Route>
+
+           <Route element={<PrivateRoute allowedRoles={['Methodist']} />}>
+            <Route element={<MainLayout />}> 
+              <Route path="/Programs" element={<ProgramsPage />} />
             </Route> 
           </Route>
                 

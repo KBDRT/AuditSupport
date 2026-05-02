@@ -4,9 +4,10 @@
  * AuditSupport
  * OpenAPI spec version: v1
  */
+import type { ProgramStatuses } from './programStatuses';
 
-export interface UpdateProgramCommand {
-  programId?: string;
+export interface EduProgramShortDTO {
+  id?: string;
   /** @nullable */
   name?: string | null;
   /** @nullable */
@@ -14,5 +15,10 @@ export interface UpdateProgramCommand {
   /** @nullable */
   duration?: string | null;
   /** @nullable */
-  directionId?: string | null;
+  year?: string | null;
+  /** @nullable */
+  direction?: string | null;
+  /** @nullable */
+  teacher?: string | null;
+  programStatus?: ProgramStatuses;
 }

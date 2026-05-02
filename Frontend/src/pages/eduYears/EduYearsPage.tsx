@@ -3,15 +3,20 @@ import { useTeacherProgramsStore } from "@/stores/TeacherProgramsStore"
 import { GetStatusTypeName } from "@/utils/TextUtils"
 import { Box, Button, Container,  HStack, Icon, Text, VStack, Badge,  AbsoluteCenter } from "@chakra-ui/react"
 import { Accordion, } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { MdAdd, MdCalendarToday } from "react-icons/md"
 import { IoMdLock, IoMdUnlock } from "react-icons/io";
 import { Link } from "react-router-dom"
-import { CreateProgram } from "@/services/ProgramService"
+import ProgramCreate from "./ProgramCreate"
+import { FixDialog } from "@/utils/DialogFix"
+
+
 
 const EduYearsPage = () => {
   const { user } = useAuthStore()
   const { fetch, years } = useTeacherProgramsStore()
+  const [isOpenCreate, setOpenCreate] = useState<boolean>(false)
+  const [yearId, setYearId] = useState<string>("")
 
   useEffect(() => {
     if (user?.userId) {
@@ -19,11 +24,13 @@ const EduYearsPage = () => {
     }
   }, [user?.userId])
 
-  const handleAdd = async (yearId: string) => {
-    await CreateProgram({agesOfChildrens: "", directionId: null, duration: "", name: "", teacherId: user?.userId, yearId: yearId})
+  const handleClose = () => {
+    setOpenCreate(false)
+    FixDialog()
   }
 
   return (
+    <>
     <Box minH="100vh" width="auto" maxW="1000px" mx="auto">
       <Container maxW="container.xl" py={2}>
         <VStack align="stretch" gap={6}>
@@ -77,7 +84,7 @@ const EduYearsPage = () => {
                             variant="ghost"
                             colorPalette="blue"
                             size="sm"
-                            onClick={() => handleAdd(item.id || "")}
+                            onClick={() => {setYearId(item.id || ""); setOpenCreate(true);}}
                             _hover={{
                               bg: "blue.50",
                               transform: "translateY(-1px)"
@@ -116,21 +123,24 @@ const EduYearsPage = () => {
                                 }}
                               >
                                 <HStack gap={2}>
+                                  <Badge 
+                                    fontWeight="500" 
+                                    w="120px"  
+                                    textAlign="center" 
+                                    display="inline-flex" 
+                                    alignItems="center" 
+                                    justifyContent="center"
+                                    flexShrink={0}
+                                  >
+                                    {program.status != undefined && GetStatusTypeName(program.status)}
+                                  </Badge>
+                                  
                                   <Text fontSize="14px" color="gray.700">
-                                    <Badge as="span" fontWeight="500">
-                                      {program.status != undefined && GetStatusTypeName(program.status)}
-                                    </Badge>
-                                    <Text as="span" color="gray.500">
-                                      {" «"}
-                                    </Text>
-                                    <Text as="span" fontWeight="500">
-                                      {program.name}
-                                    </Text>
-                                    <Text as="span" color="gray.500">
-                                      {"»"}
-                                    </Text>
+                                    <Text as="span" color="gray.500">«</Text>
+                                    <Text as="span" fontWeight="500">{program.name}</Text>
+                                    <Text as="span" color="gray.500">»</Text>
                                   </Text>
-                                </HStack>
+                              </HStack>
                               </Box>
                               </Link>
                             ))
@@ -146,6 +156,15 @@ const EduYearsPage = () => {
         </VStack>
       </Container>
     </Box>
+
+    {isOpenCreate && (
+      <ProgramCreate 
+        yearId={yearId}
+        teacherId={user?.userId || ""}
+        onClose={handleClose} />
+    )}
+
+    </>
   )
 }
 

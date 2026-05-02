@@ -79,6 +79,18 @@ namespace Infrastructure.Database.Repositories.Builders
             return this;
         }
 
+        public IProgramQueryBuilder IncludeDirection()
+        {
+            _query = _query.Include(x => x.Direction);
+            return this;
+        }
+
+        public IProgramQueryBuilder IncludeTeacher()
+        {
+            _query = _query.Include(x => x.Teacher);
+            return this;
+        }
+
         public IProgramQueryBuilder UsePagination(PaginationDTO pagination)
         {
             _query = _query.OrderBy(x => x.Id)

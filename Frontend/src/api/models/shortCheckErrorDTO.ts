@@ -17,6 +17,7 @@ export interface ShortCheckErrorDTO {
   wordLength?: number;
   /** @nullable */
   context?: string | null;
+  /** @nullable */
   sectionName?: string | null;
   pageNumber?: number;
 }

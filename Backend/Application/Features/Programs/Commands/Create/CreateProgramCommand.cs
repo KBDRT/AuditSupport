@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.DTO.Common;
 using CSharpFunctionalExtensions;
 using MediatR;
 
@@ -12,6 +13,6 @@ namespace Application.Features.Programs.Commands.Create
         string Duration,
         Guid YearId,
         Guid? DirectionId
-    ) : IRequest<UnitResult<ServiceError>>;
+    ) : IRequest<Result<CreateOperationResponseDTO, ServiceError>>;
 }
 

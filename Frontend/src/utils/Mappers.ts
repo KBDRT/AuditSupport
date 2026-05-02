@@ -1,6 +1,6 @@
-import type { EduYear, GetUserDTO, UpdateUserRequest, UpdateYearRequest } from "@/api/models";
+import { ProgramStatuses, type CreateProgramCommand, type EduProgramDTO, type EduYear, type GetUserDTO, type UpdateUserRequest, type UpdateYearRequest } from "@/api/models";
 
-export const mergeUpdateToUser = (
+export const mapUpdateToUser = (
   item: GetUserDTO, 
   updates: UpdateUserRequest
 ): GetUserDTO => ({
@@ -22,7 +22,7 @@ export const mergeUpdateToUser = (
 });
 
 
-export const mergeUpdateToYear = (
+export const mapUpdateToYear = (
   item: EduYear, 
   updates: UpdateYearRequest
 ): EduYear => ({
@@ -34,3 +34,16 @@ export const mergeUpdateToYear = (
   period: updates.startYear != undefined ? `${updates.startYear}-${updates.startYear + 1}`: "-",
   });
 
+
+export const mapToEduProgramDTO = (command: CreateProgramCommand, id: string): EduProgramDTO => ({
+  id: id,
+  name: command.name || null,
+  agesOfChildrens: command.agesOfChildrens || null,
+  duration: command.duration || null,
+  year: null,
+  direction: null,
+  directionId: command.directionId || undefined,
+  teacher: null,
+  programStatus: ProgramStatuses.Created,
+  versions: []
+});

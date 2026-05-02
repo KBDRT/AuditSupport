@@ -10,6 +10,6 @@ namespace Application.Features.Programs.Commands.Update
         string Name,
         string AgesOfChildrens,
         string Duration,
-        Guid DirectionId
+        Guid? DirectionId
     ) : IRequest<UnitResult<ServiceError>>;
 }

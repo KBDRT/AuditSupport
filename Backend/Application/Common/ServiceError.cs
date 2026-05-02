@@ -5,7 +5,8 @@
         NOT_FOUND,
         EXISTING_RECORD,
         INCORRECT_PARAMETERS,
-        UNKNOWN_ERROR
+        UNKNOWN_ERROR,
+        CONFLICT
     };
 
 

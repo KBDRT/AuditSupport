@@ -27,7 +27,11 @@ namespace Application.Features.Programs.Commands.Update
             program.Name = request.Name;
             program.AgesOfChildrens = request.AgesOfChildrens;
             program.Duration = request.Duration;
-            program.DirectionId = request.DirectionId;
+
+            if (request.DirectionId != null && request.DirectionId != Guid.Empty)
+            {
+                program.DirectionId = request.DirectionId;
+            }
 
             await _repository.Update(program, cancellationToken);
 

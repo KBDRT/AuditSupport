@@ -13,7 +13,7 @@ namespace Application.MappingProfiles
         {
             CreateMap<EduProgram, EduProgramShortDTO>()
                 .ForMember(dest => dest.Year, opt => opt.MapFrom(src => src.EduYear.Period))
-                .ForMember(dest => dest.Direction, opt => opt.MapFrom(src => src.Direction != null ? src.Direction.Name : string.Empty))
+                .ForMember(dest => dest.Direction, opt => opt.MapFrom(src => src.Direction.Name))
                 .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => src.Teacher.Initials.Short));
 
             CreateMap<EduProgram, EduProgramDTO>()

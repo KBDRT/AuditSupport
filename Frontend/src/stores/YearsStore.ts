@@ -3,9 +3,9 @@ import { create } from 'zustand';
 import { axiosInstance } from '@/services/axiosInstanse';
 import { ShowError, ShowToast } from '@/components/common/Alert';
 import { AxiosError } from 'axios'
-import type { ErrorsApi } from '@/types/ErrorsApi';
+
 import { getEduYear } from '@/api/edu-year/edu-year';
-import { mergeUpdateToYear } from '@/utils/Mappers';
+import { mapUpdateToYear } from '@/utils/Mappers';
 
 interface YearsStore {
   items: EduYear[]
@@ -20,7 +20,7 @@ interface YearsStore {
 
 export const api = getEduYear(axiosInstance);
 
-export const useYearsStore = create<YearsStore>((set, get) => ({
+export const useYearsStore = create<YearsStore>((set) => ({
   items: [],
   loading: false,
 
@@ -75,7 +75,7 @@ export const useYearsStore = create<YearsStore>((set, get) => ({
       {
         set((state) => ({
         items: state.items.map(item => 
-          item.id === id ? mergeUpdateToYear(item, updatedItem) : item
+          item.id === id ? mapUpdateToYear(item, updatedItem) : item
         )}))
         ShowToast("Обновлено!", "", "success")
         return true

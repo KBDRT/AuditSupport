@@ -5,7 +5,6 @@ import { ShowError, ShowToast } from '@/components/common/Alert';
 import { AxiosError } from 'axios'
 import { getEduProgram } from '@/api/edu-program/edu-program';
 import { type ChangeProgramStatusCommand } from './../api/models/changeProgramStatusCommand';
-import { version } from 'react';
 
 interface ProgramStore {
   selectedVersion: ProgramVersionDTO | null
@@ -17,6 +16,7 @@ interface ProgramStore {
   downloadVersionFile: (versionId: string) => Promise<boolean> // 
   setSelectedVersion: (version: ProgramVersionDTO) => void
   changeStatus: (request: ChangeProgramStatusCommand) => Promise<boolean> // 
+  deleteProgram: (programId: string) => Promise<boolean>
 }
 
 export const api = getEduProgram(axiosInstance);
@@ -108,6 +108,23 @@ export const useProgramStore = create<ProgramStore>((set) => ({
     }
   },
 
+  
+  deleteProgram: async (programId) => {
+    try 
+    {
+      const response = await api.deleteEduProgram({programId: programId})
+      if (response.status == 200) 
+      {
+        return true;
+      } 
+    }
+    catch (error) 
+    {
+      ShowError(error as AxiosError)
+      return false;
+    }
+    return false
+  },
 
   downloadVersionFile: async (versionId) => {
     try {

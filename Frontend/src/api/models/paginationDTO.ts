@@ -5,8 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface CreateVersionResponseDTO {
-  id?: string;
-  techCheckId?: string;
-  isSuccessCheck?: boolean;
+export interface PaginationDTO {
+  page?: number;
+  size?: number;
 }

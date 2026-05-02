@@ -25,6 +25,7 @@ namespace Presentation.Controllers
                 ErrorsCode.NOT_FOUND => NotFound(serviceResult.Error),
                 ErrorsCode.INCORRECT_PARAMETERS => BadRequest(serviceResult.Error),
                 ErrorsCode.EXISTING_RECORD => Conflict(serviceResult.Error),
+                ErrorsCode.CONFLICT => Conflict(serviceResult.Error),
                 _ => StatusCode(500, serviceResult.Error)
             };
         }
@@ -37,9 +38,10 @@ namespace Presentation.Controllers
 
             return serviceResult.Error.Code switch
             {
-                ErrorsCode.NOT_FOUND => NotFound(serviceResult.Error),
-                ErrorsCode.INCORRECT_PARAMETERS => BadRequest(serviceResult.Error),
+                ErrorsCode.NOT_FOUND => NotFound(serviceResult.Error), 
+                ErrorsCode.INCORRECT_PARAMETERS => BadRequest(serviceResult.Error), 
                 ErrorsCode.EXISTING_RECORD => Conflict(serviceResult.Error),
+                ErrorsCode.CONFLICT => Conflict(serviceResult.Error),
                 _ => StatusCode(500, serviceResult.Error)
             };
         }

@@ -15,5 +15,7 @@ export interface EduYear {
   description?: string | null;
   /** @nullable */
   readonly period?: string | null;
+  /** @nullable */
+  readonly periodSpace?: string | null;
   isOpened?: boolean;
 }

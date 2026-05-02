@@ -4,6 +4,7 @@ using Application.DTO.Programs;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
+using Domain.Enums;
 using MediatR;
 
 namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
@@ -22,7 +23,10 @@ namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
 
         public async Task<Result<List<EduProgramShortDTO>, ServiceError>> Handle(GetProgramsWithFilterQuery request, CancellationToken cancellationToken)
         {
-            var query = _queryBuilder.ForYear(request.YearId);
+            var query = _queryBuilder.ForYear(request.YearId)
+                                     .IncludeTeacher()
+                                     .IncludeDirection();
+
 
             if (request.Teachers != null) 
                 query = query.ForTeachers(request.Teachers);

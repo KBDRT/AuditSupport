@@ -9,7 +9,7 @@ export const roleRedirects: Record<string, string> = {
   'Admin': '/Users',
   'Head': '/Years',
   'Teacher': '/EduYears',
-  'Methodist': '/Reports',
+  'Methodist': '/Programs',
 };
 
 const LoginPage = () => {
@@ -51,13 +51,12 @@ const LoginPage = () => {
   if (loading) {
     return (
       <Box 
-      minH="100vh" 
-      display="flex" 
-      alignItems="center" 
-      justifyContent="center"
-      // bg="linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)"
-    >
-      <PageLoading />
+        minH="100vh" 
+        display="flex" 
+        alignItems="center" 
+        justifyContent="center"
+      >
+        <PageLoading />
       </Box>
     )
   }

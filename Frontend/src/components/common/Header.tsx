@@ -48,6 +48,12 @@ const Header = () => {
         { name: "Учебные года", href: "/EduYears", icon: MdSchool },
       ]
     }
+    else if (user?.role === "Methodist")
+    {
+      return [
+        { name: "Программы", href: "/Programs", icon: MdSchool },
+      ]
+    }
     return []
   }
 
@@ -151,7 +157,7 @@ const Header = () => {
             </HStack>
           )}
 
-          <Menu.Root>
+          <Menu.Root >
             <Menu.Trigger asChild>
               <Button 
                 variant="ghost" 
@@ -161,19 +167,18 @@ const Header = () => {
                 transition="all 0.2s"
                 _hover={{ bg: "blue.50" }}
               >
-                <Flex alignItems="center" gap={3}>
+                <Flex alignItems="center" gap={3} >
                   <Avatar.Root size="sm">
                     <Avatar.Fallback/>
                     <Avatar.Image />
                   </Avatar.Root>
-                  <Box textAlign="left" display={{ base: "none", md: "block" }}>
+                  <Box textAlign="left">
                     <HStack>
                       <Badge 
                         colorPalette="blue"
                         fontSize="12px"
                         borderRadius="full"
                         px={2}
-                        // mt={1}
                       >
                         { getViewText(user?.role || "") }
                       </Badge>
@@ -194,7 +199,7 @@ const Header = () => {
                   borderRadius="xl"
                   border="1px solid"
                   borderColor="gray.100"
-                  minW="220px"
+                  width="100px"
                 >
                   <Menu.Item 
                     value="logout"

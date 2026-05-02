@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.DTO.Programs;
 using Domain.Entities.References;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Repositories
@@ -9,13 +10,13 @@ namespace Infrastructure.Database.Repositories
     {
         public async Task<List<ShortYearDTO>> GetGroupedByTeacher(Guid teacherId, CancellationToken cancellationToken = default)
         {
-            return await context.EduYears
+            return await context.EduYears.OrderByDescending(x => x.StartYear)
                 .Select(year => new ShortYearDTO(
                     year.Id,
                     year.Period,
                     year.IsOpened,
-                    context.EduPrograms
-                        .Where(p => p.EduYearId == year.Id && p.TeacherId == teacherId)
+                    context.EduPrograms.OrderByDescending(x => x.CreatedDate)
+                        .Where(p => p.EduYearId == year.Id && p.TeacherId == teacherId && p.ProgramStatus != ProgramStatuses.Deleted)
                         .Select(p => new ShortProgramDTO(
                             p.Id,
                             p.Name,

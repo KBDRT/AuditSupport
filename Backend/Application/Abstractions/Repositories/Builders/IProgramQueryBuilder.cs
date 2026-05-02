@@ -15,6 +15,11 @@ namespace Application.Abstractions.Repositories.Builders
         IProgramQueryBuilder IncludeVersion();
 
         IProgramQueryBuilder IncludeYear();
+
+        IProgramQueryBuilder IncludeDirection();
+
+        IProgramQueryBuilder IncludeTeacher();
+
         Task<EduProgram?> SingleOrDefaultAsync(CancellationToken cancellationToken);
         IProgramQueryBuilder WithStatus(ProgramStatuses status);
         IProgramQueryBuilder WithStatuses(List<ProgramStatuses> statuses);
