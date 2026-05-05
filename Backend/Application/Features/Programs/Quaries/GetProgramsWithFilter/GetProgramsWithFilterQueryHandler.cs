@@ -24,6 +24,7 @@ namespace Application.Features.Programs.Quaries.GetProgramsWithFilter
         public async Task<Result<List<EduProgramShortDTO>, ServiceError>> Handle(GetProgramsWithFilterQuery request, CancellationToken cancellationToken)
         {
             var query = _queryBuilder.ForYear(request.YearId)
+                                     .ExcludeDeleted()
                                      .IncludeTeacher()
                                      .IncludeDirection();
 

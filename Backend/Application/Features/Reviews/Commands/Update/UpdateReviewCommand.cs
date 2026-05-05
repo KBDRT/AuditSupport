@@ -9,6 +9,7 @@ namespace Application.Features.Reviews.Commands.Update
         Guid ReviewId,
         string Commentary,
         Stream? File,
-        bool IsSuccess
+        bool IsSuccess,
+        bool IsFinished
     ) : IRequest<UnitResult<ServiceError>>;
 }

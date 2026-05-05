@@ -1,30 +1,38 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Common;
+using Application.DTO.Reviews;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using Domain.Entities.ProgramContext;
 using MediatR;
 
 namespace Application.Features.Reviews.Quaries.GetReviewById
 {
-    public class GetReviewByIdQueryHandler : IRequestHandler<GetReviewByIdQuery, Result<ProgramReview, ServiceError>>
+    public class GetReviewByIdQueryHandler : IRequestHandler<GetReviewByIdQuery, Result<GetReviewResponseDTO, ServiceError>>
     {
 
-        private readonly IBaseRepository<ProgramReview> _repository;
+        private readonly IReviewRepository _repository;
+        private readonly IMapper _mapper;
 
-        public GetReviewByIdQueryHandler(IBaseRepository<ProgramReview> repository)
+        public GetReviewByIdQueryHandler(IReviewRepository repository,
+                                         IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<Result<ProgramReview, ServiceError>> Handle(GetReviewByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<GetReviewResponseDTO, ServiceError>> Handle(GetReviewByIdQuery request, CancellationToken cancellationToken)
         {
-            var review = await _repository.GetById(request.ReviewId, cancellationToken);
+            var review = await _repository.GetReviewWithInfo(request.ReviewId, cancellationToken);
             if (review == null)
             {
-                return Result.Failure<ProgramReview, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
+                return Result.Failure<GetReviewResponseDTO, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
             }
 
-            return Result.Success<ProgramReview, ServiceError>(review);
+            var result = _mapper.Map<GetReviewResponseDTO>(review);
+
+
+            return Result.Success<GetReviewResponseDTO, ServiceError>(result);
         }
     }
 }

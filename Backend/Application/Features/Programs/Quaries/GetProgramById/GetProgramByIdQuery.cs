@@ -8,7 +8,7 @@ namespace Application.Features.Programs.Quaries.GetProgramById
 {
     public record GetProgramByIdQuery
     (
-        Guid ProgramId
-
+        Guid ProgramId,
+        bool OnlyLastVersion
     ) : IRequest<Result<EduProgramDTO, ServiceError>>;
 }

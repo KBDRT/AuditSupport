@@ -3,6 +3,7 @@ using Application.Common;
 using Application.DTO.Programs;
 using AutoMapper;
 using CSharpFunctionalExtensions;
+using Domain.Entities.ProgramContext;
 using MediatR;
 
 namespace Application.Features.Programs.Quaries.GetProgramById
@@ -30,6 +31,16 @@ namespace Application.Features.Programs.Quaries.GetProgramById
             {
                 return Result.Failure<EduProgramDTO, ServiceError>(new(ErrorsCode.NOT_FOUND, ""));
             }
+
+            if (request.OnlyLastVersion)
+            {
+                var lastVersion = program.Versions.Where(x => x.IsUseForReview).FirstOrDefault();
+                if (lastVersion != null)
+                {
+                    program.Versions = [lastVersion];
+                }
+            }
+
 
             var result = _mapper.Map<EduProgramDTO>(program);
 

@@ -77,9 +77,9 @@ namespace Presentation.Controllers
 
         [HttpGet("{programId}")]
         [ProducesResponseType(typeof(EduProgramDTO), 200)]
-        public async Task<IActionResult> GetProgramById(Guid programId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProgramById(Guid programId, CancellationToken cancellationToken, bool onlyLastVersion = false)
         {
-            GetProgramByIdQuery query = new(programId);
+            GetProgramByIdQuery query = new(programId, onlyLastVersion);
 
             var result = await _mediator.Send(query, cancellationToken);
             return FromResult(result);

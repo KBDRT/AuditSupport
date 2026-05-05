@@ -12,6 +12,9 @@ namespace Application.DTO.Programs
         public string Year { get; set; } = string.Empty;
         public string Direction { get; set; } = string.Empty;
         public string Teacher { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
         public ProgramStatuses ProgramStatus { get; set; }
     };
 }

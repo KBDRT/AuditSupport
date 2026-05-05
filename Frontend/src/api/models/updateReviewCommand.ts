@@ -12,4 +12,5 @@ export interface UpdateReviewCommand {
   /** @nullable */
   file?: Blob | null;
   isSuccess?: boolean;
+  isFinished?: boolean;
 }

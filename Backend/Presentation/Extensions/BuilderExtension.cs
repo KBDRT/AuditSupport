@@ -154,6 +154,7 @@ namespace Presentation.Extensions
             _services.AddScoped<IProgramRepository, ProgramRepository>();
             _services.AddScoped<IProgramVersionRepository, ProgramVersionRepository>();
             _services.AddScoped<IProgramHistoryRepository, ProgramHistoryRepository>();
+            _services.AddScoped<IReviewRepository, ReviewRepository>();
 
             _services.AddScoped<IProgramQueryBuilder, ProgramQueryBuilder>();
         }

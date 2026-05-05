@@ -22,6 +22,8 @@ export interface EduProgramDTO {
   directionId?: string;
   /** @nullable */
   teacher?: string | null;
+   /** @nullable */
+  email?: string | null;
   programStatus?: ProgramStatuses;
   /** @nullable */
   versions?: ProgramVersionDTO[] | null;

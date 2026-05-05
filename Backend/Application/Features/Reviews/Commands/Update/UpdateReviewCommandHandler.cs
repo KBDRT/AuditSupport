@@ -26,6 +26,10 @@ namespace Application.Features.Reviews.Commands.Update
 
             review.Commentary = request.Commentary;
             review.IsSuccess = request.IsSuccess;
+            review.IsFinished = request.IsFinished;
+
+
+            await _repository.Update(review, cancellationToken);
 
             // change file
 

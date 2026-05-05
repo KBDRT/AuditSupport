@@ -6,11 +6,11 @@
  */
 
 export interface CreateReviewCommand {
-  versionId?: string;
+  programId?: string;
   auditorId?: string;
-  /** @nullable */
-  commentary?: string | null;
-  isSuccess?: boolean;
-  /** @nullable */
-  file?: Blob | null;
+  // /** @nullable */
+  // commentary?: string | null;
+  // isSuccess?: boolean;
+  // /** @nullable */
+  // file?: Blob | null;
 }

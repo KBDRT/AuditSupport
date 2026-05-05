@@ -25,6 +25,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
   const [openedDialog, setOpenedDialog] = useState<DialogName>(DialogName.None)
   const [dialogId, setDialogId] = useState<string>()
 
+
   useEffect(() => {
     const loadProgram = async () => {
       if (programId && !program) {
@@ -47,7 +48,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
 
   return (
     <>
-      <Container maxW="container.lg" py={6}>
+      <Container maxW="container.lg" py={4}>
         <VStack align="stretch" gap={3}>
           <HStack gap={3}>
             <Box

@@ -9,5 +9,7 @@ namespace Application.Abstractions.Repositories
         Task<ProgramVersion?> GetWithProgram(Guid versionId, CancellationToken cancellationToken = default);
 
         Task SetUnuseForAll(Guid programId, CancellationToken cancellationToken = default);
+
+        Task<ProgramVersion?> GetActiveForReview(Guid programId, CancellationToken cancellationToken = default);
     }
 }

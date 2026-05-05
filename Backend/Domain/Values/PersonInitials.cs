@@ -35,5 +35,19 @@ namespace Domain.Values
                 return output;
             }
         }
+
+        [NotMapped]
+        public string Full
+        {
+            get
+            {
+                string output = $"{Surname} {Name}";
+                if (!String.IsNullOrEmpty(Patronymic))
+                {
+                    output += $" {Patronymic}";
+                }
+                return output;
+            }
+        }
     }
 }

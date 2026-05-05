@@ -91,6 +91,12 @@ namespace Infrastructure.Database.Repositories.Builders
             return this;
         }
 
+        public IProgramQueryBuilder ExcludeDeleted()
+        {
+            _query = _query.Where(x => x.ProgramStatus != ProgramStatuses.Deleted);
+            return this;
+        }
+
         public IProgramQueryBuilder UsePagination(PaginationDTO pagination)
         {
             _query = _query.OrderBy(x => x.Id)

@@ -1,122 +1,131 @@
-import { Box, HStack, Portal, Button, Separator } from "@chakra-ui/react"
-import { useState,  useEffect } from "react"
-import { useUsersStore } from "@/stores/UsersStore"
-import { Input, InputGroup } from "@chakra-ui/react"
-import { LuSearch } from "react-icons/lu"
+import { Box, HStack, Portal, Button, Separator, createListCollection } from "@chakra-ui/react"
+import { useEffect, useMemo, useState } from "react"
 import { Select } from "@chakra-ui/react"
-import { SegmentGroup } from "@chakra-ui/react"
 import { MdFilterAltOff } from "react-icons/md"
-import { CloseButton } from "@chakra-ui/react"
-import { ROLES_COLLECTION, STATUS_ITEMS } from "@/constants/common"
+import { ROLES_COLLECTION } from "@/constants/common"
+import { useYearsStore } from "@/stores/YearsStore"
+import { useDirectionsStore } from "@/stores/DirectionsStore"
+import { useProgramsStore } from "@/stores/ProgramsStore"
 
 const FilterTablePrograms = () => {
-  const { clearFiler, filterUsers, filter } = useUsersStore()
+  const { setYear, fetch } = useProgramsStore()
+  const { fetch: fetchYears, items: years } = useYearsStore()
+  const { fetch: fetchDirections, items: directions } = useDirectionsStore()
+  
+  const [selectedYear, setSelectedYear] = useState<string[]>([])
+  const [selectedDirections, setSelectedDirections] = useState<string[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([])
 
-  const [searchValue, setSearchValue] = useState(filter.searchField)
-  const [statusValue, setStatusValue] = useState(filter.statusCode)
-  const [rolesValue, setRolesValue] = useState<string[]>(filter.roles)
+  const collectionYears = useMemo(() => {
+    return createListCollection({
+      items: years ?? [],
+      itemToString: (year) => year.period || "",
+      itemToValue: (year) => year.id || "", 
+    })
+  }, [years])
+
+  const collectionDirections = useMemo(() => {
+    return createListCollection({
+      items: directions ?? [],
+      itemToString: (direction) => direction.name || "",
+      itemToValue: (direction) => direction.id || "", 
+    })
+  }, [directions])
 
   useEffect(() => {
-    setSearchValue(filter.searchField)
-  }, [filter.searchField])
+    const init = async () => {
+      await fetchYears()
+      await fetchDirections()
+    
+    }
+    
+    init()
+  }, []) 
 
   useEffect(() => {
-    setStatusValue(filter.statusCode)
-  }, [filter.statusCode])
-
-  useEffect(() => {
-    setRolesValue(filter.roles)
-  }, [filter.roles])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchValue !== filter.searchField) {
-        filterUsers({ searchField: searchValue })
+    const init = async () => {
+      if (collectionYears.items.length > 0)
+      {
+        const firstYearId = collectionYears.items[0].id ?? ""
+        setSelectedYear([firstYearId])
+        setYear(firstYearId)
+        await fetch()
       }
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [searchValue])
+    }
+    
+    init()
+  }, [collectionYears.items.length]) 
 
-  const handleChangeSearch = (value: string) => {
-    setSearchValue(value)
+
+  const handleChangeYear = async (value: string[]) => {
+    const yearId = value[0]
+    setSelectedYear(value)
+    setYear(yearId)
+    await fetch()
   }
 
-  const handleChangeRoles = (value: string[]) => {
-    setRolesValue(value)
-    filterUsers({ roles: value })
+  const handleChangeDirections = (value: string[]) => {
+    setSelectedDirections(value)
+  
   }
 
-  const handleChangeStatus = (value: string) => {
-    setStatusValue(value)
-    filterUsers({ statusCode: value })
+  const handleChangeStatus = (value: string[]) => {
+    setSelectedStatus(value)
+ 
   }
 
   const handleClearFilter = () => {
-    clearFiler()
-    setSearchValue("")
-    setStatusValue("active")
-    setRolesValue([])
-  }
+    setSelectedDirections([])
+    setSelectedStatus([])
 
-  const endElement = searchValue ? (
-    <CloseButton
-      size="xs"
-      onClick={() => {
-        setSearchValue("")
-        filterUsers({ searchField: "" })
-      }}
-      me="-2"
-    />
-  ) : undefined
+    if (collectionYears.items.length > 0) {
+      const firstYearId = collectionYears.items[0].id ?? ""
+      setSelectedYear([firstYearId])
+      setYear(firstYearId)
+      fetch()
+    }
+  }
 
   return (
     <Box>
       <HStack gap={3}>
-
+  
         <Select.Root
-              multiple
-              collection={ROLES_COLLECTION}
-              size="sm"
-              // width="320px"
-              value={rolesValue}
-              onValueChange={({ value }) => handleChangeRoles(value)}
-            >
-              <Select.HiddenSelect />
-              <Select.Control>
-                <Select.Trigger>
-                  <Select.ValueText placeholder="Выберите уч. год" />
-                </Select.Trigger>
-                <Select.IndicatorGroup>
-                  <Select.ClearTrigger />
-                  <Select.Indicator />
-                </Select.IndicatorGroup>
-              </Select.Control>
-              <Portal>
-                <Select.Positioner>
-                  <Select.Content>
-                    {ROLES_COLLECTION.items.map((role) => (
-                      <Select.Item item={role} key={role.value}>
-                        {role.label}
-                        <Select.ItemIndicator />
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Positioner>
-              </Portal>
-            </Select.Root>
-
-
-
-
-        <Separator orientation="vertical" height="8" />
+          collection={collectionYears}
+          size="sm"
+          value={selectedYear}
+          onValueChange={({ value }) => handleChangeYear(value)}
+        >
+          <Select.HiddenSelect />
+          <Select.Control>
+            <Select.Trigger>
+              <Select.ValueText placeholder="Выберите уч. год" />
+            </Select.Trigger>
+            <Select.IndicatorGroup>
+              <Select.ClearTrigger />
+              <Select.Indicator />
+            </Select.IndicatorGroup>
+          </Select.Control>
+          <Portal>
+            <Select.Positioner>
+              <Select.Content>
+                {collectionYears.items.map((year) => (
+                  <Select.Item item={year} key={year.id}>
+                    {year.period}
+                    <Select.ItemIndicator />
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Portal>
+        </Select.Root>
 
         <Select.Root
           multiple
-          collection={ROLES_COLLECTION}
+          collection={collectionDirections}
           size="sm"
-          // width="320px"
-          value={rolesValue}
-          onValueChange={({ value }) => handleChangeRoles(value)}
+          value={selectedDirections}
+          onValueChange={({ value }) => handleChangeDirections(value)}
         >
           <Select.HiddenSelect />
           <Select.Control>
@@ -131,9 +140,9 @@ const FilterTablePrograms = () => {
           <Portal>
             <Select.Positioner>
               <Select.Content>
-                {ROLES_COLLECTION.items.map((role) => (
-                  <Select.Item item={role} key={role.value}>
-                    {role.label}
+                {collectionDirections.items.map((direction) => (
+                  <Select.Item item={direction} key={direction.id}>
+                    {direction.name}
                     <Select.ItemIndicator />
                   </Select.Item>
                 ))}
@@ -141,14 +150,15 @@ const FilterTablePrograms = () => {
             </Select.Positioner>
           </Portal>
         </Select.Root>
+
+        <Separator orientation="vertical" height="8" />
 
         <Select.Root
           multiple
           collection={ROLES_COLLECTION}
           size="sm"
-          // width="320px"
-          value={rolesValue}
-          onValueChange={({ value }) => handleChangeRoles(value)}
+          value={selectedStatus}
+          onValueChange={({ value }) => handleChangeStatus(value)}
         >
           <Select.HiddenSelect />
           <Select.Control>
@@ -173,49 +183,6 @@ const FilterTablePrograms = () => {
             </Select.Positioner>
           </Portal>
         </Select.Root>
-
-              <Select.Root
-          multiple
-          collection={ROLES_COLLECTION}
-          size="sm"
-          // width="320px"
-          value={rolesValue}
-          onValueChange={({ value }) => handleChangeRoles(value)}
-        >
-          <Select.HiddenSelect />
-          <Select.Control>
-            <Select.Trigger>
-              <Select.ValueText placeholder="Выберите статус" />
-            </Select.Trigger>
-            <Select.IndicatorGroup>
-              <Select.ClearTrigger />
-              <Select.Indicator />
-            </Select.IndicatorGroup>
-          </Select.Control>
-          <Portal>
-            <Select.Positioner>
-              <Select.Content>
-                {ROLES_COLLECTION.items.map((role) => (
-                  <Select.Item item={role} key={role.value}>
-                    {role.label}
-                    <Select.ItemIndicator />
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Positioner>
-          </Portal>
-        </Select.Root>
-
-
-        <InputGroup startElement={<LuSearch />} endElement={endElement}>
-          <Input
-            value={searchValue}
-            placeholder="Название программы"
-            size="sm"
-            onChange={(e) => handleChangeSearch(e.target.value) }
-          />
-        </InputGroup>
-
 
         <Separator orientation="vertical" height="8" />
 

@@ -6,6 +6,12 @@ namespace Infrastructure.Database.Repositories
 {
     public class ProgramVersionRepository(AppDBContext context) : BaseRepository<ProgramVersion>(context), IProgramVersionRepository
     {
+        public async Task<ProgramVersion?> GetActiveForReview(Guid programId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ProgramVersions.Where(x => x.ProgramId == programId && x.IsUseForReview)
+                                                 .FirstOrDefaultAsync(cancellationToken);
+        }
+
         public async Task<int> GetLastVersion(Guid programId, CancellationToken cancellationToken = default)
         {
             return await _context.ProgramVersions.Where(x => x.ProgramId == programId).CountAsync(cancellationToken);

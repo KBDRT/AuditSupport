@@ -12,10 +12,13 @@ import type {
 } from 'axios';
 
 import type {
+  CreateOperationResponseDTO,
   CreateReviewCommand,
   DeleteReviewCommand,
   UpdateReviewCommand
 } from '../models';
+import type { ShortReviewResponseDTO } from '../models/shortReviewResponseDTO';
+import type { GetReviewResponseDTO } from '../models/getReviewResponseDTO';
 
 
 
@@ -23,7 +26,7 @@ import type {
   export const getReview = (axiosInstance: AxiosInstance = axios.default) => {
 const postReview = (
     createReviewCommand: CreateReviewCommand, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<CreateOperationResponseDTO>> => {
     return axiosInstance.post(
       `/Review`,
       createReviewCommand,options
@@ -45,11 +48,18 @@ const patchReview = (
       updateReviewCommand,options
     );
   }
-const getReviewReviewId = (
+const getReviewId = (
     reviewId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
+ ): Promise<AxiosResponse<GetReviewResponseDTO>> => {
     return axiosInstance.get(
       `/Review/${reviewId}`,options
+    );
+  }
+  const getReviewsForProgram = (
+    programId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ShortReviewResponseDTO[]>> => {
+    return axiosInstance.get(
+      `/Review/Program/${programId}`,options
     );
   }
 const getReviewFileReviewId = (
@@ -59,9 +69,10 @@ const getReviewFileReviewId = (
       `/Review/File/${reviewId}`,options
     );
   }
-return {postReview,deleteReview,patchReview,getReviewReviewId,getReviewFileReviewId}};
+return {postReview,deleteReview,patchReview,getReviewId,getReviewsForProgram,getReviewFileReviewId}};
 export type PostReviewResult = AxiosResponse<unknown>
 export type DeleteReviewResult = AxiosResponse<unknown>
 export type PatchReviewResult = AxiosResponse<unknown>
-export type GetReviewReviewIdResult = AxiosResponse<unknown>
+export type GetReviewIdResult = AxiosResponse<GetReviewResponseDTO>
+export type GetReviewsForProgram = AxiosResponse<ShortReviewResponseDTO[]>
 export type GetReviewFileReviewIdResult = AxiosResponse<unknown>

@@ -1,28 +1,43 @@
-import { Table, Box,  Center, Badge, Spinner} from "@chakra-ui/react"
+import { Table, Box,  Center, Badge, Spinner, Button} from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
 import type {  UpdateUserRequest } from "@/api/models";
 import { FixDialog } from "@/utils/DialogFix";
 import FilterTablePrograms from "./FilterTablePrograms";
 import { useProgramsStore } from "@/stores/ProgramsStore";
 import { GetStatusTypeName } from "@/utils/TextUtils";
+import ProgramReviews from "../review/ProgramReviews";
 
 
 const ProgramsTable = () => {
   const { items, fetch, loading } = useProgramsStore()
   const [selectedLogin, setSelectedLogin] = useState("") 
   const [selectedItem, setSelectedItem] = useState<UpdateUserRequest | null>(null)
-  const [isOpenUpdate, setIsOpenUpdate] = useState(false)
+
   const tableRef = useRef<HTMLDivElement>(null)
+
+ const [programId, setProgramId] = useState<string>()
+  const [isOpenReviews, setIsOpenReviews] = useState(false)
+
+  const handleCloseDialog = () => {
+    // onChangeCreatePage(true)
+    setIsOpenReviews(false);
+    FixDialog()
+  }
+
 
   useEffect(() => {
     fetch();
   }, []);
 
-  const handleClose = () => {
-    setIsOpenUpdate(false)
-    setSelectedItem(null)
-    FixDialog()
+
+
+
+  const handleOpenReview = (programId: string) => {
+    // setIsOpenUpdate(false)
+    // setSelectedItem(null)
+    // FixDialog()
   }
+
 
   return (
     <>
@@ -51,6 +66,7 @@ const ProgramsTable = () => {
               <Table.ColumnHeader w="250px">Направление</Table.ColumnHeader>
               {/* <Table.ColumnHeader w="150px">Роль</Table.ColumnHeader> */}
               <Table.ColumnHeader w="150px" textAlign="center">Статус</Table.ColumnHeader>
+              <Table.ColumnHeader w="150px" textAlign="center">Действие</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
 
@@ -106,6 +122,9 @@ const ProgramsTable = () => {
                     {item.direction || '—'}
                   </Table.Cell>
 
+    
+
+
                   {/* <Table.Cell w="150px" verticalAlign="middle">
                     {GetRoleName(item.role ?? 0)}
                   </Table.Cell> */}
@@ -125,12 +144,25 @@ const ProgramsTable = () => {
                       </Badge>
                     </Center>
                   </Table.Cell>
+
+                  <Table.Cell w="250px" verticalAlign="middle">
+                    <Button onClick={(e) => {setProgramId(item.id); setIsOpenReviews(true)}}>Проверка</Button>
+                  </Table.Cell>
+
                 </Table.Row>
               ))}
             </Table.Body>
           )}
         </Table.Root>
       </Box>
+
+      {isOpenReviews && (
+        <ProgramReviews
+          programId={programId || ""}
+          onClose={handleCloseDialog}
+        />
+      )}
+
 
     </>
   )

@@ -3,7 +3,7 @@
 
 namespace Application.Abstractions.Repositories
 {
-    public interface IProgramRepository : IBaseRepository<ProgramVersion>
+    public interface IProgramRepository : IBaseRepository<EduProgram>
     {
     }
 }

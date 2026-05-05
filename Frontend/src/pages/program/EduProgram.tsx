@@ -145,12 +145,12 @@ const EduProgram = () => {
               bg="white"
               borderRadius="2xl"
               boxShadow="sm"
-              p={6}
+              p={4}
               _hover={{ boxShadow: "md" }}
               transition="all 0.3s ease"
             >
               <VStack gap={6} align="stretch">
-                <Grid templateColumns="120px 1fr" gap={6}>
+                <Grid templateColumns="140px 1fr" gap={6}>
                   <GridItem>
                     <Field.Root>
                       <Field.Label display="flex" alignItems="center" gap={2}>
@@ -162,12 +162,12 @@ const EduProgram = () => {
                         fontSize="13px"
                         borderRadius="full"
                         px={3}
-                        py={1}
+                        py={2.5}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
                         w="full"
-                        minH="40px"
+                        minH="32px"
                       >
                         {programFromStore?.programStatus != undefined && GetStatusTypeName(programFromStore.programStatus)}
                       </Badge>
@@ -184,7 +184,7 @@ const EduProgram = () => {
                         name="name"
                         onChange={handleChange}
                         placeholder="Введите название программы"
-                        size="lg"
+                        size="sm"
                         fontSize="16px"
                         value={localFormData?.name || ""}
                         _focus={{
@@ -196,7 +196,7 @@ const EduProgram = () => {
                   </GridItem>
                 </Grid>
 
-                  <Grid templateColumns="120px 1fr 1fr 1fr" gap={6}>
+                <Grid templateColumns="140px 1fr 1fr 1fr" gap={6}>
                   <GridItem>
                     <Field.Root>
                       <Field.Label display="flex" alignItems="center" gap={2}>
@@ -204,6 +204,7 @@ const EduProgram = () => {
                         Учебный год
                       </Field.Label>
                       <Input
+                        textAlign="center"
                         name="year"
                         value={localFormData?.year || ""}
                         readOnly

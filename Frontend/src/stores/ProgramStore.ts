@@ -10,7 +10,7 @@ interface ProgramStore {
   selectedVersion: ProgramVersionDTO | null
   loading: boolean
   program: EduProgramDTO | null
-  fetchProgram: (programId: string) => Promise<boolean>
+  fetchProgram: (programId: string, onlyLastVersion?: boolean) => Promise<boolean>
   updateProgram: (updatedProgram: UpdateProgramCommand) => Promise<boolean>
   addVersion: (item: Omit<CreateVersionRequest, 'id'>) => Promise<boolean>
   downloadVersionFile: (versionId: string) => Promise<boolean> // 
@@ -47,10 +47,10 @@ export const useProgramStore = create<ProgramStore>((set) => ({
     return false;
   },
 
-  fetchProgram: async (id) => {
+  fetchProgram: async (id, onlyLastVersion?) => {
     try 
     {
-      const response = await api.getEduProgramProgramId(id)
+      const response = await api.getEduProgramProgramId(id, onlyLastVersion)
       if (response.status == 200) 
       {
         set({ program: response.data });

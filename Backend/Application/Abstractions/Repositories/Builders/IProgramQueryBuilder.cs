@@ -20,6 +20,9 @@ namespace Application.Abstractions.Repositories.Builders
 
         IProgramQueryBuilder IncludeTeacher();
 
+        IProgramQueryBuilder ExcludeDeleted();
+
+
         Task<EduProgram?> SingleOrDefaultAsync(CancellationToken cancellationToken);
         IProgramQueryBuilder WithStatus(ProgramStatuses status);
         IProgramQueryBuilder WithStatuses(List<ProgramStatuses> statuses);

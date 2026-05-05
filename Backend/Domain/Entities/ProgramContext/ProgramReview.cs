@@ -15,6 +15,8 @@ namespace Domain.Entities.ProgramContext
 
         public string Commentary { get; set; } = string.Empty;
 
+        public bool IsFinished { get; set; } = false;
+
         public bool IsSuccess { get; set; } = false;
 
         public double FileSize { get; set; }

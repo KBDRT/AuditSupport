@@ -31,6 +31,7 @@ const PreviewProgramFile = ({ versionId, onClose}: PreviewProgramFileProps) => {
       
       if (response.status === 200) {
         const arrayBuffer = await response.data.arrayBuffer();
+ 
         await previewDocx(arrayBuffer);
       }
     } catch (error) {

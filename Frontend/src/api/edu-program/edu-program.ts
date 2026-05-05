@@ -46,7 +46,7 @@ const getEduProgram = (
       `/EduProgram`, 
       {
         ...options,
-        params: getProgramsWithFilterQuery  // ← добавить эту строку
+        params: getProgramsWithFilterQuery  
       }
     );
 }
@@ -82,12 +82,21 @@ const getEduProgramVersionFileVersionId = (
     );
   }
 const getEduProgramProgramId = (
-    programId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<EduProgramDTO>> => {
+    programId: string, 
+    onlyLastVersion?: boolean, 
+    options?: AxiosRequestConfig
+): Promise<AxiosResponse<EduProgramDTO>> => {
     return axiosInstance.get(
-      `/EduProgram/${programId}`,options
+        `/EduProgram/${programId}`,
+        {
+            ...options,
+            params: {
+                ...options?.params,
+                onlyLastVersion: onlyLastVersion
+            }
+        }
     );
-  }
+}
 const getEduProgramVersionVersionId = (
     versionId: string, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<unknown>> => {

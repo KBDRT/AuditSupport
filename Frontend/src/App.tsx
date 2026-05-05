@@ -16,6 +16,7 @@ import './index.css';
 import EduProgram from './pages/program/EduProgram';
 import { Box } from '@chakra-ui/react';
 import ProgramsPage from './pages/programs/ProgramsPage';
+import ReviewPage from './pages/review/ReviewPage';
 
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
            <Route element={<PrivateRoute allowedRoles={['Methodist']} />}>
             <Route element={<MainLayout />}> 
               <Route path="/Programs" element={<ProgramsPage />} />
+              <Route path="/Review/:reviewId" element={<ReviewPage />} />
             </Route> 
           </Route>
                 

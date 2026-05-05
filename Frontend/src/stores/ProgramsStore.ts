@@ -1,4 +1,4 @@
-import type { CreateUserRequest, DeleteAdminUsersParams, EduProgramDTO, GetAdminUsersParams, GetProgramsWithFilterQuery, GetUserDTO, UpdateUserRequest } from '@/api/models';
+import type { CreateUserRequest, DeleteAdminUsersParams, EduProgramDTO, EduYear, GetAdminUsersParams, GetProgramsWithFilterQuery, GetUserDTO, UpdateUserRequest } from '@/api/models';
 import { create } from 'zustand';
 import { getAdmin } from '@/api/admin/admin';
 import { mapUpdateToUser } from '@/utils/Mappers';
@@ -20,6 +20,9 @@ interface ProgramsStore {
   allItems: EduProgramShortDTO[]
   loading: boolean
   filter: FilterUsers
+  yearId: string,
+  setYear: (newYearId: string) => void 
+
   addItem: (item: Omit<CreateUserRequest, 'id'>) => Promise<boolean>
   updateItem: (id: string, item: Partial<UpdateUserRequest>) => Promise<boolean>
   deleteItem: (id: string) => Promise<boolean>
@@ -27,7 +30,6 @@ interface ProgramsStore {
   fetch: () => Promise<void>
   useFilter: () => void
   clearFiler: () => void
-  filterUsers: (newFilter: Partial<FilterUsers>) => void 
 }
 
 export const api = getEduProgram(axiosInstance);
@@ -36,6 +38,10 @@ export const useProgramsStore = create<ProgramsStore>((set, get) => ({
   items: [],
   allItems: [],
   loading: false,
+  yearId: "",
+
+  setYear: (newYearId) => set({ yearId: newYearId }),
+  
   filter: {
     roles: [],
     statusCode: "active",
@@ -43,11 +49,18 @@ export const useProgramsStore = create<ProgramsStore>((set, get) => ({
   },
   
   fetch: async () => {
+
+    if (!get().yearId || get().yearId.length == 0)
+    {
+      set({ items: [] });
+      return;
+    }
+
     set({ loading: true });
     try {
 
       const params : GetProgramsWithFilterQuery  = {
-       yearId: "634d3cf7-8fd7-492f-8257-0952e79ca5df"
+       yearId: get().yearId
       }
 
       const response = await api.getEduProgram(params)
@@ -187,9 +200,6 @@ export const useProgramsStore = create<ProgramsStore>((set, get) => ({
     get().useFilter()
   },
 
-  filterUsers: (newFilter) => {set((state) => ({
-    filter: { ...state.filter, ...newFilter }}))
-    get().useFilter()
-  },
+
 
 }))

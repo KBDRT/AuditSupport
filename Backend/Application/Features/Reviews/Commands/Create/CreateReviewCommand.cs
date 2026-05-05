@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.DTO.Common;
 using CSharpFunctionalExtensions;
 using Domain.Entities;
 using MediatR;
@@ -10,10 +11,12 @@ namespace Application.Features.Reviews.Commands.Create
 {
     public record CreateReviewCommand
     (
-        Guid VersionId,
-        Guid AuditorId,
-        string Commentary,
-        bool IsSuccess,
-        Stream File
-    ) : IRequest<Result<Guid, ServiceError>>;
+        Guid ProgramId,
+        //Guid VersionId,
+        Guid AuditorId
+        //string Commentary,
+        //bool IsSuccess,
+        //bool IsFinished,
+        //Stream? File
+    ) : IRequest<Result<CreateOperationResponseDTO, ServiceError>>;
 }
