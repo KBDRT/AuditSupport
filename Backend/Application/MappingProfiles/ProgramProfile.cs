@@ -32,11 +32,14 @@ namespace Application.MappingProfiles
             CreateMap<CheckError, ShortCheckErrorDTO>();
 
             CreateMap<ProgramReview, ShortReviewResponseDTO>()
-                .ForMember(dest => dest.Auditor, opt => opt.MapFrom(src => src.Auditor.Initials.Short));
+                .ForMember(dest => dest.Auditor, opt => opt.MapFrom(src => src.Auditor.Initials.Full));
 
             CreateMap<ProgramReview, GetReviewResponseDTO>()
                .ForMember(dest => dest.ProgramVersion, opt => opt.MapFrom(src => src.ProgramVersion))
                .ForMember(dest => dest.Program, opt => opt.MapFrom(src => src.ProgramVersion.Program));
+
+            CreateMap<ProgramHistory, ProgramHistoryDTO>()
+                .ForMember(dest => dest.UserFIO, opt => opt.MapFrom(src => src.User.Initials.Full));
         }
     }
 }

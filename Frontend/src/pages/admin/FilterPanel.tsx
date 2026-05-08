@@ -1,7 +1,6 @@
-import { Box, HStack, Portal, Button, Separator } from "@chakra-ui/react"
-import { useState,  useEffect } from "react"
+import { Box, HStack, Portal, Button, Separator, Icon, Input, InputGroup, Text } from "@chakra-ui/react"
+import { useState, useEffect } from "react"
 import { useUsersStore } from "@/stores/UsersStore"
-import { Input, InputGroup } from "@chakra-ui/react"
 import { LuSearch } from "react-icons/lu"
 import { Select } from "@chakra-ui/react"
 import { SegmentGroup } from "@chakra-ui/react"
@@ -70,14 +69,20 @@ const FilterTable = () => {
   ) : undefined
 
   return (
-    <Box>
+    <Box
+      bg="white"
+      borderRadius="xl"
+      border="1px solid"
+      borderColor="gray.200"
+      p={3}
+    >
       <HStack gap={3}>
-        <InputGroup startElement={<LuSearch />} endElement={endElement}>
+        <InputGroup startElement={<LuSearch />} endElement={endElement} w="250px">
           <Input
             value={searchValue}
             placeholder="ФИО или Логин"
             size="sm"
-            onChange={(e) => handleChangeSearch(e.target.value) }
+            onChange={(e) => handleChangeSearch(e.target.value)}
           />
         </InputGroup>
 
@@ -87,14 +92,14 @@ const FilterTable = () => {
           multiple
           collection={ROLES_COLLECTION}
           size="sm"
-          // width="320px"
           value={rolesValue}
           onValueChange={({ value }) => handleChangeRoles(value)}
+          w="200px"
         >
           <Select.HiddenSelect />
           <Select.Control>
             <Select.Trigger>
-              <Select.ValueText placeholder="Выберите роли" />
+              <Select.ValueText placeholder="Роли" />
             </Select.Trigger>
             <Select.IndicatorGroup>
               <Select.ClearTrigger />
@@ -120,10 +125,6 @@ const FilterTable = () => {
         <SegmentGroup.Root
           size="sm"
           value={statusValue}
-          css={{
-            "--segment-indicator-bg": "colors.green.300",
-            "--segment-indicator-shadow": "shadows.md",
-          }}
           onValueChange={({ value }) => handleChangeStatus(value ?? "all")}
         >
           <SegmentGroup.Indicator />
@@ -132,8 +133,18 @@ const FilterTable = () => {
 
         <Separator orientation="vertical" height="8" />
 
-        <Button size="xs" variant="surface" onClick={handleClearFilter}>
-          <MdFilterAltOff /> Сбросить фильтрацию
+        <Button
+          size="xs"
+          variant="ghost"
+          colorPalette="gray"
+          onClick={handleClearFilter}
+          _hover={{ bg: "gray.100", transform: "translateY(-1px)" }}
+          transition="all 0.2s"
+        >
+          <HStack gap={1}>
+            <Icon as={MdFilterAltOff} boxSize="14px" />
+            <Text fontSize="12px">Сбросить</Text>
+          </HStack>
         </Button>
       </HStack>
     </Box>

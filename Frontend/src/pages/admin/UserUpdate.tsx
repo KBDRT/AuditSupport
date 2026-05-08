@@ -1,8 +1,8 @@
-import { Button, Dialog, Field, Input, Portal, Stack, Select, CloseButton, Text} from "@chakra-ui/react"
+import { Button, Dialog, Field, Input, Portal, Stack, Select, CloseButton, Text, HStack, Icon, Box } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import type { Roles, UpdateUserRequest } from "@/api/models";
 import { ROLE_COLLECTION, STATUS_COLLECTION} from "@/constants/common"
-import { MdSave, MdLockReset, MdDelete  } from "react-icons/md";
+import { MdSave, MdLockReset, MdDelete, MdInfo, MdClose } from "react-icons/md";
 import { useUsersStore } from "@/stores/UsersStore";
 import { withMask } from "use-mask-input"
 import { z } from 'zod'
@@ -38,9 +38,7 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
   const handleSave = async() => {
     try {
       userSchemaUpdate.parse(formData)
-      
       setInvalidFields({ email: false, name: false, surname: false })
-      
       const isSuccess = await updateItem(formData.userId ?? "", formData)  
       if (isSuccess) {
         onClose()
@@ -50,14 +48,12 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
     {
       if (error instanceof z.ZodError) {
         const newErrors = { email: false, name: false, surname: false}
-        
         error.issues.forEach(issue => {
           const field = issue.path[0] as keyof UserInvalidFields
           if (field in newErrors) {
             newErrors[field] = true
           }
         })
-        
         setInvalidFields(newErrors)
       }
     }   
@@ -65,8 +61,7 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
 
   const handleDelete = async() => {
     const isSuccess = await deleteItem(formData.userId ?? "")
-    if (isSuccess)
-    {
+    if (isSuccess) {
       onClose()       
     } 
   }
@@ -76,10 +71,9 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
   }
 
   return (
-    <>
     <Dialog.Root 
       open={open}
-      placement="top"
+      placement="center"
       onOpenChange={(details) => {
         if (!details.open) {
           onClose()
@@ -89,51 +83,104 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
       <Portal>     
         <Dialog.Backdrop />  
         <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.CloseTrigger />
-            <Dialog.Header>
-              <Dialog.Title>Редактирование пользователя</Dialog.Title>
+          <Dialog.Content
+            bg="white"
+            borderRadius="2xl"
+            boxShadow="2xl"
+            maxW="550px"
+            w="full"
+          >
+            <Dialog.Header borderBottom="1px solid" borderColor="gray.100" pb={3}>
+              <HStack gap={3}>
+                <Box
+                  as="div"
+                  w="32px"
+                  h="32px"
+                  bg="linear-gradient(135deg, #3182CE 0%, #2C5282 100%)"
+                  borderRadius="8px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Icon as={MdInfo} boxSize="16px" color="white" />
+                </Box>
+                <Dialog.Title fontSize="xl" fontWeight="600" color="gray.800">
+                  Редактирование пользователя
+                </Dialog.Title>
+              </HStack>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton 
+                  size="sm" 
+                  _hover={{ bg: "gray.100", transform: "rotate(90deg)" }}
+                  transition="all 0.2s"
+                />
+              </Dialog.CloseTrigger>
             </Dialog.Header>
-            <Dialog.Body pb="2">
-              <Stack gap="2">
-                <Field.Root orientation="horizontal" disabled>
+
+            <Dialog.Body pb={4} pt={4}>
+              <Stack gap={4}>
+                <Field.Root disabled>
                   <Field.Label>Логин</Field.Label>
-                  <Input value={userLogin|| ""} readOnly autoFocus/>
+                  <Input value={userLogin || ""} readOnly bg="gray.50" />
                 </Field.Root>
-                <Field.Root orientation="horizontal" invalid={invalidFields["email"]}>
+
+                <Field.Root invalid={invalidFields["email"]}>
                   <Field.Label>Email</Field.Label>
                   <Input
                     value={formData.email || ""}
                     ref={withMask("email")}
                     onChange={(e) => {setFormData({ ...formData, email: e.target.value }); setInvalidFields({...invalidFields, email: false})}}
                     placeholder="Введите email"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px #3182CE"
+                    }}
                   />
+                  <Field.ErrorText>Некорректный формат email</Field.ErrorText>
                 </Field.Root>
-                <Field.Root orientation="horizontal" invalid={invalidFields["surname"]}>
+
+                <Field.Root invalid={invalidFields["surname"]}>
                   <Field.Label>Фамилия</Field.Label>
                   <Input
                     value={formData.surname || ""}
                     onChange={(e) => {setFormData({ ...formData, surname: e.target.value }); setInvalidFields({...invalidFields, surname: false})}}
                     placeholder="Введите фамилию"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px #3182CE"
+                    }}
                   />
+                  <Field.ErrorText>Поле обязательно</Field.ErrorText>
                 </Field.Root>
-                <Field.Root orientation="horizontal" invalid={invalidFields["name"]}>
+
+                <Field.Root invalid={invalidFields["name"]}>
                   <Field.Label>Имя</Field.Label>
                   <Input
                     value={formData.name || ""}
                     onChange={(e) => {setFormData({ ...formData, name: e.target.value }); setInvalidFields({...invalidFields, name: false})}}
                     placeholder="Введите имя"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px #3182CE"
+                    }}
                   />
+                  <Field.ErrorText>Поле обязательно</Field.ErrorText>
                 </Field.Root>
-                <Field.Root orientation="horizontal">
+
+                <Field.Root>
                   <Field.Label>Отчество</Field.Label>
                   <Input
                     value={formData.patronymic || ""}
                     onChange={(e) => setFormData({ ...formData, patronymic: e.target.value })}
-                    placeholder=""
+                    placeholder="Введите отчество"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px #3182CE"
+                    }}
                   />
                 </Field.Root>
-                <Field.Root orientation="horizontal">
+
+                <Field.Root>
                   <Field.Label>Роль</Field.Label>
                   <Select.Root
                     collection={ROLE_COLLECTION}
@@ -144,7 +191,7 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                     <Select.HiddenSelect />
                     <Select.Control>
                       <Select.Trigger>
-                        <Select.ValueText placeholder="Выберите роли" />
+                        <Select.ValueText placeholder="Выберите роль" />
                       </Select.Trigger>
                       <Select.IndicatorGroup>
                         <Select.Indicator />
@@ -164,7 +211,8 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                     </Portal>
                   </Select.Root>
                 </Field.Root>
-                <Field.Root orientation="horizontal">
+
+                <Field.Root>
                   <Field.Label>Статус</Field.Label>
                   <Select.Root
                     collection={STATUS_COLLECTION}
@@ -175,7 +223,7 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                     <Select.HiddenSelect />
                     <Select.Control>
                       <Select.Trigger>
-                        <Select.ValueText placeholder="" />
+                        <Select.ValueText placeholder="Выберите статус" />
                       </Select.Trigger>
                       <Select.IndicatorGroup>
                         <Select.Indicator />
@@ -197,47 +245,57 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
                 </Field.Root>
               </Stack>
             </Dialog.Body>
-            <Dialog.Footer>
-              <Button colorPalette="green" size="sm" onClick={handleSave} variant="ghost">
-                <MdSave />Сохранить
-              </Button>
+
+            <Dialog.Footer borderTop="1px solid" borderColor="gray.100" pt={4} gap={3}>
+             <Box>
+              <Button
+                  colorPalette="gray"
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleSave}
+                >
+                  <HStack gap={2}>
+                    <Icon as={MdSave} />
+                    <Text>Сохранить</Text>
+                  </HStack>
+                </Button>            
 
               <Dialog.Root>
                 <Dialog.Trigger asChild>
-                  <Button  size="sm" variant="ghost">
-                    <MdLockReset /> Сбросить пароль
+                  <Button size="sm" variant="ghost" colorPalette="gray">
+                    <HStack gap={2}>
+                      <Icon as={MdLockReset} />
+                      <Text>Сбросить пароль</Text>
+                    </HStack>
                   </Button>
                 </Dialog.Trigger>
                 <Portal>
                   <Dialog.Backdrop />
                   <Dialog.Positioner>
-                    <Dialog.Content>
-                      <Dialog.Header>
-                        <Dialog.Title>Подтверждение</Dialog.Title>
+                    <Dialog.Content bg="white" borderRadius="2xl" boxShadow="2xl" maxW="450px" w="full">
+                      <Dialog.Header borderBottom="1px solid" borderColor="gray.100">
+                        <Dialog.Title fontWeight="600">Подтверждение</Dialog.Title>
                       </Dialog.Header>
                       <Dialog.Body>
-                        <Text>
-                          Внимание, новый пароль будет отправлен на почту: 
-                          <Text as="span" fontWeight="bold" color="black.600" mt={2} mb={3}>
+                        <Text fontSize="14px" color="gray.600">
+                          Внимание, новый пароль будет отправлен на почту:
+                          <Text as="span" fontWeight="bold" display="inline">
                             {` ${formData.email}`}
                           </Text>
                         </Text>
-                        <br />
-                        <Text>
-                          Продолжить?
-                        </Text>
+                        <Text fontSize="14px" color="gray.600">Продолжить?</Text>
                       </Dialog.Body>
-                      <Dialog.Footer>
+                      <Dialog.Footer borderTop="1px solid" borderColor="gray.100" pt={4} gap={3}>
+                        <Button colorPalette="green" size="sm" onClick={handleResetPassword}>
+                          <HStack gap={2}>
+                            <Icon as={MdSave} />
+                            <Text>Подтвердить</Text>
+                          </HStack>
+                        </Button>
                         <Dialog.ActionTrigger asChild>
-                          <Button colorPalette="green" size="sm" onClick={handleResetPassword}>Подтвердить</Button>
-                        </Dialog.ActionTrigger>
-                        <Dialog.ActionTrigger asChild>
-                          <Button variant="outline" colorPalette="red" size="sm">Отмена</Button>
+                          <Button variant="outline" colorPalette="gray" size="sm">Отмена</Button>
                         </Dialog.ActionTrigger>
                       </Dialog.Footer>
-                      <Dialog.CloseTrigger asChild>
-                        <CloseButton size="sm" />
-                      </Dialog.CloseTrigger>
                     </Dialog.Content>
                   </Dialog.Positioner>
                 </Portal>
@@ -245,54 +303,64 @@ const UserUpdate = ({ open, item, userLogin, onClose}: UserUpdateProps) => {
 
               <Dialog.Root>
                 <Dialog.Trigger asChild>
-                  <Button colorPalette="red" size="sm" variant="ghost">
-                    <MdDelete /> Удалить
+                  <Button size="sm" variant="ghost" colorPalette="gray">
+                    <HStack gap={2}>
+                      <Icon as={MdDelete} />
+                      <Text>Удалить</Text>
+                    </HStack>
                   </Button>
                 </Dialog.Trigger>
                 <Portal>
                   <Dialog.Backdrop />
                   <Dialog.Positioner>
-                    <Dialog.Content>
-                      <Dialog.Header>
-                        <Dialog.Title>Удаление</Dialog.Title>
+                    <Dialog.Content bg="white" borderRadius="2xl" boxShadow="2xl" maxW="450px" w="full">
+                      <Dialog.Header borderBottom="1px solid" borderColor="gray.100">
+                        <Dialog.Title fontWeight="600">Удаление</Dialog.Title>
                       </Dialog.Header>
                       <Dialog.Body>
-                        <Text>
+                        <Text fontSize="14px" color="gray.600">
                           Вы уверены, что хотите удалить пользователя:
-                          <Text as="span" fontWeight="bold" color="black.600" my={2}>
-                            {` ${formData.surname} ${formData.name} ${formData.patronymic} `}
+                          <Text as="span" fontWeight="bold"  display="inline" >
+                            {` ${formData.surname} ${formData.name} ${formData.patronymic || ''}`}
                           </Text>
                           ?
                         </Text>
                       </Dialog.Body>
-                      <Dialog.Footer>
+                      <Dialog.Footer borderTop="1px solid" borderColor="gray.100" pt={4} gap={3}>
+                        <Button colorPalette="green" size="sm" onClick={handleDelete}>
+                          <HStack gap={2}>
+                            <Icon as={MdSave} />
+                            <Text>Подтвердить</Text>
+                          </HStack>
+                        </Button>
                         <Dialog.ActionTrigger asChild>
-                          <Button colorPalette="green" size="sm" onClick={handleDelete}>Подтвердить</Button>
-                        </Dialog.ActionTrigger>
-                        <Dialog.ActionTrigger asChild>
-                          <Button variant="outline" colorPalette="red" size="sm">Отмена</Button>
+                          <Button variant="outline" colorPalette="gray" size="sm">Отмена</Button>
                         </Dialog.ActionTrigger>
                       </Dialog.Footer>
-                      <Dialog.CloseTrigger asChild>
-                        <CloseButton size="sm" />
-                      </Dialog.CloseTrigger>
                     </Dialog.Content>
                   </Dialog.Positioner>
                 </Portal>
               </Dialog.Root>
 
+              <Button
+                variant="ghost"
+                size="sm"
+                colorPalette="gray"
+                onClick={onClose}
+              >
+                <HStack gap={2}>
+                  <Icon as={MdClose} />
+                  <Text>Отмена</Text>
+                </HStack>
+              </Button>          
+            </Box>
 
             </Dialog.Footer>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
-            </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
     </Dialog.Root>
-    </>
   )
 }
 
 export default UserUpdate
-

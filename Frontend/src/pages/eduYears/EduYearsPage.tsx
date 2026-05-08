@@ -9,6 +9,7 @@ import { IoMdLock, IoMdUnlock } from "react-icons/io";
 import { Link } from "react-router-dom"
 import ProgramCreate from "./ProgramCreate"
 import { FixDialog } from "@/utils/DialogFix"
+import StatusBadge from "@/components/common/StatusBadge"
 
 
 
@@ -123,7 +124,8 @@ const EduYearsPage = () => {
                                 }}
                               >
                                 <HStack gap={2}>
-                                  <Badge 
+                                 {program.status != undefined && <StatusBadge status={program.status} />}
+                                  {/* <Badge 
                                     fontWeight="500" 
                                     w="120px"  
                                     textAlign="center" 
@@ -133,7 +135,7 @@ const EduYearsPage = () => {
                                     flexShrink={0}
                                   >
                                     {program.status != undefined && GetStatusTypeName(program.status)}
-                                  </Badge>
+                                  </Badge> */}
                                   
                                   <Text fontSize="14px" color="gray.700">
                                     <Text as="span" color="gray.500">«</Text>

@@ -1,16 +1,9 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Common;
-using Application.DTO.Programs;
 using Application.DTO.Reviews;
-using Application.Features.Programs.Quaries.GetProgramsWithFilter;
 using AutoMapper;
 using CSharpFunctionalExtensions;
-using DocumentFormat.OpenXml.Presentation;
-using Domain.Entities.ProgramContext;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Reviews.Quaries.GetReviewsForProgramId
 {

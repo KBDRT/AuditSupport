@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Button,
   Box,
@@ -22,11 +22,9 @@ import {
 
 import {
   MdSave,
-  MdSend,
   MdWarning,
   MdCheck,
   MdClose,
-  MdDelete,
   MdDownload,
   MdPreview,
   MdVisibility,
@@ -40,7 +38,7 @@ import {
 } from "react-icons/md"
 
 import { useEffect, useState } from "react";
-import { FormatDateTime, GetStatusTypeName } from './../../utils/TextUtils';
+import { FormatDateTime } from './../../utils/TextUtils';
 import { useDirectionsStore } from "@/stores/DirectionsStore";
 import PageLoading from "@/components/common/PageLoading";
 import { useProgramStore } from "@/stores/ProgramStore";
@@ -50,6 +48,7 @@ import VersionCheckInfo from "../program/VersionCheckInfo";
 import PreviewProgramFile from "../program/PreviewProgramFile";
 import { FixDialog } from "@/utils/DialogFix";
 import type { GetReviewResponseDTO } from "@/api/models/getReviewResponseDTO";
+import StatusBadge from "@/components/common/StatusBadge";
 
 const DialogName = {
   None: 0,
@@ -67,7 +66,6 @@ const ReviewPage = () => {
   const [openAccordion, setOpenAccordion] = useState<boolean>(true)
   const programFromStore = reviewId ? review : undefined
   const [localFormData, setLocalFormData] = useState<GetReviewResponseDTO | undefined>()
-  const navigate = useNavigate();
   const { downloadVersionFile } = useProgramStore()
   const [isSuccessCheck, setIsSuccessCheck] = useState<boolean>(false)
 
@@ -104,15 +102,13 @@ const ReviewPage = () => {
   
   const handleEndCheck = async () => {
     if (localFormData) {
-      setEndCheck(isSuccessCheck)
+      setEndCheck(!isSuccessCheck)
     }
   }
 
   const handleDownloadFile = async (id: string) => {
     await downloadVersionFile(id)
   }
-
-  const handleDelete = async() => {}
 
   if (loading) {
     return (
@@ -162,7 +158,8 @@ const ReviewPage = () => {
                           <Icon as={MdInfo} color="blue.500" boxSize="14px" />
                           Статус
                         </Field.Label>
-                        <Badge
+                            {programFromStore?.program?.programStatus != undefined && <StatusBadge status={programFromStore?.program?.programStatus} />}
+                        {/* <Badge
                           colorPalette="blue"
                           fontSize="13px"
                           borderRadius="full"
@@ -174,7 +171,7 @@ const ReviewPage = () => {
                           w="full"
                         >
                           {programFromStore?.program?.programStatus != undefined && GetStatusTypeName(programFromStore?.program?.programStatus)}
-                        </Badge>
+                        </Badge> */}
                       </Field.Root>
                     </GridItem>
 

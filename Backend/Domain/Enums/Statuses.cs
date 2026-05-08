@@ -10,6 +10,7 @@
         Changed,
         ReadyToApprove,
         Deleted,
-        Approved
+        Approved,
+        NeedChanges
     }
 }

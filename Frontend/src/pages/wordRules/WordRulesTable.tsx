@@ -1,9 +1,10 @@
-import { Table, Box,  Center,  Spinner} from "@chakra-ui/react"
+import { Table, Box, Center, Spinner, VStack, HStack, Icon, Text, Badge } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
-import type {  UpdateWordRuleRequest} from "@/api/models";
+import type { UpdateWordRuleRequest } from "@/api/models";
 import { FixDialog } from "@/utils/DialogFix";
 import WordRulesUpdate from "./WordRulesUpdate";
 import { useWordRulesStore } from "@/stores/WordRules";
+import { MdInfo, MdTextFields } from "react-icons/md";
 
 const WordRulesTable = () => {
   const { items, fetch, loading } = useWordRulesStore()
@@ -22,37 +23,36 @@ const WordRulesTable = () => {
   }
 
   return (
-    <>
-
+    <VStack align="stretch" gap={4}>
       <Box 
         ref={tableRef}
-        overflowX="auto" 
-        maxW="100%"
+        overflowX="auto"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="gray.200"
+        bg="white"
       >
-
         <Table.Root 
           size="sm" 
           interactive 
           variant="outline" 
           showColumnBorder
           w="100%"
-          mt="2"
-          borderWidth="1px"
-          minW="800px"  
+          borderWidth="0"
         >
           <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader w="200px">Термин</Table.ColumnHeader>
-              <Table.ColumnHeader w="250px">Комментарий</Table.ColumnHeader>
+            <Table.Row bg="gray.50">
+              <Table.ColumnHeader w="400px">Термин</Table.ColumnHeader>
+              <Table.ColumnHeader>Описание</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
 
           {loading ? (
             <Table.Body>
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center" h="200px">
+                <Table.Cell colSpan={2} textAlign="center" h="200px">
                   <Center>
-                    <Spinner size="xl" color="blue"/>
+                    <Spinner size="xl" color="blue" />
                   </Center>
                 </Table.Cell>
               </Table.Row>
@@ -60,7 +60,7 @@ const WordRulesTable = () => {
           ) : items.length === 0 ? (
             <Table.Body>
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center" color="gray.500" h="200px">
+                <Table.Cell colSpan={2} textAlign="center" color="gray.500" h="200px">
                   Нет данных
                 </Table.Cell>
               </Table.Row>
@@ -81,15 +81,18 @@ const WordRulesTable = () => {
                   style={{ cursor: "pointer" }}
                   bg={selectedItem?.ruleId === item.ruleId ? "blue.50" : undefined}
                   _hover={{ bg: "gray.50" }}
+                  transition="all 0.2s"
                 >
-                  <Table.Cell w="200px" verticalAlign="middle">
-                    {item.word}
+                  <Table.Cell verticalAlign="middle">
+                    <HStack gap={2}>
+                      {/* <Icon as={MdTextFields} color="blue.500" boxSize="16px" /> */}
+                      <Text fontWeight="500">{item.word}</Text>
+                    </HStack>
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
-                    {item.commentary}
+                  <Table.Cell verticalAlign="middle" color="gray.600">
+                    {item.commentary || "—"}
                   </Table.Cell>
-
                 </Table.Row>
               ))}
             </Table.Body>
@@ -101,10 +104,10 @@ const WordRulesTable = () => {
         <WordRulesUpdate 
           open={isOpenUpdate}
           item={selectedItem}
-          onClose={handleClose} />
+          onClose={handleClose}
+        />
       )}
-
-    </>
+    </VStack>
   )
 }
 

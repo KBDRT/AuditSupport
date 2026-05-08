@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Repositories;
 using Application.Common;
 using Application.DTO.Users;
-using Application.Helpers;
+using Application.Helpers.Definitions;
 using Application.Services.Definitions.CRUDServices;
 using CSharpFunctionalExtensions;
 using Domain.Entities.References;

@@ -1,7 +1,7 @@
-import { Button, Dialog, Field, Input, Portal, Stack,  CloseButton, Text, Center, Select, Box, IconButton, Table, Editable, HStack } from "@chakra-ui/react"
+import { Button, Dialog, Field, Input, Portal, Stack, CloseButton, Select, Box, Text, Center, Table, Editable, IconButton, HStack, Icon } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { RuleSectionType, type UpdateSectionRuleRequest } from "@/api/models";
-import { MdSave, MdDelete, MdAdd  } from "react-icons/md";
+import { MdSave, MdDelete, MdAdd, MdInfo, MdClose } from "react-icons/md";
 import { useSectionRulesStore } from "@/stores/SectionRules";
 import { SECTION_RULE_TYPE_COLLECTION } from "@/constants/common";
 import { LuTrash2 } from "react-icons/lu";
@@ -17,25 +17,23 @@ interface SectionRulesUpdateProps {
   onClose: () => void
 }
 
-
 const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => {
   const [formData, setFormData] = useState<UpdateSectionRuleRequest>(item)
   const { deleteItem, updateItem} = useSectionRulesStore()
   const [invalidFields, setInvalidFields] = useState<SectionRulesInvalidFields>({sectionName: false})
-
   const [structure, setStructure] = useState<SectionStructure[]>([]);
 
   useEffect(() => {
     setFormData(item)
-    if (formData.structure && formData.structure.length > 0) {
-      const convertedStructure = formData.structure.map((item) => ({
-        id: Date.now(),
-        value: item.name || ""
+    if (item.structure && item.structure.length > 0) {
+      const convertedStructure = item.structure.map((structureItem, index) => ({
+        id: Date.now() + index,
+        value: structureItem.name || ""
       }))
-    setStructure(convertedStructure)
+      setStructure(convertedStructure)
     } else {
       setStructure([])
-  }
+    }
   }, [item])
 
   const handleValueChange = (id: number, newValue: string) => {
@@ -50,10 +48,9 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
   }
 
   const handleDeleteStructure = (id: number) => {
-   const newStructure = structure.filter(item => item.id !== id)
-   setStructure(newStructure)
+    const newStructure = structure.filter(item => item.id !== id)
+    setStructure(newStructure)
   }
-
 
   const handleSave = async() => {
     if (formData.sectionName?.length == 0)
@@ -62,10 +59,10 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
     }
     else
     {
-       const updatedFormData = {
-            ...formData,
-            structure: structure.map(item => ({ name: item.value })) 
-        }
+      const updatedFormData = {
+        ...formData,
+        structure: structure.map(item => ({ name: item.value })) 
+      }
       const isSuccess = await updateItem(formData.ruleId ?? "", updatedFormData)  
       if (isSuccess)
       {
@@ -83,10 +80,9 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
   }
 
   return (
-    <>
     <Dialog.Root 
       open={open}
-      placement="top"
+      placement="center"
       onOpenChange={(details) => {
         if (!details.open) {
           onClose()
@@ -96,32 +92,80 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
       <Portal>       
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.CloseTrigger />
-            <Dialog.Header>
-              <Dialog.Title>Редактирование раздела</Dialog.Title>
+          <Dialog.Content
+            bg="white"
+            borderRadius="2xl"
+            boxShadow="2xl"
+            maxW="600px"
+            w="full"
+          >
+            <Dialog.Header borderBottom="1px solid" borderColor="gray.100" pb={3}>
+              <HStack gap={3}>
+                <Box
+                  as="div"
+                  w="32px"
+                  h="32px"
+                  bg="linear-gradient(135deg, #3182CE 0%, #2C5282 100%)"
+                  borderRadius="8px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Icon as={MdInfo} boxSize="16px" color="white" />
+                </Box>
+                <Dialog.Title fontSize="xl" fontWeight="600" color="gray.800">
+                  Редактирование раздела
+                </Dialog.Title>
+              </HStack>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton 
+                  size="sm" 
+                  _hover={{ bg: "gray.100", transform: "rotate(90deg)" }}
+                  transition="all 0.2s"
+                />
+              </Dialog.CloseTrigger>
             </Dialog.Header>
-            <Dialog.Body pb="2">
-              <Stack gap="2">
-                <Field.Root orientation="horizontal" invalid={invalidFields["sectionName"]}>
-                  <Field.Label>Термин</Field.Label>
+
+            <Dialog.Body pb={4} pt={4}>
+              <Stack gap={4}>
+                <Field.Root invalid={invalidFields["sectionName"]}>
+                  <Field.Label display="flex" alignItems="center" gap={2}>
+                    <Icon as={MdInfo} color="blue.500" boxSize="14px" />
+                    Раздел
+                  </Field.Label>
                   <Input
                     value={formData.sectionName || ""}
                     onChange={(e) => {setFormData({ ...formData, sectionName: e.target.value}); setInvalidFields({...invalidFields, sectionName: false})}}
-                    placeholder="Введите термин"
+                    placeholder="Введите название раздела"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px #3182CE"
+                    }}
                   />
-                  <Field.ErrorText>Поля является обязательным</Field.ErrorText>
+                  <Field.ErrorText>Поле обязательно</Field.ErrorText>
                 </Field.Root>
-                <Field.Root orientation="horizontal">
-                  <Field.Label>Описание</Field.Label>
+
+                <Field.Root>
+                  <Field.Label display="flex" alignItems="center" gap={2}>
+                    <Icon as={MdInfo} color="blue.500" boxSize="14px" />
+                    Описание
+                  </Field.Label>
                   <Input
                     value={formData.commentary || ""}
                     onChange={(e) => {setFormData({ ...formData, commentary: e.target.value})}}
+                    placeholder="Введите описание"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px #3182CE"
+                    }}
                   />
                 </Field.Root>
 
-                <Field.Root orientation="horizontal">
-                  <Field.Label>Тип раздела</Field.Label>
+                {/* <Field.Root>
+                  <Field.Label display="flex" alignItems="center" gap={2}>
+                    <Icon as={MdInfo} color="blue.500" boxSize="14px" />
+                    Тип раздела
+                  </Field.Label>
                   <Select.Root
                     collection={SECTION_RULE_TYPE_COLLECTION}
                     size="sm"
@@ -153,106 +197,158 @@ const SectionRulesUpdate = ({ open, item, onClose}: SectionRulesUpdateProps) => 
                       </Select.Positioner>
                     </Portal>
                   </Select.Root>
-                </Field.Root>
-                {formData.type != RuleSectionType.NUMBER_0 && 
-                <Box mt={2}>
-                  <Center>  
-                    <Text fontWeight="semibold">Структура раздела
-                        <IconButton variant="outline" size="xs" ml={2} onClick={handleAddStructure}>
-                          <MdAdd />
-                        </IconButton>
-                    </Text>
-                  </Center>
-                  <Table.ScrollArea borderWidth="1px" maxH="150px" mt={2}>
-                    <Table.Root size="sm">
-                      <Table.Header>
-                      </Table.Header>
-                      <Table.Body>
-                        {structure.map((item) => (
-                          <Table.Row key={item.id}>
-                            <Table.Cell p={0}>
-                              <HStack>
-                                <Editable.Root width="100%" 
-                                    defaultValue="Click to edit" 
-                                    value={item.value} 
-                                    onValueChange={(e) => handleValueChange(item.id, e.value)}>
-                                  <Editable.Preview  width="100%"/>
-                                  <Editable.Input />
-                                </Editable.Root>
-                                <IconButton 
-                                  variant="ghost" 
-                                  size="sm"
-                                  colorPalette="red"
-                                  onClick={() => {handleDeleteStructure(item.id)}}>
-                                  <LuTrash2 />
-                                </IconButton>
-                              </HStack>
-                            </Table.Cell>
-                          </Table.Row>
-                        ))}
-                      </Table.Body>
-                    </Table.Root>
-                  </Table.ScrollArea>
-                </Box>}
+                </Field.Root> */}
+
+                {formData.type != RuleSectionType.NUMBER_0 && (
+                  <Box>
+                    <HStack justify="space-between" mb={2}>
+                      <Text fontSize="sm" fontWeight="500" color="gray.700">
+                        Структура раздела
+                      </Text>
+                      <IconButton
+                        variant="ghost"
+                        size="xs"
+                        colorPalette="blue"
+                        onClick={handleAddStructure}
+                        _hover={{ bg: "blue.50", transform: "translateY(-1px)" }}
+                      >
+                        <MdAdd />
+                      </IconButton>
+                    </HStack>
+                    <Box
+                      border="1px solid"
+                      borderColor="gray.200"
+                      borderRadius="lg"
+                      maxH="200px"
+                      overflowY="auto"
+                    >
+                      <Table.Root size="sm">
+                        <Table.Body>
+                          {structure.map((item) => (
+                            <Table.Row key={item.id} _hover={{ bg: "gray.50" }}>
+                              <Table.Cell p={2}>
+                                <HStack>
+                                  <Editable.Root
+                                    width="100%"
+                                    value={item.value}
+                                    onValueChange={(e) => handleValueChange(item.id, e.value)}
+                                  >
+                                    <Editable.Preview width="100%" py={1} px={2} />
+                                    <Editable.Input
+                                      _focus={{
+                                        borderColor: "blue.500",
+                                        boxShadow: "0 0 0 1px #3182CE"
+                                      }}
+                                    />
+                                  </Editable.Root>
+                                  <IconButton
+                                    variant="ghost"
+                                    size="sm"
+                                    colorPalette="red"
+                                    onClick={() => handleDeleteStructure(item.id)}
+                                    _hover={{ bg: "red.50" }}
+                                  >
+                                    <LuTrash2 />
+                                  </IconButton>
+                                </HStack>
+                              </Table.Cell>
+                            </Table.Row>
+                          ))}
+                        </Table.Body>
+                      </Table.Root>
+                    </Box>
+                  </Box>
+                )}
               </Stack>
             </Dialog.Body>
-            <Dialog.Footer>
-              <Center>
-              <Button colorPalette="green" size="sm" onClick={handleSave} variant="ghost">
-                <MdSave />Сохранить
+
+            <Dialog.Footer borderTop="1px solid" borderColor="gray.100" pt={4} gap={3}>
+
+              <Button
+                colorPalette="gray"
+                size="sm"
+                variant="ghost"
+                onClick={handleSave}
+              >
+                <HStack gap={2}>
+                  <Icon as={MdSave} />
+                  <Text>Сохранить</Text>
+                </HStack>
               </Button>
 
               <Dialog.Root>
                 <Dialog.Trigger asChild>
-                  <Button colorPalette="red" size="sm" variant="ghost">
-                    <MdDelete /> Удалить
+                  <Button colorPalette="gray" size="sm" variant="ghost">
+                    <HStack gap={2}>
+                      <Icon as={MdDelete} />
+                      <Text>Удалить</Text>
+                    </HStack>
                   </Button>
                 </Dialog.Trigger>
                 <Portal>
                   <Dialog.Backdrop />
                   <Dialog.Positioner>
-                    <Dialog.Content>
-                      <Dialog.Header>
-                        <Dialog.Title>Удаление</Dialog.Title>
+                    <Dialog.Content bg="white" borderRadius="2xl" boxShadow="2xl" maxW="450px" w="full">
+                      <Dialog.Header borderBottom="1px solid" borderColor="gray.100">
+                        <Dialog.Title fontWeight="600">Удаление</Dialog.Title>
                       </Dialog.Header>
                       <Dialog.Body>
-                        <Text>
-                          Вы уверены, что хотите удалить раздел:
-                          <Text as="span" fontWeight="bold" color="black.600" my={2}>
-                            {` ${item.sectionName} `}
+                        <Text fontSize="14px" color="gray.600">
+                          Вы уверены, что хотите удалить раздел
+                          <Text as="span" fontWeight="bold" color="red.600" display="block" mt={2}>
+                            {item.sectionName}
                           </Text>
                           ?
                         </Text>
-                  
                       </Dialog.Body>
-                      <Dialog.Footer>
+                      <Dialog.Footer borderTop="1px solid" borderColor="gray.100" pt={4} gap={3}>
+                        <Button
+                          colorPalette="red"
+                          size="sm"
+                          variant="ghost"
+                          onClick={handleDelete}
+                        >
+                          <HStack gap={2}>
+                            <Icon as={MdDelete} />
+                            <Text>Удалить</Text>
+                          </HStack>
+                        </Button>
                         <Dialog.ActionTrigger asChild>
-                          <Button colorPalette="green" size="sm" onClick={handleDelete}>Подтвердить</Button>
-                        </Dialog.ActionTrigger>
-                        <Dialog.ActionTrigger asChild>
-                          <Button variant="outline" colorPalette="red" size="sm">Отмена</Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            colorPalette="gray"
+                            _hover={{ bg: "gray.100" }}
+                          >
+                            Отмена
+                          </Button>
                         </Dialog.ActionTrigger>
                       </Dialog.Footer>
-                      <Dialog.CloseTrigger asChild>
-                        <CloseButton size="sm" />
-                      </Dialog.CloseTrigger>
                     </Dialog.Content>
                   </Dialog.Positioner>
                 </Portal>
               </Dialog.Root>
 
-            </Center>
+                            <Button
+                variant="ghost"
+                size="sm"
+                colorPalette="gray"
+                onClick={onClose}
+                _hover={{ bg: "gray.100", transform: "translateY(-1px)" }}
+              >
+                <HStack gap={2}>
+                  <Icon as={MdClose} />
+                  <Text>Отмена</Text>
+                </HStack>
+              </Button>
+
+
             </Dialog.Footer>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
-            </Dialog.CloseTrigger>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
-    </>
+            </Dialog.Content>
+            </Dialog.Positioner>
+            </Portal>
+          </Dialog.Root>
   )
 }
 
 export default SectionRulesUpdate
-

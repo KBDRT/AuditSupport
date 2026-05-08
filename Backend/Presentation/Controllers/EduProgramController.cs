@@ -8,10 +8,12 @@ using Application.Features.Programs.Commands.Delete;
 using Application.Features.Programs.Commands.Update;
 using Application.Features.Programs.Quaries.GetErrorsByCheckId;
 using Application.Features.Programs.Quaries.GetProgramById;
+using Application.Features.Programs.Quaries.GetProgramHistory;
 using Application.Features.Programs.Quaries.GetProgramsForTeacher;
 using Application.Features.Programs.Quaries.GetProgramsWithFilter;
 using Application.Features.Programs.Quaries.GetProgramVersion;
 using Application.Features.Programs.Quaries.GetProgramVersionFile;
+using Domain.Entities.ProgramContext;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.EduPrograms;
@@ -140,6 +142,16 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetErrorsForCheck(Guid checkId, CancellationToken cancellationToken)
         {
             GetErrorsByCheckIdQuery query = new(checkId);
+
+            var result = await _mediator.Send(query, cancellationToken);
+            return FromResult(result);
+        }
+
+        [HttpGet("History/{programId}")]
+        [ProducesResponseType(typeof(List<ProgramHistoryDTO>), 200)]
+        public async Task<IActionResult> GetHistory(Guid programId, CancellationToken cancellationToken)
+        {
+            GetProgramHistoryQuery query = new(programId);
 
             var result = await _mediator.Send(query, cancellationToken);
             return FromResult(result);

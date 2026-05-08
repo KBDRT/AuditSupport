@@ -1,4 +1,4 @@
-import { Button, Box, Container, HStack, VStack, Text, Icon, Table, Spacer, Badge } from "@chakra-ui/react"
+import { Button, Box, HStack, VStack, Text, Icon, Table, Spacer, Badge } from "@chakra-ui/react"
 import { MdInfo, MdDownload, MdVisibility, MdPreview, MdAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import VersionCreate from "./VersionCreate";
@@ -48,8 +48,7 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
 
   return (
     <>
-      <Container maxW="container.lg" py={4}>
-        <VStack align="stretch" gap={3}>
+        <VStack align="stretch" gap={4} mt="4">
           <HStack gap={3}>
             <Box
               as="div"
@@ -160,7 +159,6 @@ const VersionsTable = ({ programId, onChangeCreatePage }: { programId?: string, 
             </Table.ScrollArea>
           </Box>
         </VStack>
-      </Container>
 
       {openedDialog == DialogName.CreateVersion && (
         <VersionCreate

@@ -1,19 +1,15 @@
-import type { CreateReviewCommand, CreateWordRuleRequest, DeleteRuleWordParams, GetWordRuleResponseDTO, UpdateWordRuleRequest} from '@/api/models';
+import type { CreateReviewCommand} from '@/api/models';
 import { create } from 'zustand';
 import { axiosInstance } from '@/services/axiosInstanse';
 import { ShowError, ShowToast } from '@/components/common/Alert';
 import { AxiosError } from 'axios'
-import { getRule } from '@/api/rule/rule';
 import { getReview } from '@/api/review/review';
 import type { ShortReviewResponseDTO } from '@/api/models/shortReviewResponseDTO';
 
 interface ReviewsStoreProps {
   items: ShortReviewResponseDTO[]
   loading: boolean
-
-  addItem: (item: CreateReviewCommand) => Promise<boolean>
-  // updateItem: (id: string, item: Partial<UpdateWordRuleRequest>) => Promise<boolean>
-  // deleteItem: (id: string) => Promise<boolean>
+  addItem: (item: CreateReviewCommand) => Promise<string>
   fetch: (programId: string) => Promise<void>
 }
 
@@ -52,18 +48,18 @@ export const useReviewsStore = create<ReviewsStoreProps>((set) => ({
           items: [...state.items, { id: response.data?.id, auditor: "", createdDate: new Date().toISOString(), isFinished: false, isSuccess: false }]
         }))
         ShowToast("Сохранено!", "", "success")
-        return true
+        return response.data?.id || ""
       }
       else
       {
         ShowToast("Внимание!", `${response?.data}`, "warning")
-        return false
+        return ""
       }
     }
     catch (error)
     {
       ShowError(error as AxiosError)
-      return false
+      return ""
     }
   },
 

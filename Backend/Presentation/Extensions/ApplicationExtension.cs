@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.CookiePolicy;
-namespace Presentation.Extensions
+﻿namespace Presentation.Extensions
 {
     public static class ApplicationExtension
     {
@@ -27,7 +26,6 @@ namespace Presentation.Extensions
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
 
             //app.UseMiddleware<AuthMiddleware>();
 

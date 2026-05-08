@@ -1,6 +1,6 @@
-import { Grid, GridItem, Heading, Box, Center, Button, Flex } from "@chakra-ui/react";
+import { Heading, Box, Button, Flex, Container, VStack, HStack, Icon, Text } from "@chakra-ui/react";
 import UsersTable from "./UsersTable";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdPeople } from "react-icons/md";
 import UserCreate from "./UserCreate";
 import { useState } from "react";
 import { FixDialog } from "@/utils/DialogFix";
@@ -18,39 +18,68 @@ function UsersPage() {
   };
 
   return (
-    <>
-    <Center>
-      <Grid w="60%" maxW="60%">
-        <GridItem>
-          <Flex justify="space-between" align="center" mb={3}>
-            <Heading size="2xl">Пользователи системы</Heading>
-            <Button 
-              // colorPalette="blue"
-              variant="outline" 
-              onClick={handleAdd}
-              size="sm"
-            >
-              <MdAdd />
-              Добавить нового пользователя
-            </Button>
-          </Flex>
-        </GridItem>
+    <Box minH="100vh" bg="gray.50">
+      <Container maxW="container.xl" py={6}>
+        <VStack align="stretch" gap={6}>
+          <Box
+            bg="white"
+            borderRadius="2xl"
+            boxShadow="sm"
+            p={6}
+            _hover={{ boxShadow: "md" }}
+            transition="all 0.3s ease"
+          >
+            <VStack align="stretch" gap={5}>
+              <Flex justify="space-between" align="center">
+                <HStack gap={3}>
+                  <Box
+                    as="div"
+                    w="32px"
+                    h="32px"
+                    bg="linear-gradient(135deg, #3182CE 0%, #2C5282 100%)"
+                    borderRadius="8px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Icon as={MdPeople} boxSize="16px" color="white" />
+                  </Box>
+                  <Heading size="lg" fontWeight="600" color="gray.800">
+                    Пользователи системы
+                  </Heading>
+                </HStack>
+                <Button
+                  variant="outline"
+                  colorPalette="blue"
+                  onClick={handleAdd}
+                  size="sm"
+                  _hover={{
+                    transform: "translateY(-1px)",
+                    boxShadow: "md",
+                    bg: "blue.50"
+                  }}
+                  transition="all 0.2s"
+                >
+                  <HStack gap={2}>
+                    <Icon as={MdAdd} boxSize="16px" />
+                    <Text>Добавить пользователя</Text>
+                  </HStack>
+                </Button>
+              </Flex>
 
-        <GridItem>
-          <Box>
-            <UsersTable />
+              <UsersTable />
+            </VStack>
           </Box>
-        </GridItem>
-      </Grid>
-    </Center>
-    
-    {isOpenCreate &&  (
-         <UserCreate 
+        </VStack>
+      </Container>
+
+      {isOpenCreate && (
+        <UserCreate 
           open={isOpenCreate}
-          onClose={handleCloseCreate} />
+          onClose={handleCloseCreate}
+        />
       )}
-    
-    </>
+    </Box>
   );
 }
 

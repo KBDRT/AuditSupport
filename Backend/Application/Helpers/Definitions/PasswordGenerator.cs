@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace Application.Helpers
+namespace Application.Helpers.Definitions
 {
     public static class PasswordGenerator
     {

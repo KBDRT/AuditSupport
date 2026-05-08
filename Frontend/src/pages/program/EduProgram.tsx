@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Box,
-  Container,
   Field,
   HStack,
   Input,
@@ -12,7 +11,6 @@ import {
   Icon,
   Grid,
   GridItem,
-  Badge,
   ActionBar,
   Portal,
   Dialog,
@@ -31,12 +29,12 @@ import {
 import { MdWork, MdPerson, MdCalendarToday, MdCategory, MdInfo } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { ProgramStatuses, type EduProgramDTO } from "@/api/models";
-import { GetStatusTypeName } from './../../utils/TextUtils';
 import { useDirectionsStore } from "@/stores/DirectionsStore";
 import VersionsTable from "./VersionsTable";
 import PageLoading from "@/components/common/PageLoading";
 import { Tooltip } from "@/components/ui/tooltip"
 import { useProgramStore } from "@/stores/ProgramStore";
+import StatusBadge from "@/components/common/StatusBadge";
 
 const EduProgram = () => {
   const { id } = useParams();
@@ -119,7 +117,6 @@ const EduProgram = () => {
   return (
     <>
       <Box bg="gray.50">
-        <Container maxW="container.lg" py={2}>
           <VStack align="stretch" gap={3}>
           
           <HStack gap={3}>
@@ -157,7 +154,8 @@ const EduProgram = () => {
                         <Icon as={MdInfo} color="blue.500" boxSize="16px" />
                         Статус
                       </Field.Label>
-                      <Badge
+                      {programFromStore?.programStatus != undefined && <StatusBadge status={programFromStore?.programStatus} />}
+                      {/* <Badge
                         colorPalette="blue"
                         fontSize="13px"
                         borderRadius="full"
@@ -170,7 +168,7 @@ const EduProgram = () => {
                         minH="32px"
                       >
                         {programFromStore?.programStatus != undefined && GetStatusTypeName(programFromStore.programStatus)}
-                      </Badge>
+                      </Badge> */}
                     </Field.Root>
                   </GridItem>
 
@@ -288,7 +286,6 @@ const EduProgram = () => {
               </VStack>
             </Box>
           </VStack>
-        </Container>
 
         <VersionsTable programId={id} onChangeCreatePage={handleChangeCreatePage} />
 

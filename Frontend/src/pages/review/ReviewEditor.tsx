@@ -13,7 +13,7 @@ import TaskList from "@tiptap/extension-task-list";
 import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Plugin } from "@tiptap/pm/state";
-import { Editor, useEditor } from "@tiptap/react";
+import {  useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
   Control,

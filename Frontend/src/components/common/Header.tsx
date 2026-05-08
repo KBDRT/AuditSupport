@@ -21,7 +21,8 @@ import {
   MdTextFields,
   MdFormatListNumbered,
   MdPeople,
-  MdExpandMore
+  MdExpandMore,
+  MdMenuBook
 } from "react-icons/md";
 
 const Header = () => {
@@ -31,10 +32,11 @@ const Header = () => {
   const getNavLinks = () => {
     if (user?.role === "Head") {
       return [
-        { name: "Уч. года", href: "/Years", icon: MdSchool },
-        { name: "Направленности", href: "/Directions", icon: MdCategory },
+        { name: "Уч. годы", href: "/Years", icon: MdSchool },
+        { name: "Направления", href: "/Directions", icon: MdCategory },
         { name: "Термины", href: "/Rules/Words", icon: MdTextFields },
         { name: "Разделы", href: "/Rules/Sections", icon: MdFormatListNumbered },
+        { name: "Программы", href: "/Programs", icon: MdMenuBook },
       ]
     }
     else if (user?.role === "Admin") {
@@ -45,7 +47,7 @@ const Header = () => {
     else if (user?.role === "Teacher")
     {
       return [
-        { name: "Учебные года", href: "/EduYears", icon: MdSchool },
+        { name: "Учебные годы", href: "/EduYears", icon: MdSchool },
       ]
     }
     else if (user?.role === "Methodist")

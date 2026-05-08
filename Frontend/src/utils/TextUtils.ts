@@ -24,13 +24,14 @@ export const GetStatusTypeName = (status: ProgramStatuses) => {
     switch (status) {
       case 0: return 'Создана';
       case 1: return 'Готова к проверке';
-      case 2: return 'Проверяется';
+      case 2: return 'На проверке';
       case 3: return 'Проверена';
       case 4: return 'На исправлении';
       case 5: return 'Исправлена';
       case 6: return 'Готова к подписанию';
       case 7: return 'Удалена';
       case 8: return 'Подписана';
+      case 9: return 'Нужно исправление';
       default: return 'Неизвестно';
     }
 }
@@ -47,3 +48,4 @@ export const FormatDateTime = (isoDate: string): string => {
     
     return `${day}.${month}.${year} ${hours}:${minutes}`
 }
+

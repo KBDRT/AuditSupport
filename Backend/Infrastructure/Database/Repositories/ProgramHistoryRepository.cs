@@ -1,9 +1,6 @@
 ﻿using Application.Abstractions.Repositories;
 using Domain.Entities.ProgramContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Database.Repositories
 {
@@ -11,7 +8,10 @@ namespace Infrastructure.Database.Repositories
     {
         public async Task<List<ProgramHistory>> GetByProgramId(Guid programId, CancellationToken cancellationToken = default)
         {
-            return await _context.ProgramHistories.Where(x => x.ProgramId == programId).ToListAsync(cancellationToken); 
+            return await _context.ProgramHistories.Where(x => x.ProgramId == programId)
+                                                  .Include(x => x.User)
+                                                  .OrderBy(x => x.Date)
+                                                  .ToListAsync(cancellationToken); 
         }
     }
 }

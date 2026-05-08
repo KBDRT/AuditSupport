@@ -1,9 +1,10 @@
-import { Table, Box,  Center,  Spinner, Badge} from "@chakra-ui/react"
+import { Table, Box, Center, Spinner, Badge, VStack, Icon } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
-import type {  UpdateYearRequest} from "@/api/models";
+import type { UpdateYearRequest } from "@/api/models";
 import { FixDialog } from "@/utils/DialogFix";
 import YearUpdate from "./YearUpdate";
 import { useYearsStore } from "@/stores/YearsStore";
+import { MdLock, MdLockOpen } from "react-icons/md";
 
 const YearsTable = () => {
   const { items, fetch, loading } = useYearsStore()
@@ -23,38 +24,37 @@ const YearsTable = () => {
   }
 
   return (
-    <>
-
+    <VStack align="stretch" gap={4}>
       <Box 
         ref={tableRef}
-        overflowX="auto" 
-        maxW="100%"
+        overflowX="auto"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="gray.200"
+        bg="white"
       >
-
         <Table.Root 
           size="sm" 
           interactive 
           variant="outline" 
           showColumnBorder
           w="100%"
-          mt="2"
-          borderWidth="1px"
-          minW="800px"  
+          borderWidth="0"
         >
           <Table.Header>
-            <Table.Row>
+            <Table.Row bg="gray.50">
+              <Table.ColumnHeader w="140px" textAlign="center">Статус</Table.ColumnHeader>
               <Table.ColumnHeader w="200px">Учебный год</Table.ColumnHeader>
-              <Table.ColumnHeader w="250px">Комментарий</Table.ColumnHeader>
-              <Table.ColumnHeader w="100px">Статус</Table.ColumnHeader>
+              <Table.ColumnHeader>Комментарий</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
 
           {loading ? (
             <Table.Body>
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center" h="200px">
+                <Table.Cell colSpan={3} textAlign="center" h="200px">
                   <Center>
-                    <Spinner size="xl" color="blue"/>
+                    <Spinner size="xl" color="blue" />
                   </Center>
                 </Table.Cell>
               </Table.Row>
@@ -62,7 +62,7 @@ const YearsTable = () => {
           ) : items.length === 0 ? (
             <Table.Body>
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center" color="gray.500" h="200px">
+                <Table.Cell colSpan={3} textAlign="center" color="gray.500" h="200px">
                   Нет данных
                 </Table.Cell>
               </Table.Row>
@@ -84,28 +84,36 @@ const YearsTable = () => {
                   style={{ cursor: "pointer" }}
                   bg={selectedItem?.yearId === item.id ? "blue.50" : undefined}
                   _hover={{ bg: "gray.50" }}
+                  transition="all 0.2s"
                 >
-                  <Table.Cell w="200px" verticalAlign="middle">
-                    {item.period}
-                  </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
-                    {item.description}
-                  </Table.Cell>
-
-                  <Table.Cell w="100px" verticalAlign="middle" textAlign="center">
+                  
+                  <Table.Cell verticalAlign="middle" textAlign="center">
                     <Center>
                       <Badge 
                         colorPalette={item.isOpened ? "green" : "red"}
-                        variant="solid"
+                        fontSize="12px"
                         borderRadius="full"
-                        px={4}
-                        py={1}
+                        px={3}
+                        py={1.5}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
                       >
+                        <Icon as={item.isOpened ? MdLockOpen : MdLock} boxSize="12px" />
                         {item.isOpened ? 'Открыт' : 'Закрыт'}
                       </Badge>
                     </Center>
-                </Table.Cell>
+                  </Table.Cell>
+
+                  <Table.Cell verticalAlign="middle" fontWeight="500">
+                    {item.period}
+                  </Table.Cell>
+
+                  <Table.Cell verticalAlign="middle" color="gray.600">
+                    {item.description || "—"}
+                  </Table.Cell>
+
                 </Table.Row>
               ))}
             </Table.Body>
@@ -118,10 +126,10 @@ const YearsTable = () => {
           open={isOpenUpdate}
           item={selectedItem}
           isOpened={selectedOpened}
-          onClose={handleClose} />
+          onClose={handleClose}
+        />
       )}
-
-    </>
+    </VStack>
   )
 }
 

@@ -3,6 +3,7 @@ import type { AxiosError } from "axios"
 import { axiosInstance } from "./axiosInstanse";
 import { getEduProgram } from "@/api/edu-program/edu-program";
 import type { ChangeProgramStatusCommand, ShortCheckErrorDTO} from "@/api/models";
+import type { ProgramHistoryDTO } from "@/api/models/programHistoryDTO";
 
 const api = getEduProgram(axiosInstance);
 
@@ -42,3 +43,19 @@ export const ChangeStatus = async (request: ChangeProgramStatusCommand) => {
   return false;
 }
 
+export const GetHistory = async (programId: string): Promise<ProgramHistoryDTO[]> => 
+{
+    try {
+      const response = await api.getEduProgramHistory(programId)
+      if (response.status == 200)
+      {
+        return response.data;
+      }
+    }
+    catch (error)
+    {
+      ShowError(error as AxiosError)
+    }
+
+    return [];
+}

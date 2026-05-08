@@ -1,9 +1,10 @@
-import { Table, Box,  Center,  Spinner} from "@chakra-ui/react"
+import { Table, Box, Center, Spinner, VStack, HStack, Icon, Text, Container, Flex, Badge } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
-import type {  UpdateDirectionRequest} from "@/api/models";
+import type { UpdateDirectionRequest } from "@/api/models";
 import { FixDialog } from "@/utils/DialogFix";
 import { useDirectionsStore } from "@/stores/DirectionsStore";
 import DirectionUpdate from "./DirectionUpdate";
+import { MdInfo, MdCategory } from "react-icons/md";
 
 const DirectionsTable = () => {
   const { items, fetch, loading } = useDirectionsStore()
@@ -22,37 +23,36 @@ const DirectionsTable = () => {
   }
 
   return (
-    <>
-
+    <VStack align="stretch" gap={4}>
       <Box 
         ref={tableRef}
-        overflowX="auto" 
-        maxW="100%"
+        overflowX="auto"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="gray.200"
+        bg="white"
       >
-
         <Table.Root 
           size="sm" 
           interactive 
           variant="outline" 
           showColumnBorder
           w="100%"
-          mt="2"
-          borderWidth="1px"
-          minW="800px"  
+          borderWidth="0"
         >
           <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader w="200px">Название</Table.ColumnHeader>
-              <Table.ColumnHeader w="250px">Комментарий</Table.ColumnHeader>
+            <Table.Row bg="gray.50">
+              <Table.ColumnHeader w="400px">Название</Table.ColumnHeader>
+              <Table.ColumnHeader>Комментарий</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
 
           {loading ? (
             <Table.Body>
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center" h="200px">
+                <Table.Cell colSpan={2} textAlign="center" h="200px">
                   <Center>
-                    <Spinner size="xl" color="blue"/>
+                    <Spinner size="xl" color="blue" />
                   </Center>
                 </Table.Cell>
               </Table.Row>
@@ -60,7 +60,7 @@ const DirectionsTable = () => {
           ) : items.length === 0 ? (
             <Table.Body>
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center" color="gray.500" h="200px">
+                <Table.Cell colSpan={2} textAlign="center" color="gray.500" h="200px">
                   Нет данных
                 </Table.Cell>
               </Table.Row>
@@ -81,13 +81,17 @@ const DirectionsTable = () => {
                   style={{ cursor: "pointer" }}
                   bg={selectedItem?.directionId === item.id ? "blue.50" : undefined}
                   _hover={{ bg: "gray.50" }}
+                  transition="all 0.2s"
                 >
-                  <Table.Cell w="200px" verticalAlign="middle">
-                    {item.name}
+                  <Table.Cell verticalAlign="middle" fontWeight="500">
+                    <HStack gap={2}>
+                      {/* <Icon as={MdCategory} color="blue.500" boxSize="16px" /> */}
+                      <Text>{item.name}</Text>
+                    </HStack>
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
-                    {item.description}
+                  <Table.Cell verticalAlign="middle" color="gray.600">
+                    {item.description || "—"}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -100,10 +104,10 @@ const DirectionsTable = () => {
         <DirectionUpdate 
           open={isOpenUpdate}
           item={selectedItem}
-          onClose={handleClose} />
+          onClose={handleClose}
+        />
       )}
-
-    </>
+    </VStack>
   )
 }
 

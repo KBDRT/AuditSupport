@@ -18,5 +18,6 @@ export const ProgramStatuses = {
   ReadyToApprove: 6,
   Deleted: 7,
   Approved: 8,
+  NeedChanges: 9
 } as const;
 

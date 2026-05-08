@@ -3,6 +3,7 @@ using Application.Abstractions.Repositories;
 using Application.Common;
 using Application.DTO.Common;
 using Application.DTO.Years;
+using Application.Helpers.Abstractions;
 using Application.Services.Definitions.CRUDServices;
 using CSharpFunctionalExtensions;
 using Domain.Entities.References;
@@ -73,9 +74,11 @@ namespace Application.Services.Implementations.CRUDServices
 
         public async Task<Result<List<EduYear>, ServiceError>> Get(CancellationToken cancellationToken)
         {
-            var directions = await _repository.GetAll(cancellationToken) ?? [];
+            var years = await _repository.GetAll(cancellationToken) ?? [];
 
-            return Result.Success<List<EduYear>, ServiceError>(directions);
+            years = years.OrderByDescending(x => x.StartYear).ToList();
+
+            return Result.Success<List<EduYear>, ServiceError>(years);
         }
 
         public async Task<UnitResult<ServiceError>> NotificateUsers(Guid yearId, CancellationToken cancellationToken)

@@ -1,12 +1,11 @@
-import { Table, Box,  Center, Badge, Spinner} from "@chakra-ui/react"
+import { Table, Box, Center, Badge, Spinner, VStack } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
 import { useUsersStore } from "@/stores/UsersStore";
-import type {  UpdateUserRequest } from "@/api/models";
+import type { UpdateUserRequest } from "@/api/models";
 import FilterTable from "./FilterPanel";
 import { GetRoleName } from "@/utils/TextUtils";
 import UserUpdate from "./UserUpdate";
 import { FixDialog } from "@/utils/DialogFix";
-
 
 const UsersTable = () => {
   const { items, fetchUsers, loading } = useUsersStore()
@@ -26,32 +25,32 @@ const UsersTable = () => {
   }
 
   return (
-    <>
+    <VStack align="stretch" gap={4}>
+      <FilterTable />
 
       <Box 
         ref={tableRef}
-        overflowX="auto" 
-        maxW="100%"
+        overflowX="auto"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="gray.200"
+        bg="white"
       >
-        <FilterTable />
-
         <Table.Root 
           size="sm" 
           interactive 
           variant="outline" 
           showColumnBorder
           w="100%"
-          mt="3"
-          borderWidth="1px"
-          minW="800px"  
+          borderWidth="0"
         >
           <Table.Header>
-            <Table.Row>
+            <Table.Row bg="gray.50">
               <Table.ColumnHeader w="200px">ФИО</Table.ColumnHeader>
-              <Table.ColumnHeader w="250px">Логин</Table.ColumnHeader>
+              <Table.ColumnHeader w="200px">Логин</Table.ColumnHeader>
               <Table.ColumnHeader w="250px">Email</Table.ColumnHeader>
-              <Table.ColumnHeader w="150px">Роль</Table.ColumnHeader>
-              <Table.ColumnHeader w="150px" textAlign="center">Статус</Table.ColumnHeader>
+              <Table.ColumnHeader w="120px">Роль</Table.ColumnHeader>
+              <Table.ColumnHeader w="100px" textAlign="center">Статус</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
 
@@ -94,30 +93,33 @@ const UsersTable = () => {
                   style={{ cursor: "pointer" }}
                   bg={selectedItem?.userId === item.id ? "blue.50" : undefined}
                   _hover={{ bg: "gray.50" }}
+                  transition="all 0.2s"
                 >
-                  <Table.Cell w="200px" verticalAlign="middle">
+                  <Table.Cell verticalAlign="middle" fontWeight="500">
                     {`${item.initials?.surname || ''} ${item.initials?.name || ''} ${item.initials?.patronymic || ''}`.trim() || '—'}
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
+                  <Table.Cell verticalAlign="middle" color="gray.600">
                     {item.login || '—'}
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
+                  <Table.Cell verticalAlign="middle" color="gray.600">
                     {item.email || '—'}
                   </Table.Cell>
 
-                  <Table.Cell w="150px" verticalAlign="middle">
-                    {GetRoleName(item.role ?? 0)}
+                  <Table.Cell verticalAlign="middle">
+                    <Badge colorPalette="blue" fontSize="11px" borderRadius="full" px={2}>
+                      {GetRoleName(item.role ?? 0)}
+                    </Badge>
                   </Table.Cell>
 
-                  <Table.Cell w="150px" verticalAlign="middle" textAlign="center">
+                  <Table.Cell verticalAlign="middle" textAlign="center">
                     <Center>
                       <Badge 
                         colorPalette={item.isActive ? "green" : "red"}
-                        variant="solid"
+                        fontSize="11px"
                         borderRadius="full"
-                        px={3}
+                        px={2}
                         py={1}
                       >
                         {item.isActive ? 'Активен' : 'Неактивен'}
@@ -138,8 +140,7 @@ const UsersTable = () => {
           userLogin={selectedLogin}
           onClose={handleClose} />
       )}
-
-    </>
+    </VStack>
   )
 }
 

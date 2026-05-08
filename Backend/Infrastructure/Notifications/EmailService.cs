@@ -1,5 +1,4 @@
 ﻿using Application.Abstractions.Notifications;
-using Domain.Entities.References;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
@@ -10,37 +9,34 @@ namespace Infrastructure.Notifications
     {
         private readonly IConfiguration _config;
 
+        private string _account;
+        private string _password;
+
         public EmailService(IConfiguration config)
         {
             _config = config;
         }
 
-        public async Task Notificate(User user, string message, string subject)
+        private void Configurate()
         {
-            using var emailMessage = new MimeMessage();
+            _account = _config["EmailAccount"] ?? string.Empty;
+            _password = _config["EmailPassword"] ?? string.Empty;
 
-            var acc = _config["EmailAccount"] ?? string.Empty;
-            var password = _config["EmailPassword"] ?? string.Empty;
-
-            if (acc == string.Empty && password == string.Empty)
+            if (String.IsNullOrWhiteSpace(_account) || String.IsNullOrWhiteSpace(_password))
             {
-                return;
+                throw new Exception();
             }
+        }
 
-            emailMessage.From.Add(new MailboxAddress("Аудит", acc));
-            emailMessage.To.Add(new MailboxAddress("", user.Email));
-            emailMessage.Subject = subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-            {
-                Text = message
-            };
+        public async Task Notificate(MimeMessage mimeMessage)
+        {
+            Configurate();
 
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync("smtp.yandex.ru", 465, true);
-                await client.AuthenticateAsync(acc, password);
-                await client.SendAsync(emailMessage);
-
+                await client.AuthenticateAsync(_account, _password);
+                await client.SendAsync(mimeMessage);
                 await client.DisconnectAsync(true);
             }
         }

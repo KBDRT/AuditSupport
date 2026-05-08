@@ -25,6 +25,7 @@ import type {
   ShortYearDTO,
   UpdateProgramCommand
 } from '../models';
+import type { ProgramHistoryDTO } from '../models/programHistoryDTO';
 
 
 
@@ -119,6 +120,13 @@ const getEduProgramYearsTeacherId = (
       `/EduProgram/Years/${teacherId}`,options
     );
   }
+  const getEduProgramHistory = (
+    programId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ProgramHistoryDTO[]>> => {
+    return axiosInstance.get(
+      `/EduProgram/History/${programId}`,options
+    );
+  }
 const getEduProgramErrorsCheckId = (
     checkId: string, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<ShortCheckErrorDTO[]>> => {
@@ -126,7 +134,7 @@ const getEduProgramErrorsCheckId = (
       `/EduProgram/Errors/${checkId}`,options
     );
   }
-return {postEduProgram,getEduProgram,deleteEduProgram,patchEduProgram,postEduProgramVersion,getEduProgramVersionFileVersionId,getEduProgramProgramId,getEduProgramVersionVersionId,patchEduProgramStatus,getEduProgramYearsTeacherId,getEduProgramErrorsCheckId}};
+return {postEduProgram,getEduProgram,deleteEduProgram,patchEduProgram,postEduProgramVersion,getEduProgramVersionFileVersionId,getEduProgramProgramId,getEduProgramVersionVersionId,patchEduProgramStatus,getEduProgramYearsTeacherId,getEduProgramHistory,getEduProgramErrorsCheckId}};
 export type PostEduProgramResult = AxiosResponse<CreateOperationResponseDTO>
 export type GetEduProgramResult = AxiosResponse<EduProgramShortDTO[]>
 export type DeleteEduProgramResult = AxiosResponse<unknown>
@@ -137,4 +145,5 @@ export type GetEduProgramProgramIdResult = AxiosResponse<EduProgramDTO>
 export type GetEduProgramVersionVersionIdResult = AxiosResponse<unknown>
 export type PatchEduProgramStatusResult = AxiosResponse<unknown>
 export type GetEduProgramYearsTeacherIdResult = AxiosResponse<ShortYearDTO[]>
+export type getEduProgramHistoryResult = AxiosResponse<ProgramHistoryDTO[]>
 export type GetEduProgramErrorsCheckIdResult = AxiosResponse<ShortCheckErrorDTO[]>

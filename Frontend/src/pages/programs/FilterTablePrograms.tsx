@@ -10,7 +10,7 @@ import { useProgramsStore } from "@/stores/ProgramsStore"
 const FilterTablePrograms = () => {
   const { setYear, fetch } = useProgramsStore()
   const { fetch: fetchYears, items: years } = useYearsStore()
-  const { fetch: fetchDirections, items: directions } = useDirectionsStore()
+  const { fetch: fetchDirections, items: directionsItems } = useDirectionsStore()
   
   const [selectedYear, setSelectedYear] = useState<string[]>([])
   const [selectedDirections, setSelectedDirections] = useState<string[]>([])
@@ -26,36 +26,40 @@ const FilterTablePrograms = () => {
 
   const collectionDirections = useMemo(() => {
     return createListCollection({
-      items: directions ?? [],
+      items: directionsItems ?? [],
       itemToString: (direction) => direction.name || "",
       itemToValue: (direction) => direction.id || "", 
     })
-  }, [directions])
+  }, [directionsItems])
 
   useEffect(() => {
     const init = async () => {
       await fetchYears()
       await fetchDirections()
-    
     }
-    
     init()
-  }, []) 
+  }, [])
 
   useEffect(() => {
-    const init = async () => {
-      if (collectionYears.items.length > 0)
-      {
-        const firstYearId = collectionYears.items[0].id ?? ""
-        setSelectedYear([firstYearId])
-        setYear(firstYearId)
-        await fetch()
-      }
+    if (collectionYears.items.length > 0) {
+      const firstYearId = collectionYears.items[0].id ?? ""
+      setSelectedYear([firstYearId])
+      setYear(firstYearId)
+      fetch()
     }
-    
-    init()
-  }, [collectionYears.items.length]) 
+  }, [collectionYears.items.length])
 
+  // useEffect(() => {
+  //   if (directions && directions.length > 0) {
+  //     setSelectedDirections(directions)
+  //   }
+  // }, [directions])
+
+  // useEffect(() => {
+  //   if (status && status.length > 0) {
+  //     setSelectedStatus(status)
+  //   }
+  // }, [status])
 
   const handleChangeYear = async (value: string[]) => {
     const yearId = value[0]
@@ -66,17 +70,21 @@ const FilterTablePrograms = () => {
 
   const handleChangeDirections = (value: string[]) => {
     setSelectedDirections(value)
-  
+    // setDirections(value)
+    fetch()
   }
 
   const handleChangeStatus = (value: string[]) => {
     setSelectedStatus(value)
- 
+    // setStatus(value)
+    fetch()
   }
 
   const handleClearFilter = () => {
     setSelectedDirections([])
     setSelectedStatus([])
+    // setDirections([])
+    // setStatus([])
 
     if (collectionYears.items.length > 0) {
       const firstYearId = collectionYears.items[0].id ?? ""
@@ -89,7 +97,6 @@ const FilterTablePrograms = () => {
   return (
     <Box>
       <HStack gap={3}>
-  
         <Select.Root
           collection={collectionYears}
           size="sm"

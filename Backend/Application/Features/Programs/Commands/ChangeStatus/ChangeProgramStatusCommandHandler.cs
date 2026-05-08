@@ -2,6 +2,7 @@
 using Application.Common;
 using CSharpFunctionalExtensions;
 using Domain.Entities.ProgramContext;
+using Domain.Enums;
 using MediatR;
 
 namespace Application.Features.Programs.Commands.ChangeStatus
@@ -10,12 +11,15 @@ namespace Application.Features.Programs.Commands.ChangeStatus
     {
         private readonly IBaseRepository<EduProgram> _programRepository;
         private readonly IProgramVersionRepository _versionRepository;
+        private readonly IBaseRepository<ProgramHistory> _historyRepository;
 
         public ChangeProgramStatusCommandHandler(IBaseRepository<EduProgram> programRepository, 
-                                                 IProgramVersionRepository versionRepository)
+                                                 IProgramVersionRepository versionRepository,
+                                                 IBaseRepository<ProgramHistory> historyRepository)
         {
             _programRepository = programRepository;
             _versionRepository = versionRepository;
+            _historyRepository = historyRepository;
         }
 
         public async Task<UnitResult<ServiceError>> Handle(ChangeProgramStatusCommand request, CancellationToken cancellationToken)
@@ -31,17 +35,33 @@ namespace Application.Features.Programs.Commands.ChangeStatus
                 program.ProgramStatus = request.NewStatus;
                 await _programRepository.Update(program, cancellationToken, SaveToDb.Deferred);
 
-                if (request.VersionId != null)
+                if (request.NewStatus == ProgramStatuses.ReadyToCheck)
                 {
-                    await _versionRepository.SetUnuseForAll(request.ProgramId, cancellationToken);
-
-                    var version = await _versionRepository.GetById((Guid)request.VersionId, cancellationToken);
-                    if (version != null)
+                    if (request.VersionId != null)
                     {
-                        version.IsUseForReview = true;
-                        await _versionRepository.Update(version, cancellationToken, SaveToDb.Deferred);
+                        await _versionRepository.SetUnuseForAll(request.ProgramId, cancellationToken);
+
+                        var version = await _versionRepository.GetById((Guid)request.VersionId, cancellationToken);
+                        if (version != null)
+                        {
+                            version.IsUseForReview = true;
+                            await _versionRepository.Update(version, cancellationToken, SaveToDb.Deferred);
+                        }
                     }
                 }
+
+                ProgramHistory newHistory = new()
+                {
+                    Id = Guid.NewGuid(),
+                    NewStatus = program.ProgramStatus,
+                    Program = program,
+                    SourceId = program.Id,
+                    SourceType = HistorySourceType.Program,
+                    UserId = program.TeacherId
+                };
+
+                await _historyRepository.AddNew(newHistory, cancellationToken, SaveToDb.Deferred);
+
 
                 await _programRepository.SaveChanges(cancellationToken);
             }

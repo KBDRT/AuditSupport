@@ -5,6 +5,8 @@ using Application.Abstractions.Repositories.Builders;
 using Application.Abstractions.Settings;
 using Application.Features.Programs.Commands.Create;
 using Application.Helpers;
+using Application.Helpers.Abstractions;
+using Application.Helpers.Definitions;
 using Application.MappingProfiles;
 using Application.Services.Definitions.CRUDServices;
 using Application.Services.Definitions.FileCheckServices;
@@ -43,8 +45,7 @@ namespace Presentation.Extensions
             _configuration = configuration;
             _logger = services.BuildServiceProvider()?.GetService<ILogger<Program>>();
 
-            _services.Configure<AuthTokenSettings>(_configuration.GetSection("AuthenticationSettings"));
-            _services.Configure<MinioSettings>(_configuration.GetSection("MinioS3"));
+            AddSettings();
 
             _services.AddCors(options =>
             {
@@ -58,11 +59,6 @@ namespace Presentation.Extensions
                               .WithExposedHeaders("X-File-Name");
                     });
             });
-
-
-            //Response.Headers.Add("X-File-Name", encodedFileName);
-            //Response.Headers.Add("Access-Control-Expose-Headers", "X-File-Name");
-
 
             _services.AddSwaggerGen(c =>
             {
@@ -90,11 +86,25 @@ namespace Presentation.Extensions
             AddServices();
 
             _services.AddScoped<JwtGenerator>();
+            _services.AddScoped<IMimeHelper, MimeHelper>();
+
+            _services.AddAutoMapper(cfg => { }, typeof(RequestsProfile));
+            _services.AddAutoMapper(cfg => { }, typeof(UserProfile));
+            _services.AddAutoMapper(cfg => { }, typeof(ProgramProfile));
+            
+            _services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProgramCommand).Assembly));
+
+        }
+
+        private static void AddSettings()
+        {
+            _services.Configure<AuthTokenSettings>(_configuration.GetSection("AuthenticationSettings"));
+            _services.Configure<MinioSettings>(_configuration.GetSection("MinioS3"));
 
             _services.AddSingleton<IAuthTokenSettings>(provider =>
             {
                 var options = provider.GetRequiredService<IOptions<AuthTokenSettings>>();
-                return options.Value;  
+                return options.Value;
             });
 
             _services.AddSingleton<IMinioSettings>(provider =>
@@ -102,15 +112,6 @@ namespace Presentation.Extensions
                 var options = provider.GetRequiredService<IOptions<MinioSettings>>();
                 return options.Value;
             });
-
-
-            _services.AddAutoMapper(cfg => { }, typeof(RequestsProfile));
-            _services.AddAutoMapper(cfg => { }, typeof(UserProfile));
-            _services.AddAutoMapper(cfg => { }, typeof(ProgramProfile));
-            
-
-            _services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProgramCommand).Assembly));
-
         }
 
         private static void AddServices()

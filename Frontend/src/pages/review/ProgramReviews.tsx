@@ -1,49 +1,41 @@
-import {  Dialog, Portal, CloseButton, HStack, Text, VStack, Box, Icon, Button, Table, Link } from "@chakra-ui/react"
-import { useState, useEffect } from "react"
-import { MdAdd, MdCheckCircle, MdClose, MdContentCopy, MdError, MdInfo } from "react-icons/md";
+import {  Dialog, Portal, CloseButton, HStack, Text, VStack, Box, Icon, Button, Table } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { MdAdd,  MdClose,  MdInfo, MdVisibility } from "react-icons/md";
 import PageLoading from "@/components/common/PageLoading";
-import { ShowToast } from "@/components/common/Alert";
-import type { ShortReviewResponseDTO } from "@/api/models/shortReviewResponseDTO";
-import { GetReviewsForProgram } from "@/services/ReviewsService";
 import {   useNavigate } from "react-router-dom";
 import { useReviewsStore } from "@/stores/ReviewsStore";
-import { useUsersStore } from "@/stores/UsersStore";
 import { useAuthStore } from "@/stores/AuthStore";
 import { FormatDateTime } from "@/utils/TextUtils";
+import { ProgramStatuses, type EduProgramShortDTO } from "@/api/models";
 
 interface ProgramReviewsProps {
-  programId: string
+  program: EduProgramShortDTO
   onClose: () => void
 }
 
-const ProgramReviews = ({ programId, onClose}: ProgramReviewsProps) => {
+const ProgramReviews = ({ program, onClose}: ProgramReviewsProps) => {
   const navigate = useNavigate()
   const {items : reviews, fetch, loading, addItem} = useReviewsStore()
   const {user} = useAuthStore()
+
  
   useEffect(() => {
     const load = async () => {
-      await fetch(programId)
-      // if (programId) {
-      //   setLoading(true)
-      //   const errors = await GetReviewsForProgram(programId)
-      //   if (errors.length > 0)
-      //   {
-      //     setFormData(errors)
-      //   }
-      //   setLoading(false)
-      // }
+      await fetch(program?.id || "")
     };
     load();
-  }, [programId]);
+  }, [program?.id]);
 
 
   
   const handleAddReview = async() => {
-    await addItem({auditorId: user?.userId, programId: programId})
-
-
-    // navigate(`/Review/${programId}`)
+    const id = await addItem({auditorId: user?.userId, programId: program?.id})
+    if (id.length > 0)
+    {
+      onClose()
+      const reviewId = id
+      navigate(`/Review/${reviewId}`)
+    }
   };
 
 
@@ -66,7 +58,7 @@ const ProgramReviews = ({ programId, onClose}: ProgramReviewsProps) => {
             bg="white"
             borderRadius="2xl"
             boxShadow="2xl"
-            maxW="600px"
+            maxW="800px"
             w="full"
           >
             <Dialog.Header borderBottom="1px solid" borderColor="gray.100" py={4} px={6}>
@@ -105,10 +97,11 @@ const ProgramReviews = ({ programId, onClose}: ProgramReviewsProps) => {
                   <Table.Header>
                     <Table.Row bg="gray.50">
                       {/* <Table.ColumnHeader w="60px" textAlign="center">№ п/п</Table.ColumnHeader> */}
-                      <Table.ColumnHeader w="150px">Дата и время создания</Table.ColumnHeader>
-                      <Table.ColumnHeader w="200px" textAlign="center">Статус проверки</Table.ColumnHeader>
-                      <Table.ColumnHeader w="200px" textAlign="center">Результат проверки</Table.ColumnHeader>
-                      <Table.ColumnHeader w="180px" textAlign="center">Перейти</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="100px">Дата и время создания</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="250px" textAlign="center">Аудитор</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="100px" textAlign="center">Статус проверки</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="100px" textAlign="center">Результат проверки</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="100px"  textAlign="center">Действие</Table.ColumnHeader>
                     </Table.Row>
                   </Table.Header>
     
@@ -125,10 +118,27 @@ const ProgramReviews = ({ programId, onClose}: ProgramReviewsProps) => {
                   // transition="all 0.2s" 
                   key={review.id}>
                   {/* <Table.Cell textAlign="center" fontWeight="500">{version.}</Table.Cell> */}
-                  <Table.Cell>{FormatDateTime(review.createdDate || "")}</Table.Cell>
-                  <Table.Cell>{review.isFinished ? "Завершена" : "В работе"}</Table.Cell>
-                  <Table.Cell>{review.isSuccess ? "Замечаний нет" : "Есть замечения"}</Table.Cell>
-                  <Table.Cell><Link href={`/Review/${review.id}`}>ГО</Link></Table.Cell>
+                  <Table.Cell minW="100px">{FormatDateTime(review.createdDate || "")}</Table.Cell>
+                  <Table.Cell minW="250px">{review.auditor}</Table.Cell>   
+                  <Table.Cell minW="100px">{review.isFinished ? "Завершена" : "В работе"}</Table.Cell>
+                  <Table.Cell minW="100px">{review.isSuccess ? "Замечаний нет" : "Есть замечания"}</Table.Cell>
+
+                  <Table.Cell minW="100px">
+                       <Button
+                          variant="ghost"
+                          size="xs"
+                          colorPalette="gray"
+                          onClick={() => {  navigate(`/Review/${review.id}`) }}
+                          _hover={{ bg: "gray.100" }}
+                        >
+                          <HStack gap={1}>
+                            <Icon as={MdVisibility} boxSize="14px" />
+                            <Text fontSize="12px">Перейти</Text>
+                          </HStack>
+                        </Button>
+                  </Table.Cell>
+
+
                   {/* <Table.Cell color="gray.600">{version.changes || "—"}</Table.Cell>
                   <Table.Cell>
                     <HStack gap={2} justify="center">
@@ -166,7 +176,7 @@ const ProgramReviews = ({ programId, onClose}: ProgramReviewsProps) => {
 
                   ))}
 
-                                    </Table.Body> 
+                </Table.Body> 
                 </Table.Root>
                 </VStack>
               
@@ -220,6 +230,7 @@ const ProgramReviews = ({ programId, onClose}: ProgramReviewsProps) => {
                 colorPalette="blue"
                 size="sm"
                 onClick={handleAddReview}
+                disabled={program?.programStatus != ProgramStatuses.ReadyToCheck}
                 _hover={{ bg: "gray.100", transform: "translateY(-1px)" }}
               >
                 <HStack gap={2}>

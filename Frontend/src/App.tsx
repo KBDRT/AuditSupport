@@ -13,10 +13,11 @@ import WordRulesPage from './pages/wordRules/WordRulesPage';
 import SectionRulesPage from './pages/sectionRules/SectionRulesPage';
 import EduYearsPage from './pages/eduYears/EduYearsPage';
 import './index.css'; 
-import EduProgram from './pages/program/EduProgram';
 import { Box } from '@chakra-ui/react';
 import ProgramsPage from './pages/programs/ProgramsPage';
 import ReviewPage from './pages/review/ReviewPage';
+import ProgramPage from './pages/program/ProgramPage';
+import ProgramsBoard from './pages/board/ProgramsBoard';
 
 
 function App() {
@@ -67,16 +68,25 @@ function App() {
             <Route element={<MainLayout />}> 
               <Route path="/EduYears" element={<EduYearsPage />} />
                {/* <Route path="/Test" element={<Test />} /> */}
-              <Route path="/EduProgram/:id" element={<EduProgram />} />
+              <Route path="/EduProgram/:id" element={<ProgramPage />} />
             </Route> 
           </Route>
 
-           <Route element={<PrivateRoute allowedRoles={['Methodist']} />}>
+          <Route element={<PrivateRoute allowedRoles={['Methodist']} />}>
+            <Route element={<MainLayout />}> 
+              <Route path="/Board" element={<ProgramsBoard />} />
+              {/* <Route path="/Programs" element={<ProgramsPage />} />
+              <Route path="/Review/:reviewId" element={<ReviewPage />} /> */}
+            </Route> 
+          </Route>
+
+          <Route element={<PrivateRoute allowedRoles={['Methodist', "Head"]} />}>
             <Route element={<MainLayout />}> 
               <Route path="/Programs" element={<ProgramsPage />} />
               <Route path="/Review/:reviewId" element={<ReviewPage />} />
             </Route> 
           </Route>
+
                 
           <Route path="*" element={<Navigate to="/login" replace />} />
 

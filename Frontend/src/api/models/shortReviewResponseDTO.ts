@@ -8,7 +8,7 @@ export interface ShortReviewResponseDTO {
   id?: string;
   auditor: string;
   createdDate: string;
-  isFinished?: boolean;
-  isSuccess?: boolean;
+  isFinished: boolean;
+  isSuccess: boolean;
 }
 

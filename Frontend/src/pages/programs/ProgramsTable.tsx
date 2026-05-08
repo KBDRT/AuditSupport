@@ -1,72 +1,62 @@
-import { Table, Box,  Center, Badge, Spinner, Button} from "@chakra-ui/react"
+import { Table, Box, Center, Spinner, Button, HStack, Icon, Text, VStack } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react";
-import type {  UpdateUserRequest } from "@/api/models";
+import { ProgramStatuses, type EduProgramShortDTO, type UpdateUserRequest } from "@/api/models";
 import { FixDialog } from "@/utils/DialogFix";
 import FilterTablePrograms from "./FilterTablePrograms";
 import { useProgramsStore } from "@/stores/ProgramsStore";
-import { GetStatusTypeName } from "@/utils/TextUtils";
 import ProgramReviews from "../review/ProgramReviews";
-
+import { MdVisibility, MdApproval } from "react-icons/md";
+import { useAuthStore } from "@/stores/AuthStore";
+import StatusBadge from "@/components/common/StatusBadge";
 
 const ProgramsTable = () => {
   const { items, fetch, loading } = useProgramsStore()
-  const [selectedLogin, setSelectedLogin] = useState("") 
-  const [selectedItem, setSelectedItem] = useState<UpdateUserRequest | null>(null)
-
+  const [selectedItem] = useState<UpdateUserRequest | null>(null)
   const tableRef = useRef<HTMLDivElement>(null)
-
- const [programId, setProgramId] = useState<string>()
+  const [program, setProgram] = useState<EduProgramShortDTO>()
   const [isOpenReviews, setIsOpenReviews] = useState(false)
+  const {user} = useAuthStore()
 
   const handleCloseDialog = () => {
-    // onChangeCreatePage(true)
     setIsOpenReviews(false);
     FixDialog()
   }
-
 
   useEffect(() => {
     fetch();
   }, []);
 
 
-
-
-  const handleOpenReview = (programId: string) => {
-    // setIsOpenUpdate(false)
-    // setSelectedItem(null)
-    // FixDialog()
-  }
-
-
   return (
-    <>
+    <VStack align="stretch" gap={4}>
+      <FilterTablePrograms />
 
       <Box 
         ref={tableRef}
-        overflowX="auto" 
-        maxW="100%"
+        overflowX="auto"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="gray.200"
+        bg="white"
       >
-        <FilterTablePrograms />
-
         <Table.Root 
           size="sm" 
           interactive 
           variant="outline" 
           showColumnBorder
           w="100%"
-          mt="3"
-          borderWidth="1px"
-          minW="800px"  
+          borderWidth="0"
         >
           <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader w="200px">Название</Table.ColumnHeader>
-              <Table.ColumnHeader w="250px">Педагог</Table.ColumnHeader>
-              <Table.ColumnHeader w="250px">Направление</Table.ColumnHeader>
-              {/* <Table.ColumnHeader w="150px">Роль</Table.ColumnHeader> */}
-              <Table.ColumnHeader w="150px" textAlign="center">Статус</Table.ColumnHeader>
-              <Table.ColumnHeader w="150px" textAlign="center">Действие</Table.ColumnHeader>
+            <Table.Row bg="gray.50">
+              <Table.ColumnHeader w="100px" textAlign="center" maxW="100px">Статус</Table.ColumnHeader>
+              <Table.ColumnHeader w="250px">Название</Table.ColumnHeader>
+              <Table.ColumnHeader w="200px">Педагог</Table.ColumnHeader>
+              <Table.ColumnHeader w="200px">Направление</Table.ColumnHeader>
+              <Table.ColumnHeader w="100px" textAlign="center">Проверки</Table.ColumnHeader>
+              {user?.role == "Head" &&
+                <Table.ColumnHeader w="100px" textAlign="center">Утверждение</Table.ColumnHeader>
+              }
             </Table.Row>
           </Table.Header>
 
@@ -75,7 +65,7 @@ const ProgramsTable = () => {
               <Table.Row>
                 <Table.Cell colSpan={5} textAlign="center" h="200px">
                   <Center>
-                    <Spinner size="xl" color="blue"/>
+                    <Spinner size="xl" color="blue" />
                   </Center>
                 </Table.Cell>
               </Table.Row>
@@ -93,61 +83,77 @@ const ProgramsTable = () => {
               {items.map((item) => (
                 <Table.Row 
                   key={item.id}
-                  // onDoubleClick={() => {
-                  //   setSelectedItem({
-                  //     email: item.email, 
-                  //     userId: item.id, 
-                  //     isActive: item.isActive, 
-                  //     name: item.initials?.name, 
-                  //     surname: item.initials?.surname,
-                  //     patronymic: item.initials?.patronymic,
-                  //     role: item.role
-                  //   } as UpdateUserRequest)
-                  //   setSelectedLogin(item.login ?? "")
-                  //   setIsOpenUpdate(true)
-                  // }}
                   style={{ cursor: "pointer" }}
                   bg={selectedItem?.userId === item.id ? "blue.50" : undefined}
                   _hover={{ bg: "gray.50" }}
+                  transition="all 0.2s"
                 >
-                  <Table.Cell w="200px" verticalAlign="middle">
+                  <Table.Cell verticalAlign="middle" textAlign="center" maxW="160px">
+                      {item?.programStatus != undefined && <StatusBadge status={item.programStatus} />}
+                    {/* <Center>
+                      <Badge
+                        colorPalette="blue"
+                        fontSize="12px"
+                        borderRadius="full"
+                        px={3}
+                        py={1.5}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        // w="auto"
+                      >
+                        {item?.programStatus != undefined && GetStatusTypeName(item.programStatus)}
+                      </Badge>
+                    </Center> */}
+                  </Table.Cell>
+
+                  <Table.Cell verticalAlign="middle" fontWeight="500">
                     {item.name || '—'}
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
+                  <Table.Cell verticalAlign="middle" color="gray.600">
                     {item.teacher || '—'}
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
+                  <Table.Cell verticalAlign="middle" color="gray.600">
                     {item.direction || '—'}
                   </Table.Cell>
 
-    
-
-
-                  {/* <Table.Cell w="150px" verticalAlign="middle">
-                    {GetRoleName(item.role ?? 0)}
-                  </Table.Cell> */}
-
-                  <Table.Cell w="150px" verticalAlign="middle" textAlign="center">
-                    <Center>
-                      <Badge 
-                        colorPalette="blue"
-                        // colorPalette={item.isActive ? "green" : "red"}
-                        variant="solid"
-                        borderRadius="full"
-                        px={3}
-                        py={1}
-                      >
-                        {item.programStatus && GetStatusTypeName(item.programStatus)}
-                        {/* {item.isActive ? 'Активен' : 'Неактивен'} */}
-                      </Badge>
-                    </Center>
+                  <Table.Cell verticalAlign="middle" textAlign="center">
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      colorPalette="gray"
+                      onClick={() => {setProgram(item); setIsOpenReviews(true)}}
+                      _hover={{ bg: "blue.50", transform: "translateY(-1px)" }}
+                      transition="all 0.2s"
+                    >
+                      <HStack gap={1}>
+                        <Icon as={MdVisibility} boxSize="14px" />
+                        <Text fontSize="12px">Просмотр</Text>
+                      </HStack>
+                    </Button>
                   </Table.Cell>
 
-                  <Table.Cell w="250px" verticalAlign="middle">
-                    <Button onClick={(e) => {setProgramId(item.id); setIsOpenReviews(true)}}>Проверка</Button>
+
+                    { user?.role == "Head" &&
+                           <Table.Cell verticalAlign="middle" textAlign="center">
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      colorPalette="gray"
+                      disabled={item.programStatus != ProgramStatuses.ReadyToApprove}
+                      // onClick={() => {setProgram(item); setIsOpenReviews(true)}}
+                      _hover={{ bg: "blue.50", transform: "translateY(-1px)" }}
+                      transition="all 0.2s"
+                    >
+                      <HStack gap={1}>
+                        <Icon as={MdApproval} boxSize="14px" />
+                        <Text fontSize="12px">Утвердить</Text>
+                      </HStack>
+                    </Button>
                   </Table.Cell>
+                    }
 
                 </Table.Row>
               ))}
@@ -158,13 +164,11 @@ const ProgramsTable = () => {
 
       {isOpenReviews && (
         <ProgramReviews
-          programId={programId || ""}
+          program={program || {}}
           onClose={handleCloseDialog}
         />
       )}
-
-
-    </>
+    </VStack>
   )
 }
 

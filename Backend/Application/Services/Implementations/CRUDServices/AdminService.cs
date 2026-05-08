@@ -3,7 +3,8 @@ using Application.Abstractions.Repositories;
 using Application.Common;
 using Application.DTO.Common;
 using Application.DTO.Users;
-using Application.Helpers;
+using Application.Helpers.Abstractions;
+using Application.Helpers.Definitions;
 using Application.Services.Definitions.CRUDServices;
 using AutoMapper;
 using CSharpFunctionalExtensions;
@@ -17,14 +18,17 @@ namespace Application.Services.Implementations.CRUDServices
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
         private readonly INotification _notificationService;
+        private readonly IMimeHelper _mimeHelper;
 
         public AdminService(IUserRepository repository,
                             IMapper mapper,
-                            INotification notificationService)
+                            INotification notificationService,
+                            IMimeHelper mimeHelper)
         {
             _repository = repository;
             _mapper = mapper;
             _notificationService = notificationService;
+            _mimeHelper = mimeHelper;
         }
 
         public async Task<Result<CreateOperationResponseDTO, ServiceError>> CreateUser(CreateUserDTO dto, CancellationToken cancellationToken)
@@ -38,8 +42,7 @@ namespace Application.Services.Implementations.CRUDServices
             var newUser = _mapper.Map<User>(dto);
             newUser.Id = Guid.NewGuid();
 
-
-            string password = string.Empty;
+            string password;
             if (dto.Password == null)
             {
                 password = PasswordGenerator.GeneratePassword(12, true);
@@ -49,13 +52,21 @@ namespace Application.Services.Implementations.CRUDServices
                 password = dto.Password;
             }
             
-            
-            var hashedPassword = new PasswordHasher<User>().HashPassword(newUser, password);
+            var hashedPassword = new PasswordHasher<User>().HashPassword(newUser, string.Empty);
             newUser.PasswordHashed = hashedPassword;
 
             var id = await _repository.AddNew(newUser, cancellationToken);
 
-            //await _notificationService.Notificate(newUser, $"Ваш пароль: {password}", "Тест");
+            List<string> emails = [];
+            emails.Add(newUser.Email);
+
+            var message = _mimeHelper.CreateMessage(emails, new(
+                $"Ваш пароль: {string.Empty}",
+                "Пароль",
+                "Система Аудита"
+            ));
+
+            await _notificationService.Notificate(message);
 
             return Result.Success<CreateOperationResponseDTO, ServiceError>(new(id)); 
         }
