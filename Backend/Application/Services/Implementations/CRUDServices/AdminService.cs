@@ -52,7 +52,7 @@ namespace Application.Services.Implementations.CRUDServices
                 password = dto.Password;
             }
             
-            var hashedPassword = new PasswordHasher<User>().HashPassword(newUser, string.Empty);
+            var hashedPassword = new PasswordHasher<User>().HashPassword(newUser, password);
             newUser.PasswordHashed = hashedPassword;
 
             var id = await _repository.AddNew(newUser, cancellationToken);

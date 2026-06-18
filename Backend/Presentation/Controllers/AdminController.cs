@@ -2,6 +2,7 @@
 using Application.DTO.Users;
 using Application.Services.Definitions.CRUDServices;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.Common;
 using Presentation.Contracts.User;
@@ -10,7 +11,8 @@ namespace Presentation.Controllers
 {
     [Route("[controller]/Users")]
     [ApiController]
-   
+    [Authorize(Policy = "RoleAdmin")]
+
     public class AdminController : BaseController
     {
         private readonly IAdminService _service;

@@ -15,6 +15,7 @@ using Application.Features.Programs.Quaries.GetProgramVersion;
 using Application.Features.Programs.Quaries.GetProgramVersionFile;
 using Domain.Entities.ProgramContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Contracts.EduPrograms;
 
@@ -49,11 +50,6 @@ namespace Presentation.Controllers
             {
                 return BadRequest("Empty file");
             }
-
-            //if (Path.GetExtension(file.FileName) != ".docx")
-            //{
-            //    return BadRequest("Incorrect format");
-            //}
 
             using var stream = file.OpenReadStream();
             CreateProgramVersionCommand command = new(request.ProgramId, request.Changes, stream);

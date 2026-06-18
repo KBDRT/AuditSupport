@@ -125,18 +125,6 @@ const EduYearsPage = () => {
                               >
                                 <HStack gap={2}>
                                  {program.status != undefined && <StatusBadge status={program.status} />}
-                                  {/* <Badge 
-                                    fontWeight="500" 
-                                    w="120px"  
-                                    textAlign="center" 
-                                    display="inline-flex" 
-                                    alignItems="center" 
-                                    justifyContent="center"
-                                    flexShrink={0}
-                                  >
-                                    {program.status != undefined && GetStatusTypeName(program.status)}
-                                  </Badge> */}
-                                  
                                   <Text fontSize="14px" color="gray.700">
                                     <Text as="span" color="gray.500">«</Text>
                                     <Text as="span" fontWeight="500">{program.name}</Text>

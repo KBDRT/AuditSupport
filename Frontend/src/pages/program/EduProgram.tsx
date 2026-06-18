@@ -155,20 +155,6 @@ const EduProgram = () => {
                         Статус
                       </Field.Label>
                       {programFromStore?.programStatus != undefined && <StatusBadge status={programFromStore?.programStatus} />}
-                      {/* <Badge
-                        colorPalette="blue"
-                        fontSize="13px"
-                        borderRadius="full"
-                        px={3}
-                        py={2.5}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        w="full"
-                        minH="32px"
-                      >
-                        {programFromStore?.programStatus != undefined && GetStatusTypeName(programFromStore.programStatus)}
-                      </Badge> */}
                     </Field.Root>
                   </GridItem>
 

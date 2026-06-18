@@ -13,8 +13,7 @@
 
             app.UseCors("AllowReactApp");
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+        
 
             //app.UseCookiePolicy(new CookiePolicyOptions
             //{
@@ -26,6 +25,9 @@
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             //app.UseMiddleware<AuthMiddleware>();
 

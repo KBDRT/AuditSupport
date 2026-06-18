@@ -29,6 +29,7 @@ using Minio;
 using Presentation.Auth;
 using Presentation.MappingProfiles;
 using Presentation.Settings;
+using System.Security.Claims;
 using System.Text;
 
 namespace Presentation.Extensions
@@ -203,7 +204,7 @@ namespace Presentation.Extensions
 
             _services.AddAuthorization(options => 
             {
-                options.AddPolicy("RoleAdmin", policy => policy.Requirements.Add(new RoleRequirement("Admin")));
+                options.AddPolicy("RoleAdmin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
                 //options.AddPolicy("RoleTeacher", policy => policy.Requirements.Add(new RoleRequirement("Teacher")));
                 //options.AddPolicy("RoleHead", policy => policy.Requirements.Add(new RoleRequirement("Head")));
             });
