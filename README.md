@@ -1,3 +1,25 @@
-ИС для сопровождения аудита дополнительных общеразвивающих программ.
-Backend: C# ASP.NET Core, EF Core, PostgreSQL, Minio S3, FluentValidation, Mediatr
-Frontend: Typescript, React, Orval, Zustand
+ИС для сопровождения аудита дополнительных общеразвивающих программ. <br>
+
+### Backend в виде REST API с чистой архитектурой 
+| Технология | Назначение |
+|:-----------|:-----------|
+C# / .NET |  Основной язык и платформа.
+ASP.NET Core	| Веб-фреймворк.
+Entity Framework Core	| ORM для работы с PostgreSQL.
+PostgreSQL	| Основная реляционная БД.
+MinIO S3	| Хранение файлов.
+MediatR	| Реализация CQRS и паттерна Mediator.
+FluentValidation	| Валидация входящих запросов.
+Swagger	| Генерация документации API.
+Serilog	| Структурированное логирование.
+
+### Frontend
+| Технология | Назначение |
+|:-----------|:-----------|
+TypeScript	|Основной язык.
+React 18	| UI библиотека.
+Zustand	| Управление глобальным состоянием.
+Axios	| HTTP клиент.
+Orval	| Генерация хуков и типов на основе Swagger-спецификации.
+Chakra UI	| Компонентная библиотека для стилизации.
+Vite	| Сборщик фронтенда.
